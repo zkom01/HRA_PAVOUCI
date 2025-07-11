@@ -86,11 +86,24 @@ class Game:
         pygame.mixer.music.load("media/sounds/Desert_Nomad.ogg")  # Načte hudební soubor
         pygame.mixer.music.play(-1)  # Přehrává hudbu ve smyčce (-1)
         pygame.mixer.music.set_volume(0.3)  # Hlasitost
+
         self.zvuk_kapky = pygame.mixer.Sound("media/sounds/olej_sound.ogg")
         self.zvuk_kapky.set_volume(0.2)
+        self.kanal1 = pygame.mixer.Channel(0)
+
         self.kousanec_sound = pygame.mixer.Sound("media/sounds/kousanec.ogg")
         self.kousanec_sound.set_volume(0.2)
+        self.kanal2 = pygame.mixer.Channel(1)
+
         self.rychlost_sound = pygame.mixer.Sound("media/sounds/rychlost.ogg")
+        self.kanal3 = pygame.mixer.Channel(3)
+
+        self.angry_sound = pygame.mixer.Sound("media/sounds/angry.ogg")
+        self.angry_sound.set_volume(0.3)
+        self.kanal4 = pygame.mixer.Channel(4)
+        self.alarm_hraje = False  # Stav, jestli už hraje
+
+        # self.kanal4.play(self.angry_sound , loops=-1)
 
         # Fonty pro text ve hře
             # Načte font a nastaví velikost
@@ -197,8 +210,16 @@ class Game:
 
         if any_spider_angry:
             self.main_color = (128, 0, 0)  # Červená
+            if not self.alarm_hraje:
+                self.kanal4.play(self.angry_sound , loops=-1)
+                self.alarm_hraje = True
+
         else:
             self.main_color = screen_color  # Původní barva (černá)
+            if self.alarm_hraje:
+                self.kanal4.stop()
+                self.alarm_hraje = False
+
 
     def update_rychlosti(self):
         """
@@ -210,21 +231,21 @@ class Game:
         velikost = len(player.had_segmenty)
 
         if velikost >= 8 and not self.rychlost_played_8:
-            self.rychlost_sound.play()
+            self.kanal3.play(self.rychlost_sound)
             self.rychlost_played_8 = True
             player.rychlostni_koeficient = 1.5
             player.mezera_mezi_sudy = 4
             self.rychlost = 4
 
         if velikost >= 5 and not self.rychlost_played_5:
-            self.rychlost_sound.play()
+            self.kanal3.play(self.rychlost_sound)
             self.rychlost_played_5 = True
             player.rychlostni_koeficient = 1.4
             player.mezera_mezi_sudy = 4
             self.rychlost = 3
 
         if velikost >= 2 and not self.rychlost_played_2:
-            self.rychlost_sound.play()
+            self.kanal3.play(self.rychlost_sound)
             self.rychlost_played_2 = True
             player.rychlostni_koeficient = 1.2
             player.mezera_mezi_sudy = 5
@@ -333,8 +354,7 @@ class Game:
                 offset_j = self.get_offset(hrac_obj, jedno_jidlo)  # Získá offset pro pixel-perfect kolizi
                 # Kontrola kolize pomocí masek
                 if hrac_obj.mask.overlap(jedno_jidlo.mask, offset_j):
-                    self.zvuk_kapky.stop()
-                    self.zvuk_kapky.play()
+                    self.kanal1.play(self.zvuk_kapky)
                     # Přesune jídlo na náhodnou novou pozici v rámci herní plochy
                     jedno_jidlo.rect.topleft = jidlo.nahodna_pozice(jedno_jidlo.image)
                     self.score += 1  # Zvýší skóre
@@ -353,8 +373,7 @@ class Game:
                 if hrac_obj.mask.overlap(pavouk_obj.mask, offset_p):
                     # Zde aplikujeme logiku imunity
                     if not hrac_obj.imunita_aktivni:  # Pouze pokud hráč NENÍ imunní
-                        # self.kousanec_sound.stop()
-                        self.kousanec_sound.play()
+                        self.kanal2.play(self.kousanec_sound)
                         aktualni_pocet_sudu = len(hrac_obj.had_segmenty)  # Získá aktuální počet sudů hráče
                         if aktualni_pocet_sudu >= 1:  # Pokud má hráč alespoň jeden sud
                             odstraneny_sud = hrac_obj.had_segmenty.pop()  # Odebere poslední sud ze seznamu hráče
