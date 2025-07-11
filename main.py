@@ -235,7 +235,7 @@ class Game:
             self.rychlost_played_8 = True
             player.rychlostni_koeficient = 1.5
             player.mezera_mezi_sudy = 4
-            self.rychlost = 4
+            self.rychlost = "MAX"
 
         if velikost >= 5 and not self.rychlost_played_5:
             self.kanal3.play(self.rychlost_sound)
