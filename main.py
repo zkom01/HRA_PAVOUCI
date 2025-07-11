@@ -277,6 +277,7 @@ class Game:
         #         self.pavouci_group.remove(self.pavouk_niky)
         #         self.niky_added = False
 
+        # Pavouk Eda
         if len(player.had_segmenty) >= 5:
             if not self.eda_added:
                 self.pavouci_group.add(self.pavouk_eda)
@@ -284,19 +285,20 @@ class Game:
                 player.aktivovat_imunitu()
                 self.eda_added = True
 
-        # elif len(player.had_segmenty) < 8:
+        # elif len(player.had_segmenty) < 5:
         #     if self.pavouk_eda in self.pavouci_group:
         #         self.pavouci_group.remove(self.pavouk_eda)
         #         self.eda_added = False
 
-        if len(player.had_segmenty) >= 6:
+        # Pavouk Hana
+        if len(player.had_segmenty) >= 5:
             if not self.hana_added:
                 self.pavouci_group.add(self.pavouk_hana)
                 self.pavouk_hana.rychlostni_koeficient = player.rychlostni_koeficient
                 player.aktivovat_imunitu()
                 self.hana_added = True
 
-        # elif len(player.had_segmenty) < 8:
+        # elif len(player.had_segmenty) < 5:
         #     if self.pavouk_hana in self.pavouci_group:
         #         self.pavouci_group.remove(self.pavouk_hana)
         #         self.hana_added = False
