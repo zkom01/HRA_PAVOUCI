@@ -58,7 +58,7 @@ class Game:
         self.score = 0  # Počáteční skóre hráče
         self.rychlost = 1
         self.kapky_od_posledniho_sudu = 0  # Počet sebraných "kapek" (jídla) od posledního přidání sudu
-        self.pocet_kapek_na_sud = 2  # Kolik kapek (jídla) je potřeba sebrat pro přidání nového sudu
+        self.pocet_kapek_na_sud = 3  # Kolik kapek (jídla) je potřeba sebrat pro přidání nového sudu
         self.rychlost_played_2 = False
         self.rychlost_played_5 = False
         self.rychlost_played_8 = False
