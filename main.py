@@ -3,7 +3,7 @@ import random  # Importuje modul random pro generování náhodných čísel
 
 from screeninfo import get_monitors
 
-########  další nápady - ukázat čas, dodělat konec hry a restart předělat s Gitem!!!!!!!!!!!!!!!!!!
+########  další nápady - ukázat čas, dodělat konec hry a restart
 
 # --- Inicializace hry ---
 pygame.init()  # Inicializuje všechny moduly Pygame. Toto je nutné spustit před použitím jakékoli funkce Pygame.
