@@ -223,7 +223,7 @@ class Game:
             offset_j = self.get_offset(hrac_obj, jedno_jidlo)
             if hrac_obj.mask.overlap(jedno_jidlo.mask, offset_j):
                 self.kanal1.play(self.zvuk_kapky)
-                jedno_jidlo.rect.topleft = jedno_jidlo.nahodna_pozice(jedno_jidlo.image)
+                jedno_jidlo.rect.topleft = jedno_jidlo.nahodna_pozice()
                 self.score += 1
                 self.kapky_od_posledniho_sudu += 1
                 if self.kapky_od_posledniho_sudu >= self.pocet_kapek_na_sud:
