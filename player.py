@@ -34,22 +34,42 @@ class Player(pygame.sprite.Sprite):
             self.direction = 'down'
 
     def move(self):
-        # Použijte nastavení ze settings.py
+        """
+        Aktualizuje pozici hráče na základě jeho směru a rychlosti.
+        Zajišťuje, aby hráč "prošel" skrz okraje obrazovky (warp efekt)
+        s ohledem na horní panel.
+        """
+        # Pohyb hráče na základě aktuálního směru
         if self.direction == 'left':
             self.rect.x -= self.speed * self.rychlostni_koeficient
-        # ... (zbytek logiky pohybu)
+        elif self.direction == 'right':
+            self.rect.x += self.speed * self.rychlostni_koeficient
+        elif self.direction == 'up':
+            self.rect.y -= self.speed * self.rychlostni_koeficient
+        elif self.direction == 'down':
+            self.rect.y += self.speed * self.rychlostni_koeficient
 
-        # Použijte nastavení ze settings.py pro hranice
-        if self.rect.bottom < settings.VYSKA_HORNIHO_PANELU:
-            self.rect.top = settings.SCREEN_HEIGHT - 20
-        # ... (zbytek warp efektu)
+        # Zajištění "warp" efektu (projití skrz okraj obrazovky a objevení se na protější straně)
+        # S ohledem na horní panel (settings.VYSKA_HORNÍHO_PANELU)
+        if self.rect.bottom < settings.VYSKA_HORNIHO_PANELU:  # Pokud je hráč nad horním panelem (mimo herní plochu)
+            self.rect.top = settings.SCREEN_HEIGHT - 20  # Objeví se dole
+        elif self.rect.top > settings.SCREEN_HEIGHT - 20:  # Pokud je hráč pod spodním okrajem
+            self.rect.bottom = settings.VYSKA_HORNIHO_PANELU + 20  # Objeví se nahoře (pod panelem)
 
-        if self.direction:
+        if self.rect.right < 5:  # Pokud je hráč vlevo mimo obrazovku
+            self.rect.left = settings.SCREEN_WIDTH - 5  # Objeví se vpravo
+        elif self.rect.left > settings.SCREEN_WIDTH - 5:  # Pokud je hráč vpravo mimo obrazovku
+            self.rect.right = 5  # Objeví se vlevo
+
+        # Ukládá pozici hlavy hráče do historie pro pohyb segmentů hada
+        if self.direction:  # Pouze pokud se hráč pohybuje (tedy pokud direction není None)
             self.pozice_hlavy.insert(0, (self.rect.centerx, self.rect.centery))
 
-        required_length = (len(self.had_segmenty) + 1) * self.mezera_mezi_sudy + 10
+        # Omezuje délku historie pozic hlavy, aby se předešlo nekonečnému růstu seznamu
+        # Délka je závislá na počtu segmentů a mezeře mezi nimi
+        required_length = (len(self.had_segmenty) + 1) * self.mezera_mezi_sudy + 10  # +10 pro malou rezervu
         if len(self.pozice_hlavy) > required_length:
-            self.pozice_hlavy.pop()
+            self.pozice_hlavy.pop()  # Odstraní nejstarší pozici z historie
 
     def update_segmenty_hada(self):
         if self.had_segmenty:
