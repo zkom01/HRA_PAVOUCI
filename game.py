@@ -66,6 +66,9 @@ class Game:
         self.barva_textu_nabidky = self.barva_textu
         self.barva_pod_text_nabidky = settings.SCREEN_COLOR
 
+        # Načtení pozadí JEDNOU
+        self.original_pozadi_image = pygame.image.load(settings.POZADI_IMAGE_PATH).convert_alpha()
+
         # Předpřipravíme text "PAUZA" pro efektivnější vykreslování
         self.pause_text0 = self.font_robot_big_1.render("PAUZA", True, self.main_color)
         self.pause_text = self.font_robot_big.render("PAUZA", True, self.barva_textu)
@@ -82,13 +85,11 @@ class Game:
         self.konec_text0_rect = self.konec_text0.get_rect(
             center=(settings.SCREEN_WIDTH - 400, settings.SCREEN_HEIGHT // 2))
 
-    @staticmethod
-    def kresleni_pozadi():
-        pozadi_image = pygame.image.load(settings.POZADI_IMAGE_PATH).convert_alpha()
-        pozadi_image = pygame.transform.scale(pozadi_image, (settings.SCREEN_WIDTH,
+    def kresleni_pozadi(self):
+        self.original_pozadi_image = pygame.transform.scale(self.original_pozadi_image, (settings.SCREEN_WIDTH,
                                                              settings.SCREEN_HEIGHT - settings.VYSKA_HORNIHO_PANELU))
-        pozadi_image_rect = pozadi_image.get_rect(topleft=(0, settings.VYSKA_HORNIHO_PANELU))
-        pygame.display.get_surface().blit(pozadi_image, pozadi_image_rect)
+        pozadi_image_rect = self.original_pozadi_image.get_rect(topleft=(0, settings.VYSKA_HORNIHO_PANELU))
+        pygame.display.get_surface().blit(self.original_pozadi_image, pozadi_image_rect)
 
     def kresleni_horniho_panelu(self, score, lives, speed):
         pocet_sudu = len(list(self.hrac_group)[0].had_segmenty)  # Přistup k player objektu
