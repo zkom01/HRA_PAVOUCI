@@ -1,12 +1,14 @@
 import pygame
 import settings  # Importujeme modul settings
 from barrel import Sud  # Importujeme třídu Sud
+from pause_menu import PauseMenu
 
 
 class Game:
     def __init__(self, hrac_group, jidla_group, pavouci_group, sudy_group, pavouk_max_obj, pavouk_tery_obj,
                  pavouk_niky_obj, pavouk_eda_obj, pavouk_hana_obj, obrazovka):
         self.screen = obrazovka
+        self.menu = PauseMenu(obrazovka)
 
         self.hrac_group = hrac_group
         self.jidla_group = jidla_group
@@ -263,6 +265,10 @@ class Game:
         self.game_paused = not self.game_paused
         if self.game_paused:
             pygame.mixer.music.pause()
+            result = self.menu.show_menu()
+            if result == "restart":
+                print("Restart hry")
+                # Tady přidej reset_game() nebo jinou logiku
         else:
             pygame.mixer.music.unpause()
 

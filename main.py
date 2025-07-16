@@ -7,7 +7,6 @@ from player import Player
 from spider import Pavouk
 from food import Jidlo
 from barrel import Sud
-from pause_menu import PauseMenu
 
 ## importy pro ladění !!!!
 # import cProfile
@@ -21,6 +20,7 @@ screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
 pygame.display.set_caption("EDOVA_HRA")
 ikona_image = pygame.image.load(settings.IKONA_IMAGE_PATH)
 pygame.display.set_icon(ikona_image)
+
 
 # --- Vytvoření herních objektů a skupin ---
 pavouk_max = Pavouk(-500, -500, settings.PAVOUK_MAX_IMAGE, settings.PAVOUK_MAX_ANGRY_IMAGE, settings.SPIDER_RYCHLOST)

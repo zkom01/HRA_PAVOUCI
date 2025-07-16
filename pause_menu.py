@@ -1,17 +1,18 @@
 import pygame
 import sys
+import settings
 from button import Button
 
 
 class PauseMenu:
 
-    def __init__(self, screen, clock):
+    def __init__(self, screen):
         self.screen = screen
-        self.clock = clock
+        self.clock = settings.FPS
         self.paused = False
         self.restart_requested = False
         self.buttons = [
-            Button("Pokračovat", 300, 200, 200, 60, self.resume_game),
+            Button("Pokračovat", settings.SCREEN_WIDTH//2, 200, 200, 60, self.resume_game),
             Button("Restart", 300, 280, 200, 60, self.restart_game),
             Button("Ukončit", 300, 360, 200, 60, self.quit_game),
         ]
@@ -41,7 +42,6 @@ class PauseMenu:
                 for button in self.buttons:
                     button.handle_event(event)
             pygame.display.flip()
-            self.clock.tick(60)
             if self.restart_requested:
                 return "restart"
 
