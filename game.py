@@ -140,7 +140,7 @@ class Game:
                 break
 
         if any_spider_angry:
-            self.main_color = (128, 0, 0)
+            self.main_color = settings.ANGRY_COLOR
             if not self.alarm_hraje:
                 self.kanal4.play(self.angry_sound, loops=-1)
                 self.alarm_hraje = True
@@ -287,7 +287,7 @@ class Game:
             # Ale pro teď je ponecháme pro funkčnost.
             if self.konec_text_rect.collidepoint(mouse_pos):
                 self.barva_pod_text_nabidky = self.white
-                self.barva_textu_nabidky = (58, 88, 255)
+                self.barva_textu_nabidky = settings.BARVA_HOVER
                 if pygame.mouse.get_pressed()[0]:
                     self.lets_continue = False
             else:

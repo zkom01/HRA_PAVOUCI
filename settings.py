@@ -4,6 +4,10 @@ from screeninfo import get_monitors
 ZIVOTY = 3
 POCET_KAPEK_NA_SUD = 2
 SCORE = 0
+# rychlost pavouků
+SPIDER_RYCHLOST = 6
+# rychlost playera
+PLAYER_RYCHLOST = 10
 RYCHLOST_1 = 1.0
 RYCHLOST_2 = 1.2
 RYCHLOST_3 = 1.4
@@ -21,18 +25,20 @@ SCREEN_WIDTH = 1400
 SCREEN_HEIGHT = 700
 ORIGINAL_SCREEN_WIDTH = SCREEN_WIDTH
 ORIGINAL_SCREEN_HEIGHT = SCREEN_HEIGHT
-SCREEN_COLOR = (0, 0, 0)
-IKONA_IMAGE_PATH = "media/img/robot.png"
 
 # --- Nastavení herních parametrů ---
 VYSKA_HORNIHO_PANELU = 64
 FPS = 60
 
 # --- Barvy ---
-BARVA_TEXTU = (50, 103, 6)
-WHITE = (255, 255, 255)
+SCREEN_COLOR = (0, 0, 0)  # černá
+BARVA_TEXTU = (50, 103, 6)  # zelená
+WHITE = (255, 255, 255) # bílá
+ANGRY_COLOR = (128, 0, 0) # červená
+BARVA_HOVER = (58, 88, 255) # světle modrá
 
 # --- Cesty k souborům ---
+IKONA_IMAGE_PATH = "media/img/robot.png"
 FONT_ROBOT_PATH = "media/fonts/Super Rocky by All Super Font.ttf"
 MUSIC_PATH = "media/sounds/Desert_Nomad.ogg"
 ZVUK_KAPKY_PATH = "media/sounds/olej_sound.ogg"
