@@ -1,10 +1,13 @@
 import pygame
+
+import game
 import settings # Důležité!
 from game import Game
 from player import Player
 from spider import Pavouk
 from food import Jidlo
 from barrel import Sud
+from pause_menu import PauseMenu
 
 ## importy pro ladění !!!!
 # import cProfile
