@@ -6,6 +6,9 @@ from barrel import Sud  # Importujeme třídu Sud
 class Game:
     def __init__(self, hrac_group, jidla_group, pavouci_group, sudy_group, pavouk_max_obj, pavouk_tery_obj,
                  pavouk_niky_obj, pavouk_eda_obj, pavouk_hana_obj):
+        # 1. Inicializujeme obrazovku jako atribut instance
+        self.screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
+
         self.hrac_group = hrac_group
         self.jidla_group = jidla_group
         self.pavouci_group = pavouci_group
@@ -68,14 +71,17 @@ class Game:
 
         # Načtení pozadí JEDNOU
         self.original_pozadi_image = pygame.image.load(settings.POZADI_IMAGE_PATH).convert_alpha()
+        # Škálování pozadí JEDNOU při inicializaci
+        self.scaled_pozadi_image = pygame.transform.scale(self.original_pozadi_image,
+                                                          (settings.SCREEN_WIDTH,
+                                                           settings.SCREEN_HEIGHT - settings.VYSKA_HORNIHO_PANELU))
 
         # Předpřipravíme text "PAUZA" pro efektivnější vykreslování
         self.pause_text0 = self.font_robot_big_1.render("PAUZA", True, self.main_color)
         self.pause_text = self.font_robot_big.render("PAUZA", True, self.barva_textu)
-        self.pause_text0_rect = self.pause_text.get_rect()
-        self.pause_text_rect = self.pause_text.get_rect()
-        self.pause_text_rect.center = ((settings.SCREEN_WIDTH // 2) + 13, (settings.SCREEN_HEIGHT // 2) + 7)
-        self.pause_text0_rect.center = (settings.SCREEN_WIDTH // 2, settings.SCREEN_HEIGHT // 2)
+        self.pause_text0_rect = self.pause_text0.get_rect(center=(settings.SCREEN_WIDTH // 2, settings.SCREEN_HEIGHT // 2))
+        self.pause_text_rect = self.pause_text.get_rect(center=((settings.SCREEN_WIDTH // 2) + 13, (settings.SCREEN_HEIGHT // 2) + 7))
+
 
         # Nabídka při PAUSE
         self.konec_text = self.font_robot_big_1.render("KONEC HRY", True, self.barva_pod_text_nabidky)
@@ -85,24 +91,23 @@ class Game:
         self.konec_text0_rect = self.konec_text0.get_rect(
             center=(settings.SCREEN_WIDTH - 400, settings.SCREEN_HEIGHT // 2))
 
+        # Statické texty pro horní panel (renderujeme jen jednou)
+        self.nadpis_text = self.font_robot.render("PAVOUCI_KOMARKOVI", True, self.barva_textu)
+        self.nadpis_text_rect = self.nadpis_text.get_rect(center=(settings.SCREEN_WIDTH // 2, settings.VYSKA_HORNIHO_PANELU // 2))
+
     def kresleni_pozadi(self):
-        self.original_pozadi_image = pygame.transform.scale(self.original_pozadi_image, (settings.SCREEN_WIDTH,
-                                                             settings.SCREEN_HEIGHT - settings.VYSKA_HORNIHO_PANELU))
-        pozadi_image_rect = self.original_pozadi_image.get_rect(topleft=(0, settings.VYSKA_HORNIHO_PANELU))
-        pygame.display.get_surface().blit(self.original_pozadi_image, pozadi_image_rect)
+        # Nyní používáme již škálovaný obrázek
+        pozadi_image_rect = self.scaled_pozadi_image.get_rect(topleft=(0, settings.VYSKA_HORNIHO_PANELU))
+        self.screen.blit(self.scaled_pozadi_image, pozadi_image_rect)
 
     def kresleni_horniho_panelu(self, score, lives, speed):
         pocet_sudu = len(list(self.hrac_group)[0].had_segmenty)  # Přistup k player objektu
 
-        pygame.draw.rect(pygame.display.get_surface(), self.main_color,
-                         (0, 0, settings.SCREEN_WIDTH, settings.VYSKA_HORNIHO_PANELU))
-        pygame.draw.line(pygame.display.get_surface(), self.white, (0, settings.VYSKA_HORNIHO_PANELU),
+        self.screen.fill(self.main_color, (0, 0, settings.SCREEN_WIDTH, settings.VYSKA_HORNIHO_PANELU)) # Vyplnění barvou
+        pygame.draw.line(self.screen, self.white, (0, settings.VYSKA_HORNIHO_PANELU),
                          (settings.SCREEN_WIDTH, settings.VYSKA_HORNIHO_PANELU))
 
-        # ... (zbytek kreslení UI)
-        nadpis_text = self.font_robot.render("PAVOUCI_KOMARKOVI", True, self.barva_textu)
-        nadpis_text_rect = nadpis_text.get_rect(center=(settings.SCREEN_WIDTH // 2, settings.VYSKA_HORNIHO_PANELU // 2))
-
+        # Tyto texty se mění, takže se musí renderovat v každém snímku
         score_text = self.font_robot_small.render(f"POCET_KAPEK: {score}", True, self.barva_textu)
         score_text_rect = score_text.get_rect(topleft=(10, 0))
 
@@ -115,15 +120,16 @@ class Game:
         lives_text = self.font_robot.render(f"ZIVOTY: {lives}", True, self.barva_textu)
         lives_text_rect = lives_text.get_rect(topright=(settings.SCREEN_WIDTH - 10, 0))
 
-        screen = pygame.display.get_surface()
-        screen.blit(lives_text, lives_text_rect)
-        screen.blit(barel_text, barel_text_rect)
-        screen.blit(rychlost_text, rychlost_text_rect)
-        screen.blit(nadpis_text, nadpis_text_rect)
-        screen.blit(score_text, score_text_rect)
+        # Používáme self.screen přímo
+        self.screen.blit(lives_text, lives_text_rect)
+        self.screen.blit(barel_text, barel_text_rect)
+        self.screen.blit(rychlost_text, rychlost_text_rect)
+        self.screen.blit(self.nadpis_text, self.nadpis_text_rect) # Používáme předrenderovaný nadpis
+        self.screen.blit(score_text, score_text_rect)
+
         if self.game_paused:
-            screen.blit(self.konec_text, self.konec_text_rect)
-            screen.blit(self.konec_text0, self.konec_text0_rect)
+            self.screen.blit(self.konec_text, self.konec_text_rect)
+            self.screen.blit(self.konec_text0, self.konec_text0_rect)
 
     def update_stav_is_angry(self):
         any_spider_angry = False
@@ -173,7 +179,7 @@ class Game:
 
     def prida_odebere_pavouka(self):
         hrac_obj = list(self.hrac_group)[0]  # Předpokládáme, že ve skupině je jen jeden hráč
-        if len(hrac_obj.had_segmenty) >= 0:
+        if len(hrac_obj.had_segmenty) >= 0: # Tahle podmínka je vždy splněna, pavouk Max se přidá vždy
             if not self.max_added:
                 self.pavouci_group.add(self.pavouk_max)
                 self.pavouk_max.rychlostni_koeficient = hrac_obj.rychlostni_koeficient
@@ -201,7 +207,7 @@ class Game:
                 hrac_obj.aktivovat_imunitu()
                 self.eda_added = True
 
-        if len(hrac_obj.had_segmenty) >= 5:  # Zkontrolujte tuto podmínku - dvě stejné podmínky
+        if len(hrac_obj.had_segmenty) >= 5:  # Zkontrolujte tuto podmínku - dvě stejné podmínky (eda a hana)
             if not self.hana_added:
                 self.pavouci_group.add(self.pavouk_hana)
                 self.pavouk_hana.rychlostni_koeficient = hrac_obj.rychlostni_koeficient
@@ -209,7 +215,7 @@ class Game:
                 self.hana_added = True
 
         if len(hrac_obj.had_segmenty) >= 12:
-            pass
+            pass # Sem byste mohl přidat nějakou logiku, pokud by to bylo potřeba
 
     @staticmethod
     def get_offset(sprite1, sprite2):
@@ -275,7 +281,9 @@ class Game:
     def pohyb_mysi(self):
         if self.game_paused:
             mouse_pos = pygame.mouse.get_pos()
-            # Použijte nastavení.SCREEN_WIDTH a nastavení.SCREEN_HEIGHT
+            # Použijte self.screen pro zjištění rozměrů, nebo settings.SCREEN_WIDTH/HEIGHT
+            # Optimalizace: Tyto texty by se měly renderovat jen při změně mouse_pos nebo stavu
+            # Ale pro teď je ponecháme pro funkčnost.
             if self.konec_text_rect.collidepoint(mouse_pos):
                 self.barva_pod_text_nabidky = self.white
                 self.barva_textu_nabidky = (58, 88, 255)
@@ -307,47 +315,60 @@ class Game:
                 obj.rect.centery = int(rel_y * new_height)
 
     def fullscreen(self):
-        global screen  # V game.py bychom se měli vyhnout globálním proměnným, pokud je to možné.
-        # Spíše by třída Game měla mít atribut pro screen.
-        # Uložte si původní screen před změnou
-        original_screen = pygame.display.get_surface()
+        # Není potřeba 'global screen'
+        original_screen_width = self.screen.get_width()
+        original_screen_height = self.screen.get_height()
 
+        # Přepněte stav fullscreenu hned na začátku
         self.is_fullscreen = not self.is_fullscreen
 
-        player_relative_positions = self.get_relative_positions(self.hrac_group, original_screen.get_width(),
-                                                                original_screen.get_height())
-        jidla_relative_positions = self.get_relative_positions(self.jidla_group, original_screen.get_width(),
-                                                               original_screen.get_height())
-        pavouci_relative_positions = self.get_relative_positions(self.pavouci_group, original_screen.get_width(),
-                                                                 original_screen.get_height())
+        # Získejte relativní pozice před změnou rozlišení
+        player_relative_positions = self.get_relative_positions(self.hrac_group, original_screen_width,
+                                                                original_screen_height)
+        jidla_relative_positions = self.get_relative_positions(self.jidla_group, original_screen_width,
+                                                               original_screen_height)
+        pavouci_relative_positions = self.get_relative_positions(self.pavouci_group, original_screen_width,
+                                                                 original_screen_height)
+        sudy_relative_positions = self.get_relative_positions(self.sudy_group, original_screen_width,
+                                                                 original_screen_height) # Přidáno pro sudy
 
         if self.is_fullscreen:
-            screen = pygame.display.set_mode((settings.MONITOR_WIDTH, settings.MONITOR_HEIGHT), pygame.FULLSCREEN)
-            settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT = screen.get_size()  # Aktualizujeme globální nastavení
+            self.screen = pygame.display.set_mode((settings.MONITOR_WIDTH, settings.MONITOR_HEIGHT), pygame.FULLSCREEN)
+            settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT = self.screen.get_size()  # Aktualizujeme globální nastavení
         else:
-            screen = pygame.display.set_mode((settings.ORIGINAL_SCREEN_WIDTH, settings.ORIGINAL_SCREEN_HEIGHT))
+            self.screen = pygame.display.set_mode((settings.ORIGINAL_SCREEN_WIDTH, settings.ORIGINAL_SCREEN_HEIGHT))
             settings.SCREEN_WIDTH = settings.ORIGINAL_SCREEN_WIDTH  # Aktualizujeme globální nastavení
             settings.SCREEN_HEIGHT = settings.ORIGINAL_SCREEN_HEIGHT  # Aktualizujeme globální nastavení
 
-        self.pause_text_rect.center = ((settings.SCREEN_WIDTH // 2) + 13, (settings.SCREEN_HEIGHT // 2) + 7)
-        self.pause_text0_rect.center = (settings.SCREEN_WIDTH // 2, settings.SCREEN_HEIGHT // 2)
+        # Zde znovu škálujeme pozadí, protože se změnilo rozlišení
+        self.scaled_pozadi_image = pygame.transform.scale(self.original_pozadi_image,
+                                                          (settings.SCREEN_WIDTH,
+                                                           settings.SCREEN_HEIGHT - settings.VYSKA_HORNIHO_PANELU))
 
+        # Aplikujte relativní pozice na základě nových rozměrů
         self.apply_relative_positions(player_relative_positions, settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
         self.apply_relative_positions(jidla_relative_positions, settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
         self.apply_relative_positions(pavouci_relative_positions, settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
+        self.apply_relative_positions(sudy_relative_positions, settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT) # Použito pro sudy
+
+        # Aktualizujte pozice textů závislých na rozměrech obrazovky
+        self.pause_text0_rect.center = (settings.SCREEN_WIDTH // 2, settings.SCREEN_HEIGHT // 2)
+        self.pause_text_rect.center = ((settings.SCREEN_WIDTH // 2) + 13, (settings.SCREEN_HEIGHT // 2) + 7)
+        self.konec_text_rect.center = (settings.SCREEN_WIDTH - 400, (settings.SCREEN_HEIGHT // 2))
+        self.konec_text0_rect.center = (settings.SCREEN_WIDTH - 400, settings.SCREEN_HEIGHT // 2)
+        self.nadpis_text_rect.center = (settings.SCREEN_WIDTH // 2, settings.VYSKA_HORNIHO_PANELU // 2)
 
     def kresleni(self):
-        screen = pygame.display.get_surface()  # Získáme aktuální povrch pro kreslení
-        screen.fill(self.main_color)
+        self.screen.fill(self.main_color) # Používáme self.screen přímo
         self.kresleni_pozadi()
-        self.jidla_group.draw(screen)
-        self.sudy_group.draw(screen)
-        self.pavouci_group.draw(screen)
-        self.hrac_group.draw(screen)
+        self.jidla_group.draw(self.screen) # Používáme self.screen přímo
+        self.sudy_group.draw(self.screen) # Používáme self.screen přímo
+        self.pavouci_group.draw(self.screen) # Používáme self.screen přímo
+        self.hrac_group.draw(self.screen) # Používáme self.screen přímo
         self.kresleni_horniho_panelu(self.score, self.zivoty, self.rychlost)
         if self.game_paused:
-            screen.blit(self.pause_text0, self.pause_text0_rect)
-            screen.blit(self.pause_text, self.pause_text_rect)
+            self.screen.blit(self.pause_text0, self.pause_text0_rect)
+            self.screen.blit(self.pause_text, self.pause_text_rect)
 
         pygame.display.update()
 
