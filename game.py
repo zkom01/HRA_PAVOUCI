@@ -5,9 +5,8 @@ from barrel import Sud  # Importujeme třídu Sud
 
 class Game:
     def __init__(self, hrac_group, jidla_group, pavouci_group, sudy_group, pavouk_max_obj, pavouk_tery_obj,
-                 pavouk_niky_obj, pavouk_eda_obj, pavouk_hana_obj):
-        # 1. Inicializujeme obrazovku jako atribut instance
-        self.screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
+                 pavouk_niky_obj, pavouk_eda_obj, pavouk_hana_obj, obrazovka):
+        self.screen = obrazovka
 
         self.hrac_group = hrac_group
         self.jidla_group = jidla_group
