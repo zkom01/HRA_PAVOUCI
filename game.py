@@ -12,11 +12,13 @@ class Game:
         self.jidla_group = jidla_group
         self.pavouci_group = pavouci_group
         self.sudy_group = sudy_group
-        self.zivoty = 3
+
+        self.zivoty = settings.ZIVOTY
+        self.pocet_kapek_na_sud = settings.POCET_KAPEK_NA_SUD
         self.score = 0
-        self.rychlost = 1
         self.kapky_od_posledniho_sudu = 0
-        self.pocet_kapek_na_sud = 2
+
+        self.rychlost = 1 # slouží k vypsání rychlosti na horním panelu
         self.rychlost_played_2 = False
         self.rychlost_played_5 = False
         self.rychlost_played_8 = False
@@ -155,21 +157,21 @@ class Game:
         if velikost >= 8 and not self.rychlost_played_8:
             self.kanal3.play(self.rychlost_sound)
             self.rychlost_played_8 = True
-            hrac_obj.rychlostni_koeficient = 1.5
+            hrac_obj.rychlostni_koeficient = settings.RYCHLOST_MAX
             hrac_obj.mezera_mezi_sudy = 4
             self.rychlost = "MAX"
 
         if velikost >= 5 and not self.rychlost_played_5:
             self.kanal3.play(self.rychlost_sound)
             self.rychlost_played_5 = True
-            hrac_obj.rychlostni_koeficient = 1.4
+            hrac_obj.rychlostni_koeficient = settings.RYCHLOST_3
             hrac_obj.mezera_mezi_sudy = 4
             self.rychlost = 3
 
         if velikost >= 2 and not self.rychlost_played_2:
             self.kanal3.play(self.rychlost_sound)
             self.rychlost_played_2 = True
-            hrac_obj.rychlostni_koeficient = 1.2
+            hrac_obj.rychlostni_koeficient = settings.RYCHLOST_2
             hrac_obj.mezera_mezi_sudy = 5
             self.rychlost = 2
 

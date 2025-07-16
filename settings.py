@@ -1,5 +1,16 @@
 from screeninfo import get_monitors
 
+# základní nastavení pravydel hry
+ZIVOTY = 3
+POCET_KAPEK_NA_SUD = 2
+SCORE = 0
+RYCHLOST_1 = 1.0
+RYCHLOST_2 = 1.2
+RYCHLOST_3 = 1.4
+RYCHLOST_MAX = 1.5
+MEZERA_MEZI_SUDY = 5
+DOBA_IMUNITY = 12000 # 2000 = 2s
+
 # Získání rozměrů primárního monitoru
 monitors = get_monitors()
 MONITOR_WIDTH = monitors[0].width

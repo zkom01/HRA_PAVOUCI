@@ -10,15 +10,15 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect.center = (x, y)
-        self.mezera_mezi_sudy = 6
+        self.mezera_mezi_sudy = settings.MEZERA_MEZI_SUDY
         self.had_segmenty = []
         self.pozice_hlavy = []
-        self.rychlostni_koeficient = 1.0
+        self.rychlostni_koeficient = settings.RYCHLOST_1
         self.speed = rychlost
 
         self.imunita_aktivni = False
         self.imunita_start_cas = 0
-        self.doba_imunity = 2000
+        self.doba_imunity = settings.DOBA_IMUNITY
 
     def pridej_segment(self, segment):
         self.had_segmenty.append(segment)
