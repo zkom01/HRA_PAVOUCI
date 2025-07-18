@@ -1,16 +1,11 @@
 import pygame
 
-import game
-import settings # Důležité!
+import settings
 from game import Game
 from player import Player
 from spider import Pavouk
 from food import Jidlo
 from barrel import Sud
-
-## importy pro ladění !!!!
-# import cProfile
-# import pstats
 
 # --- Inicializace hry ---
 pygame.init()
@@ -47,7 +42,9 @@ hra = Game(player_group, jidlo_group, pavouk_group, sud_group, pavouk_max, pavou
 
 # --- Spuštění hry ---
 hra.fullscreen()
-
+## importy pro ladění !!!!
+# import cProfile
+# import pstats
 # # Použití cProfile pro profilování
 # profiler = cProfile.Profile()
 # profiler.enable()
