@@ -1,6 +1,7 @@
 import pygame
 import settings  # Importujeme modul settings
 from barrel import Sud  # Importujeme třídu Sud
+from food import Jidlo
 from pause_menu import PauseMenu
 
 
@@ -79,21 +80,6 @@ class Game:
                                                           (settings.SCREEN_WIDTH,
                                                            settings.SCREEN_HEIGHT - settings.VYSKA_HORNIHO_PANELU))
 
-        # # Předpřipravíme text "PAUZA" pro efektivnější vykreslování
-        # self.pause_text0 = self.font_robot_big_1.render("PAUZA", True, self.main_color)
-        # self.pause_text = self.font_robot_big.render("PAUZA", True, self.barva_textu)
-        # self.pause_text0_rect = self.pause_text0.get_rect(center=(settings.SCREEN_WIDTH // 2, settings.SCREEN_HEIGHT // 2))
-        # self.pause_text_rect = self.pause_text.get_rect(center=((settings.SCREEN_WIDTH // 2) + 13, (settings.SCREEN_HEIGHT // 2) + 7))
-        #
-        #
-        # # Nabídka při PAUSE
-        # self.konec_text = self.font_robot_big_1.render("KONEC HRY", True, self.barva_pod_text_nabidky)
-        # self.konec_text_rect = self.konec_text.get_rect(
-        #     center=(settings.SCREEN_WIDTH - 400, (settings.SCREEN_HEIGHT // 2)))
-        # self.konec_text0 = self.font_robot_big.render("KONEC HRY", True, self.barva_textu)
-        # self.konec_text0_rect = self.konec_text0.get_rect(
-        #     center=(settings.SCREEN_WIDTH - 400, settings.SCREEN_HEIGHT // 2))
-
         # Statické texty pro horní panel (renderujeme jen jednou)
         self.nadpis_text = self.font_robot.render("PAVOUCI_KOMARKOVI", True, self.barva_textu)
         self.nadpis_text_rect = self.nadpis_text.get_rect(center=(settings.SCREEN_WIDTH // 2, settings.VYSKA_HORNIHO_PANELU // 2))
@@ -129,10 +115,6 @@ class Game:
         self.screen.blit(rychlost_text, rychlost_text_rect)
         self.screen.blit(self.nadpis_text, self.nadpis_text_rect) # Používáme předrenderovaný nadpis
         self.screen.blit(score_text, score_text_rect)
-
-        # if self.game_paused:
-        #     self.screen.blit(self.konec_text, self.konec_text_rect)
-        #     self.screen.blit(self.konec_text0, self.konec_text0_rect)
 
     def update_stav_is_angry(self):
         any_spider_angry = False
@@ -266,11 +248,80 @@ class Game:
         if self.game_paused:
             pygame.mixer.music.pause()
             result = self.menu.show_menu()
-            if result == "restart":
+            if result == "resume":
+                # Pokud uživatel vybral "Pokračovat", přepneme hru zpět do ne-pausnutého stavu
+                self.game_paused = False
+                pygame.mixer.music.unpause()  # Spustíme hudbu hned po obnovení hry
+
+            elif result == "restart":
                 print("Restart hry")
                 # Tady přidej reset_game() nebo jinou logiku
-        else:
-            pygame.mixer.music.unpause()
+                self.reset_game()  # Zavoláme metodu pro resetování hry
+                self.game_paused = False  # Hra se po restartu spustí
+                pygame.mixer.music.unpause()  # Spustíme hudbu
+
+            else:
+                # Pokud se pause() zavolá, když hra NENÍ pausnutá (uživatel stiskl mezerník podruhé),
+                # tak se hudba spustí a hra pokračuje.
+                pygame.mixer.music.unpause()
+
+    def reset_game(self):
+        # Tato metoda bude resetovat všechny relevantní herní stavy
+        self.zivoty = settings.ZIVOTY
+        self.score = 0
+        self.kapky_od_posledniho_sudu = 0
+        self.rychlost = 1
+        self.rychlost_played_2 = False
+        self.rychlost_played_5 = False
+        self.rychlost_played_8 = False
+
+        # Reset pozic a stavů pavouků
+        self.pavouk_max.rect.x = -500
+        self.pavouk_max.rect.y = -500
+        self.pavouk_tery.rect.x = -500
+        self.pavouk_tery.rect.y = -500
+        self.pavouk_niky.rect.x = -500
+        self.pavouk_niky.rect.y = -500
+        self.pavouk_eda.rect.x = -500
+        self.pavouk_eda.rect.y = -500
+        self.pavouk_hana.rect.x = -500
+        self.pavouk_hana.rect.y = -500
+
+        # Vyprázdníme skupiny a přidáme jen počáteční objekty
+        self.pavouci_group.empty()
+        # Pavouk Max by se měl přidat hned na začátku hry (podle vaší logiky)
+        # ale zajistěte, aby se přidával v prida_odebere_pavouka(),
+        # takže zde jen resetujeme flagy.
+        self.tery_added = False
+        self.niky_added = False
+        self.max_added = False  # Toto je klíčové pro přidání Maxe
+        self.eda_added = False
+        self.hana_added = False
+
+        self.jidla_group.empty()
+        # Znovu přidáme jídla na náhodné pozice
+        jidlo = Jidlo(settings.FOOD_IMAGE)
+        jidlo1 = Jidlo(settings.FOOD_IMAGE)
+        self.jidla_group.add(jidlo, jidlo1)  # Musíte je inicializovat na náhodné pozice.
+
+        self.sudy_group.empty()  # Odstraníme všechny sudy
+
+        # Reset hráče - odstranění všech segmentů hada a vrácení na počáteční pozici
+        hrac_obj = list(self.hrac_group)[0]
+        hrac_obj.had_segmenty = []  # Resetujeme hada na prázdný seznam
+        hrac_obj.rect.centerx = settings.SCREEN_WIDTH // 2
+        hrac_obj.rect.centery = settings.SCREEN_HEIGHT // 2
+        hrac_obj.aktivovat_imunitu()  # Aby nebyl hned pokousán
+        hrac_obj.direction = None
+
+        # V případě, že alarm angry_sound hraje, zastavte ho
+        if self.alarm_hraje:
+            self.kanal4.stop()
+            self.alarm_hraje = False
+            self.main_color = settings.SCREEN_COLOR  # Reset barvy
+
+        # Znovu spustíme hudbu, pokud již nebyla spuštěna výše
+        pygame.mixer.music.play(-1)
 
     def stisknute_klavesy(self):
         player_obj = list(self.hrac_group)[0]  # Předpokládáme, že ve skupině je jen jeden hráč
@@ -284,27 +335,6 @@ class Game:
                     self.fullscreen()
                 if not self.game_paused:
                     player_obj.stisknute_klavesy_player(event)
-
-    # def pohyb_mysi(self):
-    #     if self.game_paused:
-    #         mouse_pos = pygame.mouse.get_pos()
-    #         # Použijte self.screen pro zjištění rozměrů, nebo settings.SCREEN_WIDTH/HEIGHT
-    #         # Optimalizace: Tyto texty by se měly renderovat jen při změně mouse_pos nebo stavu
-    #         # Ale pro teď je ponecháme pro funkčnost.
-    #         if self.konec_text_rect.collidepoint(mouse_pos):
-    #             self.barva_pod_text_nabidky = self.white
-    #             self.barva_textu_nabidky = settings.BARVA_HOVER
-    #             if pygame.mouse.get_pressed()[0]:
-    #                 self.lets_continue = False
-    #         else:
-    #             self.barva_pod_text_nabidky = settings.SCREEN_COLOR
-    #             self.barva_textu_nabidky = self.barva_textu
-    #         self.konec_text = self.font_robot_big_1.render("KONEC HRY", True, self.barva_pod_text_nabidky)
-    #         self.konec_text_rect = self.konec_text.get_rect(
-    #             center=(settings.SCREEN_WIDTH - 400, settings.SCREEN_HEIGHT // 2))
-    #         self.konec_text0 = self.font_robot_big.render("KONEC HRY", True, self.barva_textu_nabidky)
-    #         self.konec_text0_rect = self.konec_text0.get_rect(
-    #             center=(settings.SCREEN_WIDTH - 400, settings.SCREEN_HEIGHT // 2))
 
     @staticmethod
     def get_relative_positions(group, current_width, current_height):
@@ -359,10 +389,6 @@ class Game:
         self.apply_relative_positions(sudy_relative_positions, settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT) # Použito pro sudy
 
         # Aktualizujte pozice textů závislých na rozměrech obrazovky
-        # self.pause_text0_rect.center = (settings.SCREEN_WIDTH // 2, settings.SCREEN_HEIGHT // 2)
-        # self.pause_text_rect.center = ((settings.SCREEN_WIDTH // 2) + 13, (settings.SCREEN_HEIGHT // 2) + 7)
-        # self.konec_text_rect.center = (settings.SCREEN_WIDTH - 400, (settings.SCREEN_HEIGHT // 2))
-        # self.konec_text0_rect.center = (settings.SCREEN_WIDTH - 400, settings.SCREEN_HEIGHT // 2)
         self.nadpis_text_rect.center = (settings.SCREEN_WIDTH // 2, settings.VYSKA_HORNIHO_PANELU // 2)
 
     def kresleni(self):
@@ -373,10 +399,6 @@ class Game:
         self.pavouci_group.draw(self.screen) # Používáme self.screen přímo
         self.hrac_group.draw(self.screen) # Používáme self.screen přímo
         self.kresleni_horniho_panelu(self.score, self.zivoty, self.rychlost)
-        # if self.game_paused:
-        #     self.screen.blit(self.pause_text0, self.pause_text0_rect)
-        #     self.screen.blit(self.pause_text, self.pause_text_rect)
-
         pygame.display.update()
 
     def update(self):
