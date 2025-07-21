@@ -3,18 +3,36 @@ import settings
 from button import Button  # Předpokládám, že máš vlastní třídu Button
 
 class PauseMenu:
-    def __init__(self, screen):
+    def __init__(self, screen, screen_width, screen_height):
         self.screen = screen
+        self.screen_width = screen_width
+        self.screen_height = screen_height
         self.paused = False
         self.quit_requested = False
         self.restart_requested = False
+        button_width = 200
+        button_height = 60
+        center_x = self.screen_width // 2
+        center_y = self.screen_height // 2
 
         # Tlačítka s akcemi
         self.buttons = [
-            Button("Pokračovat", settings.SCREEN_WIDTH // 2, 200, 200, 60, self.resume_game),
-            Button("Restart", 300, 280, 200, 60, self.restart_game),
-            Button("Ukončit", 300, 360, 200, 60, self.quit_game),
+            Button("Pokračovat", center_x, center_y, button_width, button_height, self.resume_game),
+            Button("Restart", center_x, center_y + 80, button_width, button_height, self.restart_game),
+            Button("Ukončit", center_x, center_y + 160, button_width, button_height, self.quit_game),
         ]
+
+    def update_screen_size(self, width, height):
+        self.screen_width = width
+        self.screen_height = height
+        center_x = self.screen_width // 2
+
+        button_width = 200
+
+        # Aktualizuj pozici tlačítek
+        self.buttons[0].rect.centerx = center_x
+        self.buttons[1].rect.centerx = center_x
+        self.buttons[2].rect.centerx = center_x
 
     def resume_game(self):
         self.paused = False
