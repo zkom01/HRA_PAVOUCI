@@ -17,9 +17,9 @@ class PauseMenu:
 
         # Tlačítka s akcemi
         self.buttons = [
-            Button("Pokračovat", center_x, center_y, button_width, button_height, self.resume_game),
-            Button("Restart", center_x, center_y + 80, button_width, button_height, self.restart_game),
-            Button("Ukončit", center_x, center_y + 160, button_width, button_height, self.quit_game),
+            Button("Pokračovat", center_x, center_y + 80, button_width, button_height, self.resume_game),
+            Button("Restart", center_x, center_y + 160, button_width, button_height, self.restart_game),
+            Button("Ukončit", center_x, center_y + 240, button_width, button_height, self.quit_game),
         ]
 
     def update_screen_size(self, width, height):
@@ -37,13 +37,12 @@ class PauseMenu:
     def resume_game(self):
         self.paused = False
 
-    def quit_game(self):
-        self.quit_requested = True
+    def restart_game(self):
         self.paused = False
 
-    def restart_game(self):
-        self.restart_requested = True
+    def quit_game(self):
         self.paused = False
+        self.quit_requested = True
 
     def show_menu(self):
         self.paused = True
@@ -53,7 +52,7 @@ class PauseMenu:
         clock = pygame.time.Clock()
 
         while self.paused:
-            self.screen.fill((30, 30, 30))  # Pozadí menu
+            # self.screen.fill((30, 30, 30))  # Pozadí menu
 
             for button in self.buttons:
                 button.draw(self.screen)
