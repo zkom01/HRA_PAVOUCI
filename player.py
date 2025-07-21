@@ -15,6 +15,7 @@ class Player(pygame.sprite.Sprite):
         self.pozice_hlavy = []
         self.rychlostni_koeficient = settings.RYCHLOST_1
         self.speed = rychlost
+        self.direction = None
 
         self.imunita_aktivni = False
         self.imunita_start_cas = 0

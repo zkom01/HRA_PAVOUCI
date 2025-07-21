@@ -123,20 +123,13 @@ class Pavouk(pygame.sprite.Sprite):
             self.speed = self.original_speed * self.rychlostni_koeficient
             self.is_angry = False
 
-    def update(self, player_rect):
+    def update(self, player_rect, player_direction):
         """
         Aktualizuje stav pavouka v každém snímku.
         Volá metody pro pohyb a kontrolu přiblížení k hráči.
+        :param player_direction:
         :param player_rect: Obdélník (rect) hráče, nutný pro pohyb a přiblížení.
         """
-        # Pohybuje pavoukem a kontroluje přiblížení k hráči
-        # Používám 'player.direction' jako jednoduchou podmínku pro začátek pohybu pavouků
-        # až po prvním pohybu hráče.
-        # POZNÁMKA: player.direction musíte získat z instance hráče, např. předáním jako parametr update metody Pavouka.
-        # V Game třídě se to děje takto: self.pavouci_group.update(player.rect)
-        # ale kontrola player.direction se musí přidat, pokud je potřeba.
-        # Pro zjednodušení jsem odstranil přímou závislost na player.direction v Pavouk.update,
-        # pokud chcete, aby se pavouci začali pohybovat až po prvním pohybu hráče,
-        # musíte tuto logiku implementovat v Game.update nebo předat player.direction do Pavouka.
-        self.move(player_rect)
-        self.priblizeni(player_rect)
+        if player_direction:
+            self.move(player_rect)
+            self.priblizeni(player_rect)

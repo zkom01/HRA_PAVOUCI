@@ -387,6 +387,6 @@ class Game:
             if not self.game_paused:
                 self.update()
                 self.hrac_group.update()
-                self.pavouci_group.update(hrac_obj.rect)  # Pavouci potřebují rect hráče
+                self.pavouci_group.update(hrac_obj.rect, hrac_obj.direction)  # Pavouci potřebují rect hráče
             self.kresleni()
             pygame.time.Clock().tick(settings.FPS)  # Používáme Clock ze settings.py
