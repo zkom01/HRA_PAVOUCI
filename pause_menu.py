@@ -3,7 +3,6 @@ import sys
 import settings
 from button import Button
 
-
 class PauseMenu:
 
     def __init__(self, screen):

@@ -1,6 +1,8 @@
 import pygame
 import settings  # Importujeme modul settings
 from barrel import Sud  # Importujeme třídu Sud
+from pause_menu import PauseMenu
+from button import Button
 
 
 class Game:
