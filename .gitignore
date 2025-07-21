@@ -1,0 +1,39 @@
+# --- Python cache ---
+__pycache__/
+*.py[cod]
+*.pyo
+
+# --- Virtual environment ---
+.venv/
+env/
+venv/
+
+# --- Editor/IDE files ---
+.vscode/
+.idea/
+*.swp
+
+# --- Logs and profiling ---
+*.log
+*.tmp
+*.prof
+*.pstats
+
+# --- OS-specific ---
+.DS_Store
+Thumbs.db
+
+# --- Compiled binaries ---
+*.so
+*.dll
+*.exe
+
+# --- Python test cache ---
+.pytest_cache/
+.tox/
+coverage.*
+
+# --- Project-specific ---
+# např. exporty, dočasné soubory
+/export/
+profil.txt

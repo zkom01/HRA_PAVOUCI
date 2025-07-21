@@ -6,10 +6,6 @@ from spider import Pavouk
 from food import Jidlo
 from barrel import Sud
 
-## importy pro ladění !!!!
-# import cProfile
-# import pstats
-
 # --- Inicializace hry ---
 pygame.init()
 
@@ -45,15 +41,23 @@ hra = Game(player_group, jidlo_group, pavouk_group, sud_group, pavouk_max, pavou
 # --- Spuštění hry ---
 hra.fullscreen()
 
-# # Použití cProfile pro profilování
-# profiler = cProfile.Profile()
-# profiler.enable()
+# importy pro ladění !!!!
+import cProfile
+import pstats
+
+# Použití cProfile pro profilování
+profiler = cProfile.Profile()
+profiler.enable()
 
 hra.run()
 
-# profiler.disable()
-# stats = pstats.Stats(profiler).sort_stats('cumtime') # 'cumtime' je dobrý pro zjištění celkového času stráveného ve funkci a jejích podfunkcích
-# stats.print_stats(20) # Vypíše top 20 nejpomalejších funkcí
+profiler.disable()
+stats = pstats.Stats(profiler).sort_stats('cumtime') # 'cumtime' je dobrý pro zjištění celkového času stráveného ve funkci a jejích podfunkcích
+stats.print_stats(20) # Vypíše top 20 nejpomalejších funkcí
+
+with open("profil.txt", "w") as f:
+    stats = pstats.Stats(profiler, stream=f).sort_stats('cumtime')
+    stats.print_stats(20)
 
 # --- Ukončení hry ---
 pygame.quit()
