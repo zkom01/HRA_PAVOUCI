@@ -42,18 +42,26 @@ hra = Game(player_group, jidlo_group, pavouk_group, sud_group, pavouk_max, pavou
 
 # --- Spuštění hry ---
 hra.fullscreen()
-## importy pro ladění !!!!
-# import cProfile
-# import pstats
-# # Použití cProfile pro profilování
-# profiler = cProfile.Profile()
-# profiler.enable()
+
+# --- Profilování ---
+import cProfile
+import pstats
+
+profiler = cProfile.Profile()
+profiler.enable()
 
 hra.run()
 
-# profiler.disable()
-# stats = pstats.Stats(profiler).sort_stats('cumtime') # 'cumtime' je dobrý pro zjištění celkového času stráveného ve funkci a jejích podfunkcích
-# stats.print_stats(20) # Vypíše top 20 nejpomalejších funkcí
+profiler.disable()
+
+# Výpis do konzole
+stats = pstats.Stats(profiler).sort_stats('cumtime')
+stats.print_stats(20) # Zobrazí top 20 nejpomalejších funkcí v konzoli
+
+# Výpis do souboru
+with open("profil_log.txt", "w") as f:
+    stats = pstats.Stats(profiler, stream=f).sort_stats('cumtime')
+    stats.print_stats(20)  # Zapíše do souboru
 
 # --- Ukončení hry ---
 pygame.quit()
