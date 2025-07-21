@@ -1,0 +1,28 @@
+         344197 function calls in 38.524 seconds
+
+   Ordered by: cumulative time
+   List reduced from 83 to 20 due to restriction <20>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.032    0.032   38.524   38.524 C:\Dropbox\PROJEKT\HRA_PAVOUCI\game.py:382(run)
+     1900   31.589    0.017   31.589    0.017 {method 'tick' of 'pygame.time.Clock' objects}
+     1900    0.024    0.000    6.571    0.003 C:\Dropbox\PROJEKT\HRA_PAVOUCI\game.py:362(kresleni)
+    11620    3.381    0.000    3.381    0.000 {method 'blit' of 'pygame.surface.Surface' objects}
+     1900    0.005    0.000    3.203    0.002 C:\Dropbox\PROJEKT\HRA_PAVOUCI\game.py:99(kresleni_pozadi)
+     1900    1.742    0.001    1.742    0.001 {built-in method pygame.display.update}
+     7600    0.023    0.000    0.684    0.000 C:\Dropbox\PROJEKT\HRA_PAVOUCI\.venv\Lib\site-packages\pygame\sprite.py:558(draw)
+     7600    0.635    0.000    0.645    0.000 {method 'blits' of 'pygame.surface.Surface' objects}
+     3800    0.554    0.000    0.554    0.000 {method 'fill' of 'pygame.surface.Surface' objects}
+     1900    0.028    0.000    0.396    0.000 C:\Dropbox\PROJEKT\HRA_PAVOUCI\game.py:104(kresleni_horniho_panelu)
+     1900    0.019    0.000    0.154    0.000 C:\Dropbox\PROJEKT\HRA_PAVOUCI\game.py:269(stisknute_klavesy)
+     7710    0.126    0.000    0.126    0.000 {method 'render' of 'pygame.font.Font' objects}
+     1900    0.125    0.000    0.125    0.000 {built-in method pygame.event.get}
+     3690    0.010    0.000    0.098    0.000 C:\Dropbox\PROJEKT\HRA_PAVOUCI\.venv\Lib\site-packages\pygame\sprite.py:546(update)
+     1845    0.007    0.000    0.075    0.000 C:\Dropbox\PROJEKT\HRA_PAVOUCI\game.py:376(update)
+     5933    0.005    0.000    0.046    0.000 C:\Dropbox\PROJEKT\HRA_PAVOUCI\spider.py:126(update)
+     1845    0.013    0.000    0.045    0.000 C:\Dropbox\PROJEKT\HRA_PAVOUCI\game.py:227(kontrola_kolize)
+     1845    0.003    0.000    0.041    0.000 C:\Dropbox\PROJEKT\HRA_PAVOUCI\player.py:107(update)
+     5933    0.012    0.000    0.032    0.000 C:\Dropbox\PROJEKT\HRA_PAVOUCI\spider.py:59(move)
+    16716    0.009    0.000    0.019    0.000 C:\Dropbox\PROJEKT\HRA_PAVOUCI\.venv\Lib\site-packages\pygame\sprite.py:440(__iter__)
+
+
