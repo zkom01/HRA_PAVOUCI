@@ -2,13 +2,14 @@ import pygame
 import settings  # Importujeme modul settings
 from barrel import Sud  # Importujeme třídu Sud
 from pause_menu import PauseMenu
-from button import Button
+
 
 
 class Game:
     def __init__(self, hrac_group, jidla_group, pavouci_group, sudy_group, pavouk_max_obj, pavouk_tery_obj,
                  pavouk_niky_obj, pavouk_eda_obj, pavouk_hana_obj, obrazovka):
         self.screen = obrazovka
+        self.pause_menu = PauseMenu(obrazovka)
 
         self.hrac_group = hrac_group
         self.jidla_group = jidla_group
@@ -262,13 +263,22 @@ class Game:
                 pavouk_obj.rect.y = -500
 
     def pause(self):
-        self.game_paused = not self.game_paused
-        if self.game_paused:
+        if not self.game_paused:
+            # Pauzujeme a spouštíme menu
             pygame.mixer.music.pause()
             pygame.mixer.Sound.stop(self.angry_sound)
-
+            self.game_paused = True
+            result = self.pause_menu.show_menu()
+            self.game_paused = False  # Hru po návratu vždy rozjedeme
+            if result == "quit":
+                self.lets_continue = False
+            elif result == "restart":
+                # restart hry
+                pass
         else:
+            # Pokud už je pauza aktivní, tak ji vypneme (můžeš upravit podle potřeby)
             pygame.mixer.music.unpause()
+            self.game_paused = False
 
     def stisknute_klavesy(self):
         player_obj = list(self.hrac_group)[0]  # Předpokládáme, že ve skupině je jen jeden hráč
