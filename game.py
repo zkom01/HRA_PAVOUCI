@@ -79,20 +79,20 @@ class Game:
                                                           (settings.SCREEN_WIDTH,
                                                            settings.SCREEN_HEIGHT - settings.VYSKA_HORNIHO_PANELU))
 
-        # Předpřipravíme text "PAUZA" pro efektivnější vykreslování
-        self.pause_text0 = self.font_robot_big_1.render("PAUZA", True, self.main_color)
-        self.pause_text = self.font_robot_big.render("PAUZA", True, self.barva_textu)
-        self.pause_text0_rect = self.pause_text0.get_rect(center=(settings.SCREEN_WIDTH // 2, settings.SCREEN_HEIGHT // 2))
-        self.pause_text_rect = self.pause_text.get_rect(center=((settings.SCREEN_WIDTH // 2) + 13, (settings.SCREEN_HEIGHT // 2) + 7))
+        # # Předpřipravíme text "PAUZA" pro efektivnější vykreslování
+        # self.pause_text0 = self.font_robot_big_1.render("PAUZA", True, self.main_color)
+        # self.pause_text = self.font_robot_big.render("PAUZA", True, self.barva_textu)
+        # self.pause_text0_rect = self.pause_text0.get_rect(center=(settings.SCREEN_WIDTH // 2, settings.SCREEN_HEIGHT // 2))
+        # self.pause_text_rect = self.pause_text.get_rect(center=((settings.SCREEN_WIDTH // 2) + 13, (settings.SCREEN_HEIGHT // 2) + 7))
 
 
-        # Nabídka při PAUSE
-        self.konec_text = self.font_robot_big_1.render("KONEC HRY", True, self.barva_pod_text_nabidky)
-        self.konec_text_rect = self.konec_text.get_rect(
-            center=(settings.SCREEN_WIDTH - 400, (settings.SCREEN_HEIGHT // 2)))
-        self.konec_text0 = self.font_robot_big.render("KONEC HRY", True, self.barva_textu)
-        self.konec_text0_rect = self.konec_text0.get_rect(
-            center=(settings.SCREEN_WIDTH - 400, settings.SCREEN_HEIGHT // 2))
+        # # Nabídka při PAUSE
+        # self.konec_text = self.font_robot_big_1.render("KONEC HRY", True, self.barva_pod_text_nabidky)
+        # self.konec_text_rect = self.konec_text.get_rect(
+        #     center=(settings.SCREEN_WIDTH - 400, (settings.SCREEN_HEIGHT // 2)))
+        # self.konec_text0 = self.font_robot_big.render("KONEC HRY", True, self.barva_textu)
+        # self.konec_text0_rect = self.konec_text0.get_rect(
+        #     center=(settings.SCREEN_WIDTH - 400, settings.SCREEN_HEIGHT // 2))
 
         # Statické texty pro horní panel (renderujeme jen jednou)
         self.nadpis_text = self.font_robot.render("PAVOUCI_KOMARKOVI", True, self.barva_textu)
@@ -130,9 +130,9 @@ class Game:
         self.screen.blit(self.nadpis_text, self.nadpis_text_rect) # Používáme předrenderovaný nadpis
         self.screen.blit(score_text, score_text_rect)
 
-        if self.game_paused:
-            self.screen.blit(self.konec_text, self.konec_text_rect)
-            self.screen.blit(self.konec_text0, self.konec_text0_rect)
+        # if self.game_paused:
+        #     self.screen.blit(self.konec_text, self.konec_text_rect)
+        #     self.screen.blit(self.konec_text0, self.konec_text0_rect)
 
     def update_stav_is_angry(self):
         any_spider_angry = False
@@ -281,26 +281,26 @@ class Game:
                 if not self.game_paused:
                     player_obj.stisknute_klavesy_player(event)
 
-    def pohyb_mysi(self):
-        if self.game_paused:
-            mouse_pos = pygame.mouse.get_pos()
-            # Použijte self.screen pro zjištění rozměrů, nebo settings.SCREEN_WIDTH/HEIGHT
-            # Optimalizace: Tyto texty by se měly renderovat jen při změně mouse_pos nebo stavu
-            # Ale pro teď je ponecháme pro funkčnost.
-            if self.konec_text_rect.collidepoint(mouse_pos):
-                self.barva_pod_text_nabidky = self.white
-                self.barva_textu_nabidky = settings.BARVA_HOVER
-                if pygame.mouse.get_pressed()[0]:
-                    self.lets_continue = False
-            else:
-                self.barva_pod_text_nabidky = settings.SCREEN_COLOR
-                self.barva_textu_nabidky = self.barva_textu
-            self.konec_text = self.font_robot_big_1.render("KONEC HRY", True, self.barva_pod_text_nabidky)
-            self.konec_text_rect = self.konec_text.get_rect(
-                center=(settings.SCREEN_WIDTH - 400, settings.SCREEN_HEIGHT // 2))
-            self.konec_text0 = self.font_robot_big.render("KONEC HRY", True, self.barva_textu_nabidky)
-            self.konec_text0_rect = self.konec_text0.get_rect(
-                center=(settings.SCREEN_WIDTH - 400, settings.SCREEN_HEIGHT // 2))
+    # def pohyb_mysi(self):
+    #     if self.game_paused:
+    #         mouse_pos = pygame.mouse.get_pos()
+    #         # Použijte self.screen pro zjištění rozměrů, nebo settings.SCREEN_WIDTH/HEIGHT
+    #         # Optimalizace: Tyto texty by se měly renderovat jen při změně mouse_pos nebo stavu
+    #         # Ale pro teď je ponecháme pro funkčnost.
+    #         if self.konec_text_rect.collidepoint(mouse_pos):
+    #             self.barva_pod_text_nabidky = self.white
+    #             self.barva_textu_nabidky = settings.BARVA_HOVER
+    #             if pygame.mouse.get_pressed()[0]:
+    #                 self.lets_continue = False
+    #         else:
+    #             self.barva_pod_text_nabidky = settings.SCREEN_COLOR
+    #             self.barva_textu_nabidky = self.barva_textu
+    #         self.konec_text = self.font_robot_big_1.render("KONEC HRY", True, self.barva_pod_text_nabidky)
+    #         self.konec_text_rect = self.konec_text.get_rect(
+    #             center=(settings.SCREEN_WIDTH - 400, settings.SCREEN_HEIGHT // 2))
+    #         self.konec_text0 = self.font_robot_big.render("KONEC HRY", True, self.barva_textu_nabidky)
+    #         self.konec_text0_rect = self.konec_text0.get_rect(
+    #             center=(settings.SCREEN_WIDTH - 400, settings.SCREEN_HEIGHT // 2))
 
     @staticmethod
     def get_relative_positions(group, current_width, current_height):
@@ -355,10 +355,10 @@ class Game:
         self.apply_relative_positions(sudy_relative_positions, settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT) # Použito pro sudy
 
         # Aktualizujte pozice textů závislých na rozměrech obrazovky
-        self.pause_text0_rect.center = (settings.SCREEN_WIDTH // 2, settings.SCREEN_HEIGHT // 2)
-        self.pause_text_rect.center = ((settings.SCREEN_WIDTH // 2) + 13, (settings.SCREEN_HEIGHT // 2) + 7)
-        self.konec_text_rect.center = (settings.SCREEN_WIDTH - 400, (settings.SCREEN_HEIGHT // 2))
-        self.konec_text0_rect.center = (settings.SCREEN_WIDTH - 400, settings.SCREEN_HEIGHT // 2)
+        # self.pause_text0_rect.center = (settings.SCREEN_WIDTH // 2, settings.SCREEN_HEIGHT // 2)
+        # self.pause_text_rect.center = ((settings.SCREEN_WIDTH // 2) + 13, (settings.SCREEN_HEIGHT // 2) + 7)
+        # self.konec_text_rect.center = (settings.SCREEN_WIDTH - 400, (settings.SCREEN_HEIGHT // 2))
+        # self.konec_text0_rect.center = (settings.SCREEN_WIDTH - 400, settings.SCREEN_HEIGHT // 2)
         self.nadpis_text_rect.center = (settings.SCREEN_WIDTH // 2, settings.VYSKA_HORNIHO_PANELU // 2)
 
     def kresleni(self):
@@ -369,10 +369,9 @@ class Game:
         self.pavouci_group.draw(self.screen) # Používáme self.screen přímo
         self.hrac_group.draw(self.screen) # Používáme self.screen přímo
         self.kresleni_horniho_panelu(self.score, self.zivoty, self.rychlost)
-        if self.game_paused:
-            self.screen.blit(self.pause_text0, self.pause_text0_rect)
-            self.screen.blit(self.pause_text, self.pause_text_rect)
-
+        # if self.game_paused:
+        #     self.screen.blit(self.pause_text0, self.pause_text0_rect)
+        #     self.screen.blit(self.pause_text, self.pause_text_rect)
         pygame.display.update()
 
     def update(self):
@@ -385,10 +384,10 @@ class Game:
         hrac_obj = list(self.hrac_group)[0]  # Předpokládáme, že ve skupině je jen jeden hráč
         while self.lets_continue:
             self.stisknute_klavesy()
-            self.pohyb_mysi()
+            # self.pohyb_mysi()
             if not self.game_paused:
                 self.update()
                 self.hrac_group.update()
-                self.pavouci_group.update(hrac_obj.rect, hrac_obj.direction)  # Pavouci potřebují rect hráče
+                self.pavouci_group.update(hrac_obj.rect, hrac_obj.direction)  # Pavouci potřebují rect hráče a direction
             self.kresleni()
             pygame.time.Clock().tick(settings.FPS)  # Používáme Clock ze settings.py
