@@ -29,12 +29,12 @@ class Pavouk(pygame.sprite.Sprite):
         self.image_angry = pygame.image.load(f"media/img/{image_angry_name}").convert_alpha()
 
         self.original_speed = rychlost  # Původní (klidná) rychlost pavouka
-        self.angry_speed = rychlost * 1.2  # Zvýšená rychlost, když je pavouk "naštvaný"
+        self.angry_speed = rychlost * settings.RYCHLOST_1  # Zvýšená rychlost, když je pavouk "naštvaný"
         self.speed = self.original_speed  # Aktuální rychlost pavouka
-        self.rychlostni_koeficient = 1.0
+        self.rychlostni_koeficient = settings.RYCHLOST_1
 
         self.direct_x, self.direct_y = self.novy_smer()  # Nastaví počáteční náhodný směr pohybu
-        self.pavouk_postava_vzdalenost = 300  # Vzdálenost (v pixelech), pod kterou se pavouk "naštve"
+        self.pavouk_postava_vzdalenost = settings.ANGRY_VZDALENOST  # Vzdálenost (v pixelech), pod kterou se pavouk "naštve"
         self.change_dir_timer = 0  # Časovač pro náhodnou změnu směru pavouka v klidovém stavu
         self.is_angry = False  # Logická proměnná, zda je pavouk "naštvaný" a pronásleduje hráče
 
@@ -127,7 +127,7 @@ class Pavouk(pygame.sprite.Sprite):
         """
         Aktualizuje stav pavouka v každém snímku.
         Volá metody pro pohyb a kontrolu přiblížení k hráči.
-        :param player_direction:
+        :param player_direction: Zajistí že se pavouci hýbou jen když se hýbe hráč
         :param player_rect: Obdélník (rect) hráče, nutný pro pohyb a přiblížení.
         """
         if player_direction:

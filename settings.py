@@ -14,6 +14,7 @@ RYCHLOST_3 = 1.4
 RYCHLOST_MAX = 1.5
 MEZERA_MEZI_SUDY = 5
 DOBA_IMUNITY = 2000 # 2000 = 2s
+ANGRY_VZDALENOST = 400
 
 # Získání rozměrů primárního monitoru
 monitors = get_monitors()

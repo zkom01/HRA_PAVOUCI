@@ -265,6 +265,8 @@ class Game:
         self.game_paused = not self.game_paused
         if self.game_paused:
             pygame.mixer.music.pause()
+            pygame.mixer.Sound.stop(self.angry_sound)
+
         else:
             pygame.mixer.music.unpause()
 
