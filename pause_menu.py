@@ -26,9 +26,7 @@ class PauseMenu:
         self.screen_width = width
         self.screen_height = height
         center_x = self.screen_width // 2
-
-        button_width = 200
-
+# použij for pro aktualizaci buttons aby jsi mohl přidávat tlačítka!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         # Aktualizuj pozici tlačítek
         self.buttons[0].rect.centerx = center_x
         self.buttons[1].rect.centerx = center_x
