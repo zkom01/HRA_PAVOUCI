@@ -308,7 +308,7 @@ class Game:
         if self.is_fullscreen:
             self.screen = pygame.display.set_mode((settings.MONITOR_WIDTH, settings.MONITOR_HEIGHT), pygame.FULLSCREEN)
             settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT = self.screen.get_size()  # Aktualizujeme globální nastavení
-            self.pause_menu.update_screen_size(settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
+
 
         else:
             self.screen = pygame.display.set_mode((settings.ORIGINAL_SCREEN_WIDTH, settings.ORIGINAL_SCREEN_HEIGHT))
@@ -328,6 +328,7 @@ class Game:
 
         # Aktualizujte pozice textů závislých na rozměrech obrazovky
         self.nadpis_text_rect.center = (settings.SCREEN_WIDTH // 2, settings.VYSKA_HORNIHO_PANELU // 2)
+        self.pause_menu.update_screen_size(settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
 
     def kresleni(self):
         self.screen.fill(self.main_color) # Používáme self.screen přímo
