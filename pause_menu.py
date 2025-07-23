@@ -6,7 +6,6 @@ Nabízí možnosti pro pokračování hry, restartování nebo ukončení.
 import pygame
 import settings
 from button import Button  # Předpokládám, že máš vlastní třídu Button
-# from game import Game
 
 class PauseMenu:
     """
@@ -42,19 +41,18 @@ class PauseMenu:
         self.game_instance = game_instance
 
         # Nastavení rozměrů a pozice tlačítek
-        button_width = 200
+        button_width = 400
         button_height = 60
         # Počáteční Y pozice prvního tlačítka, od níž se odvozují ostatní
-        start_y = (self.screen_height // 2) - 80
-        print(start_y)
+        self.start_y = (self.screen_height // 2) - 80
         # Mezera mezi tlačítky
         button_spacing = 80 
 
         # Vytvoření tlačítek menu s callback funkcemi
         self.buttons: list[Button] = [
-            Button("Pokračovat", self.screen_width // 2, start_y, button_width, button_height, self.resume_game),
-            Button("Restart", self.screen_width // 2, start_y + button_spacing, button_width, button_height, self.restart_game),
-            Button("Ukončit", self.screen_width // 2, start_y + (2 * button_spacing), button_width, button_height, self.quit_game),
+            Button("Pokračovat", self.screen_width // 2, self.start_y, button_width, button_height, self.resume_game),
+            Button("Restart", self.screen_width // 2, self.start_y + button_spacing, button_width, button_height, self.restart_game),
+            Button("Ukončit", self.screen_width // 2, self.start_y + (2 * button_spacing), button_width, button_height, self.quit_game),
         ]
 
     def update_screen_size(self, width: int, height: int):
@@ -74,14 +72,14 @@ class PauseMenu:
         
         # Aktualizace Y pozice pro centrování tlačítek po změně velikosti okna.
         # Výchozí Y pozice pro první tlačítko.
-        start_y = (self.screen_height // 2) - 80
+        self.start_y = (self.screen_height // 2) - 80
         button_spacing = 80
 
         # Aktualizuj pozice tlačítek pomocí for cyklu
         # To je lepší pro rozšiřitelnost, pokud přidáš více tlačítek.
         for i, button in enumerate(self.buttons):
             button.rect.centerx = center_x
-            button.rect.centery = start_y + (i * button_spacing)
+            button.rect.centery = self.start_y + (i * button_spacing)
 
 
     def resume_game(self):
