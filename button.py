@@ -51,7 +51,7 @@ class Button:
         """
         Vykreslí tlačítko na danou Pygame surface.
 
-        Tato metoda kontroluje pozici myši, aby určila, zda je tlačítko najeto,
+        Tato metoda kontroluje pozici myši, aby určila, zda je na tlačítko najeto,
         a podle toho vybere barvu pozadí. Poté vykreslí zaoblený obdélník,
         okraj a vycentrovaný text.
 

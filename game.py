@@ -484,15 +484,13 @@ class Game:
             # Aktualizuje GLOBÁLNÍ nastavení rozměrů obrazovky.
             settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT = self.screen.get_size()
             # Aktualizuje menu pauzy o nové rozměry obrazovky.
-            self.pause_menu.update_screen_size(settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
+
         else:
             # Přepne zpět do okenního režimu na původní rozlišení.
             self.screen = pygame.display.set_mode((settings.ORIGINAL_SCREEN_WIDTH, settings.ORIGINAL_SCREEN_HEIGHT))
             # Aktualizuje GLOBÁLNÍ nastavení rozměrů obrazovky.
             settings.SCREEN_WIDTH = settings.ORIGINAL_SCREEN_WIDTH
             settings.SCREEN_HEIGHT = settings.ORIGINAL_SCREEN_HEIGHT
-            self.pause_menu.update_screen_size(settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
-
 
         # Zde se znovu škáluje pozadí, protože se změnilo rozlišení obrazovky.
         self.scaled_pozadi_image = pygame.transform.scale(
@@ -507,8 +505,9 @@ class Game:
         self.apply_relative_positions(sudy_relative_positions, settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
 
         # Aktualizujte pozice textů, které závisí na rozměrech obrazovky.
-        # Konkrétně nadpis na horním panelu.
+        # Konkrétně nadpis na horním panelu a pozice tlačítek
         self.nadpis_text_rect.center = (settings.SCREEN_WIDTH // 2, settings.VYSKA_HORNIHO_PANELU // 2)
+        self.pause_menu.update_screen_size(settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
 
     def kresleni(self):
         """

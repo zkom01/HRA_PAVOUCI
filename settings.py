@@ -34,7 +34,7 @@ DOBA_IMUNITY = 2000
 # Vzdálenost v pixelech, pod kterou se pavouk stane "naštvaným" a začne pronásledovat hráče.
 ANGRY_VZDALENOST = 400
 # Násobitel rychlosti pavouka, když je "naštvaný". (Přidáno pro lepší konfiguraci a oddělení od SPIDER_RYCHLOST)
-ANGRY_SPEED_MULTIPLIER = 1.5 # Příklad: 1.5x původní rychlost
+ANGRY_SPEED_MULTIPLIER = 1 # Příklad: 1.5x původní rychlost
 
 
 # --- Nastavení obrazovky ---
