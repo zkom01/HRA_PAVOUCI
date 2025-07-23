@@ -6,6 +6,7 @@ Nabízí možnosti pro pokračování hry, restartování nebo ukončení.
 import pygame
 import settings
 from button import Button  # Předpokládám, že máš vlastní třídu Button
+# from game import Game
 
 class PauseMenu:
     """
@@ -23,7 +24,7 @@ class PauseMenu:
         buttons (list[Button]): Seznam objektů Button, které tvoří menu.
     """
 
-    def __init__(self, screen: pygame.Surface, screen_width: int, screen_height: int):
+    def __init__(self, screen: pygame.Surface, screen_width: int, screen_height: int, game_instance):
         """
         Inicializuje novou instanci pauzovacího menu.
 
@@ -38,6 +39,7 @@ class PauseMenu:
         self.paused = False
         self.quit_requested = False
         self.restart_requested = False
+        self.game_instance = game_instance
 
         # Nastavení rozměrů a pozice tlačítek
         button_width = 200
@@ -140,6 +142,9 @@ class PauseMenu:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         self.paused = False  # Ukončí smyčku menu
+                    if event.key == pygame.K_F11:
+                        self.game_instance.fullscreen()  # Přepne režim celé obrazovky
+                        self.game_instance.kresleni()  # Tato metoda vykreslí pozadí a všechny herní prvky
                         # Není potřeba explicitně nastavit resume_game, protože 'else' vrátí "resume"
                         break  # Opustíme smyčku událostí, protože menu končí
                 

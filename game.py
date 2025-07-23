@@ -74,7 +74,7 @@ class Game:
         """
         self.screen = obrazovka
         # Inicializace menu pro pauzu, předáváme aktuální obrazovku a její rozměry.
-        self.pause_menu = PauseMenu(obrazovka, settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
+        self.pause_menu = PauseMenu(obrazovka, settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT, self)
 
         # Skupiny spritů pro snadnou správu herních objektů.
         self.hrac_group = hrac_group
@@ -412,7 +412,6 @@ class Game:
         Zpracovává události stisku kláves a ukončení okna.
         Řídí pauzu hry, přepínání fullscreenu a pohyb hráče.
         """
-        player_obj = list(self.hrac_group)[0]  # Předpokládáme, že ve skupině je jen jeden hráč
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.lets_continue = False  # Nastaví flag pro ukončení hry
@@ -423,7 +422,7 @@ class Game:
                     self.fullscreen()  # Přepne režim celé obrazovky
                 # Pokud není hra pozastavena, zpracuj vstup pro hráče.
                 if not self.game_paused:
-                    player_obj.stisknute_klavesy_player(event)
+                    self.hrac_obj.stisknute_klavesy_player(event)
 
     @staticmethod
     def get_relative_positions(group, current_width, current_height):
