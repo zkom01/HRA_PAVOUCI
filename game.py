@@ -81,6 +81,7 @@ class Game:
         self.jidla_group = jidla_group
         self.pavouci_group = pavouci_group
         self.sudy_group = sudy_group
+        self.hrac_obj = list(self.hrac_group)[0]  # Získejte referenci na hráče
 
         # Herní stavové proměnné.
         self.zivoty = settings.ZIVOTY
@@ -236,15 +237,15 @@ class Game:
         Aktualizuje rychlost hráče a pavouků na základě počtu získaných sudů.
         Přehrává zvukový efekt při každé změně rychlosti.
         """
-        hrac_obj = list(self.hrac_group)[0]  # Předpokládáme, že ve skupině je jen jeden hráč
-        velikost = len(hrac_obj.had_segmenty)  # Počet sudů určuje úroveň rychlosti
+
+        velikost = len(self.hrac_obj.had_segmenty)  # Počet sudů určuje úroveň rychlosti
 
         # Podmínky pro zvýšení rychlosti a přehrání zvuku (pouze jednou pro každou úroveň).
         if velikost >= 8 and not self.rychlost_played_8:
             self.kanal3.play(self.rychlost_sound)
             self.rychlost_played_8 = True
-            hrac_obj.rychlostni_koeficient = settings.RYCHLOST_MAX
-            hrac_obj.mezera_mezi_sudy = 4
+            self.hrac_obj.rychlostni_koeficient = settings.RYCHLOST_MAX
+            self.hrac_obj.mezera_mezi_sudy = 4
             self.rychlost = "MAX"  # Text pro zobrazení
 
         if velikost >= 5 and not self.rychlost_played_5:
@@ -253,74 +254,73 @@ class Game:
             # Zde je pořadí důležité pro správnou aktivaci rychlostí.
             self.kanal3.play(self.rychlost_sound)
             self.rychlost_played_5 = True
-            hrac_obj.rychlostni_koeficient = settings.RYCHLOST_3
-            hrac_obj.mezera_mezi_sudy = 4
+            self.hrac_obj.rychlostni_koeficient = settings.RYCHLOST_3
+            self.hrac_obj.mezera_mezi_sudy = 4
             self.rychlost = "3"
 
         if velikost >= 2 and not self.rychlost_played_2:
             self.kanal3.play(self.rychlost_sound)
             self.rychlost_played_2 = True
-            hrac_obj.rychlostni_koeficient = settings.RYCHLOST_2
-            hrac_obj.mezera_mezi_sudy = 5
+            self.hrac_obj.rychlostni_koeficient = settings.RYCHLOST_2
+            self.hrac_obj.mezera_mezi_sudy = 5
             self.rychlost = "2"
 
         # Všichni pavouci dostávají stejný rychlostní koeficient jako hráč.
         for pavouk in self.pavouci_group:
-            pavouk.rychlostni_koeficient = hrac_obj.rychlostni_koeficient
+            pavouk.rychlostni_koeficient = self.hrac_obj.rychlostni_koeficient
 
     def prida_odebere_pavouka(self):
         """
         Dynamicky přidává nové pavouky do hry na základě počtu získaných sudů hráčem.
         Při přidání pavouka se hráči aktivuje dočasná imunita.
         """
-        hrac_obj = list(self.hrac_group)[0]  # Předpokládáme, že ve skupině je jen jeden hráč
 
         # Podmínka pro Max pavouka.
         # Poznámka: `len(hrac_obj.had_segmenty) >= 0` je vždy True, takže pavouk Max se přidá vždy.
-        if len(hrac_obj.had_segmenty) >= 0:
+        if len(self.hrac_obj.had_segmenty) >= 0:
             if not self.max_added:
                 self.pavouci_group.add(self.pavouk_max)
                 # Nastaví pavoukovi stejnou rychlost jako má hráč.
-                self.pavouk_max.rychlostni_koeficient = hrac_obj.rychlostni_koeficient
-                hrac_obj.aktivovat_imunitu()  # Hráč získá imunitu po přidání pavouka
+                self.pavouk_max.rychlostni_koeficient = self.hrac_obj.rychlostni_koeficient
+                self.hrac_obj.aktivovat_imunitu()  # Hráč získá imunitu po přidání pavouka
                 self.max_added = True
 
         # Podmínka pro Tery pavouka.
-        if len(hrac_obj.had_segmenty) >= 2:
+        if len(self.hrac_obj.had_segmenty) >= 2:
             if not self.tery_added:
                 self.pavouci_group.add(self.pavouk_tery)
-                self.pavouk_tery.rychlostni_koeficient = hrac_obj.rychlostni_koeficient
-                hrac_obj.aktivovat_imunitu()
+                self.pavouk_tery.rychlostni_koeficient = self.hrac_obj.rychlostni_koeficient
+                self.hrac_obj.aktivovat_imunitu()
                 self.tery_added = True
 
         # Podmínka pro Niky pavouka.
-        if len(hrac_obj.had_segmenty) >= 3:
+        if len(self.hrac_obj.had_segmenty) >= 3:
             if not self.niky_added:
                 self.pavouci_group.add(self.pavouk_niky)
-                self.pavouk_niky.rychlostni_koeficient = hrac_obj.rychlostni_koeficient
-                hrac_obj.aktivovat_imunitu()
+                self.pavouk_niky.rychlostni_koeficient = self.hrac_obj.rychlostni_koeficient
+                self.hrac_obj.aktivovat_imunitu()
                 self.niky_added = True
 
         # Podmínka pro Eda pavouka.
-        if len(hrac_obj.had_segmenty) >= 5:
+        if len(self.hrac_obj.had_segmenty) >= 5:
             if not self.eda_added:
                 self.pavouci_group.add(self.pavouk_eda)
-                self.pavouk_eda.rychlostni_koeficient = hrac_obj.rychlostni_koeficient
-                hrac_obj.aktivovat_imunitu()
+                self.pavouk_eda.rychlostni_koeficient = self.hrac_obj.rychlostni_koeficient
+                self.hrac_obj.aktivovat_imunitu()
                 self.eda_added = True
 
         # Podmínka pro Hana pavouka.
         # Poznámka: Tato podmínka je stejná jako pro Eda pavouka (>= 5).
         # Zkontrolujte, zda je to záměr, nebo zda by zde měla být jiná hodnota (např. >= 7 nebo 8).
-        if len(hrac_obj.had_segmenty) >= 5:
+        if len(self.hrac_obj.had_segmenty) >= 5:
             if not self.hana_added:
                 self.pavouci_group.add(self.pavouk_hana)
-                self.pavouk_hana.rychlostni_koeficient = hrac_obj.rychlostni_koeficient
-                hrac_obj.aktivovat_imunitu()
+                self.pavouk_hana.rychlostni_koeficient = self.hrac_obj.rychlostni_koeficient
+                self.hrac_obj.aktivovat_imunitu()
                 self.hana_added = True
 
         # Místo pro další logiku, pokud hráč získá více sudů.
-        if len(hrac_obj.had_segmenty) >= 12:
+        if len(self.hrac_obj.had_segmenty) >= 12:
             pass
 
     @staticmethod
@@ -344,12 +344,11 @@ class Game:
         Kontroluje kolize mezi hráčem a jídlem, a mezi hráčem a pavouky.
         Zpracovává důsledky kolizí (sběr jídla, ztráta sudů/životů).
         """
-        hrac_obj = list(self.hrac_group)[0]  # Předpokládáme, že ve skupině je jen jeden hráč
 
         # Kontrola kolize s jídlem.
         for jedno_jidlo in self.jidla_group:
-            offset_j = self.get_offset(hrac_obj, jedno_jidlo)
-            if hrac_obj.mask.overlap(jedno_jidlo.mask, offset_j):
+            offset_j = self.get_offset(self.hrac_obj, jedno_jidlo)
+            if self.hrac_obj.mask.overlap(jedno_jidlo.mask, offset_j):
                 self.kanal1.play(self.zvuk_kapky)  # Přehrání zvuku sebrání kapky
                 jedno_jidlo.rect.topleft = jedno_jidlo.nahodna_pozice()  # Přemístění jídla
                 self.score += 1
@@ -357,21 +356,21 @@ class Game:
                 # Pokud hráč sebral dostatek kapek, přidá se nový sud (segment hada).
                 if self.kapky_od_posledniho_sudu >= self.pocet_kapek_na_sud:
                     # Nový sud se objeví na pozici hráče.
-                    new_sud = Sud(hrac_obj.rect.centerx, hrac_obj.rect.centery, settings.BARREL_IMAGE)
+                    new_sud = Sud(self.hrac_obj.rect.centerx, self.hrac_obj.rect.centery, settings.BARREL_IMAGE)
                     self.sudy_group.add(new_sud)
-                    hrac_obj.pridej_segment(new_sud)  # Přidání sudu k hráči (hadovi)
+                    self.hrac_obj.pridej_segment(new_sud)  # Přidání sudu k hráči (hadovi)
                     self.kapky_od_posledniho_sudu = 0  # Reset počítadla kapek
 
         # Kontrola kolize s pavouky.
         for pavouk_obj in self.pavouci_group:
-            offset_p = self.get_offset(hrac_obj, pavouk_obj)
-            if hrac_obj.mask.overlap(pavouk_obj.mask, offset_p):
-                if not hrac_obj.imunita_aktivni:
+            offset_p = self.get_offset(self.hrac_obj, pavouk_obj)
+            if self.hrac_obj.mask.overlap(pavouk_obj.mask, offset_p):
+                if not self.hrac_obj.imunita_aktivni:
                     self.kanal2.play(self.kousanec_sound)  # Přehrání zvuku kousnutí
-                    aktualni_pocet_sudu = len(hrac_obj.had_segmenty)
+                    aktualni_pocet_sudu = len(self.hrac_obj.had_segmenty)
                     if aktualni_pocet_sudu >= 1:
                         # Hráč ztratí sud (segment hada).
-                        odstraneny_sud = hrac_obj.had_segmenty.pop()
+                        odstraneny_sud = self.hrac_obj.had_segmenty.pop()
                         self.sudy_group.remove(odstraneny_sud)
                         self.kapky_od_posledniho_sudu = 0  # Reset počítadla kapek
                     else:
@@ -379,7 +378,7 @@ class Game:
                         self.zivoty -= 1
                         self.kapky_od_posledniho_sudu = 0
 
-                    hrac_obj.aktivovat_imunitu()  # Hráč získá dočasnou imunitu
+                    self.hrac_obj.aktivovat_imunitu()  # Hráč získá dočasnou imunitu
                 # Pavouk je po kolizi přesunut mimo obrazovku, aby se neustále nespouštěla kolize.
                 pavouk_obj.rect.x = -500
                 pavouk_obj.rect.y = -500
@@ -402,11 +401,11 @@ class Game:
                 # Zde by se měla přidat logika pro restart hry (např. resetování všech herních proměnných
                 # a pozic objektů, nebo volání metody pro restart).
                 pass
-        else:
-            # Pokud už je pauza aktivní a znovu se zavolá, zruší se pauza.
-            # Toto chování může být upraveno, pokud chcete, aby pauzu vypínalo jen menu.
-            pygame.mixer.music.unpause()  # Pokračuje v hudbě
-            self.game_paused = False
+            else:  # result == "continue" nebo jakákoli jiná možnost, která nekončí hru
+                pygame.mixer.music.unpause()  # **Pokračuje v hudbě po návratu z menu**
+                if self.alarm_hraje:  # Pokud hrál alarm před pauzou, měl by hrát i teď
+                    self.kanal4.play(self.angry_sound, loops=-1)
+                self.hrac_obj.direction = None
 
     def stisknute_klavesy(self):
         """
