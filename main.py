@@ -68,28 +68,28 @@ hra = Game(player_group, jidlo_group, pavouk_group, sud_group,
 # Nastaví hru na celoobrazovkový režim, pokud je v nastavení povoleno.
 hra.fullscreen()
 
-# Importy pro ladění a profilování výkonu.
-import cProfile
-import pstats
-
-# Inicializace a spuštění profilování kódu.
-profiler = cProfile.Profile()
-profiler.enable()
+# # Importy pro ladění a profilování výkonu.
+# import cProfile
+# import pstats
+#
+# # Inicializace a spuštění profilování kódu.
+# profiler = cProfile.Profile()
+# profiler.enable()
 
 # Spustí hlavní herní smyčku.
 hra.run()
 
-# Ukončení profilování a výpis statistik.
-profiler.disable()
-# Seřadí statistiky podle kumulativního času (celkový čas strávený ve funkci a jejích podfunkcích).
-stats = pstats.Stats(profiler).sort_stats('cumtime')
-# Vypíše top 20 nejpomalejších funkcí do standardního výstupu.
-stats.print_stats(20)
-
-# Uloží statistiky profilování do souboru 'profil.txt'.
-with open("profil.txt", "w") as f:
-    stats = pstats.Stats(profiler, stream=f).sort_stats('cumtime')
-    stats.print_stats(20)
+# # Ukončení profilování a výpis statistik.
+# profiler.disable()
+# # Seřadí statistiky podle kumulativního času (celkový čas strávený ve funkci a jejích podfunkcích).
+# stats = pstats.Stats(profiler).sort_stats('cumtime')
+# # Vypíše top 20 nejpomalejších funkcí do standardního výstupu.
+# stats.print_stats(20)
+#
+# # Uloží statistiky profilování do souboru 'profil.txt'.
+# with open("profil.txt", "w") as f:
+#     stats = pstats.Stats(profiler, stream=f).sort_stats('cumtime')
+#     stats.print_stats(20)
 
 # --- Ukončení Pygame ---
 # Odinicializuje Pygame a uvolní všechny zdroje.
