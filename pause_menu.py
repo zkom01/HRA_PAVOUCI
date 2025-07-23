@@ -43,7 +43,8 @@ class PauseMenu:
         button_width = 200
         button_height = 60
         # Počáteční Y pozice prvního tlačítka, od níž se odvozují ostatní
-        start_y = (self.screen_height // 2) + 80
+        start_y = (self.screen_height // 2) - 80
+        print(start_y)
         # Mezera mezi tlačítky
         button_spacing = 80 
 
@@ -71,7 +72,7 @@ class PauseMenu:
         
         # Aktualizace Y pozice pro centrování tlačítek po změně velikosti okna.
         # Výchozí Y pozice pro první tlačítko.
-        start_y = (self.screen_height // 2) + 80 
+        start_y = (self.screen_height // 2) - 80
         button_spacing = 80
 
         # Aktualizuj pozice tlačítek pomocí for cyklu
@@ -135,6 +136,12 @@ class PauseMenu:
                     # Pokud uživatel zavře okno, nastaví požadavek na ukončení hry
                     self.quit_requested = True
                     self.paused = False # Ukončí smyčku menu
+                    break  # Opustíme smyčku událostí, protože menu končí
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        self.paused = False  # Ukončí smyčku menu
+                        # Není potřeba explicitně nastavit resume_game, protože 'else' vrátí "resume"
+                        break  # Opustíme smyčku událostí, protože menu končí
                 
                 # Předá událost každému tlačítku pro zpracování kliknutí
                 for button in self.buttons:
