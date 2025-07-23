@@ -5,7 +5,7 @@ Nabízí možnosti pro pokračování hry, restartování nebo ukončení.
 
 import pygame
 import settings
-from button import Button  # Předpokládám, že máš vlastní třídu Button
+from button import Button
 
 class PauseMenu:
     """
