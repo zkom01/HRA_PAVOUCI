@@ -4,12 +4,17 @@ Modul Game obsahuje hlavní herní logiku a smyčku.
 Třída Game inicializuje herní prostředí, spravuje herní objekty (hráč, jídlo, pavouci, sudy),
 zpracovává interakce (kolize, stisky kláves), aktualizuje herní stav a vykresluje vše na obrazovku.
 """
+from typing import Protocol
 
 import pygame
 import settings
 from barrel import Sud
 from pause_menu import PauseMenu
 
+# Definujte protokol pro objekty, které mají 'rect' atribut
+# (jinak hlásí chybu "Unresolved attribute reference 'rect' for class 'Sprite'").
+class RectHolder(Protocol):
+    rect: pygame.Rect
 
 class Game:
     """
@@ -319,7 +324,7 @@ class Game:
             pass
 
     @staticmethod
-    def get_offset(sprite1, sprite2):
+    def get_offset(sprite1: RectHolder, sprite2: RectHolder):
         """
         Vypočítá offset mezi dvěma spritovými objekty pro použití s maskovou kolizí.
 
