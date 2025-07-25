@@ -487,7 +487,6 @@ class Game:
             self.screen = pygame.display.set_mode((settings.MONITOR_WIDTH, settings.MONITOR_HEIGHT), pygame.FULLSCREEN)
             # Aktualizuje GLOBÁLNÍ nastavení rozměrů obrazovky.
             settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT = self.screen.get_size()
-            # Aktualizuje menu pauzy o nové rozměry obrazovky.
 
         else:
             # Přepne zpět do okenního režimu na původní rozlišení.
@@ -544,11 +543,9 @@ class Game:
         """
         while self.lets_continue:
             self.stisknute_klavesy()  # Zpracování uživatelského vstupu
-            # self.pohyb_mysi() # Zakomentováno, pokud není použito
             if not self.game_paused:
                 self.update()  # Aktualizace herní logiky
                 self.hrac_group.update()  # Aktualizace hráče
-                # Pavouci se aktualizují s ohledem na pozici a směr hráče
-                self.pavouci_group.update()
+                self.pavouci_group.update() # Aktualizace pavouků
             self.kresleni()  # Vykreslení všech herních prvků
             pygame.time.Clock().tick(settings.FPS)  # Omezuje rychlost hry na definované FPS
