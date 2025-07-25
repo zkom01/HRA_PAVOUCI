@@ -7,7 +7,6 @@ a vizuálního vzhledu.
 import pygame
 import random
 import settings # Importujeme modul settings pro přístup k nastavení
-
 class Pavouk(pygame.sprite.Sprite):
     """
     Třída Pavouk (Spider) reprezentuje nepřátelský objekt ve hře.
@@ -33,7 +32,7 @@ class Pavouk(pygame.sprite.Sprite):
         is_angry (bool): True, pokud je pavouk "naštvaný" a pronásleduje hráče.
     """
 
-    def __init__(self, x: int, y: int, image_name: str, image_angry_name: str, rychlost: int):
+    def __init__(self, x: int, y: int, image_name: str, image_angry_name: str, rychlost: int, hrac_group):
         """
         Konstruktor třídy Pavouk.
 
@@ -69,6 +68,9 @@ class Pavouk(pygame.sprite.Sprite):
         self.change_dir_timer = 0  # Časovač pro náhodnou změnu směru pavouka v klidovém stavu
         self.is_angry = False  # Logická proměnná, zda je pavouk "naštvaný" a pronásleduje hráče
 
+        # Získejte referenci na hráče (pro reakci na přiblížení a pohyb)
+        self.hrac_obj = list(hrac_group)[0]
+
     @staticmethod
     def novy_smer() -> tuple[int, int]:
         """
@@ -91,30 +93,29 @@ class Pavouk(pygame.sprite.Sprite):
         # Měl by vždy vrátit hodnotu díky random.choice, ale pro jistotu fallback.
         return 0, 0
 
-    def move(self, player_rect: pygame.Rect):
+    def move(self):
         """
         Aktualizuje pozici pavouka na základě jeho aktuální rychlosti a směru.
         Zajišťuje, aby pavouk zůstal v rámci hranic herní obrazovky (včetně horního panelu).
         Pokud je pavouk "naštvaný" (self.is_angry je True), směřuje k hráči.
         Jinak se pohybuje náhodně a občas změní směr.
 
-        Args:
-            player_rect (pygame.Rect): Obdélník (rect) hráče pro cílení pohybu v "naštvaném" stavu.
         """
-        if self.is_angry:
-            # V "naštvaném" stavu se pavouk přímo snaží dosáhnout hráče.
-            # Vypočítá se delta X a Y k hráči.
-            delta_x = player_rect.centerx - self.rect.centerx
-            delta_y = player_rect.centery - self.rect.centery
+        if not self.hrac_obj.imunita_aktivni:
+            if self.is_angry:
+                # V "naštvaném" stavu se pavouk přímo snaží dosáhnout hráče.
+                # Vypočítá se delta X a Y k hráči.
+                delta_x = self.hrac_obj.rect.centerx - self.rect.centerx
+                delta_y = self.hrac_obj.rect.centery - self.rect.centery
 
-            # Pavouk se pohybuje primárně po delší ose k hráči, aby se vyhnul diagonálnímu pohybu,
-            # který by mohl být méně předvídatelný nebo působit nepřirozeně.
-            if abs(delta_x) > abs(delta_y):
-                self.direct_x = 1 if delta_x > 0 else -1
-                self.direct_y = 0 # Pohyb jen horizontálně
-            else:
-                self.direct_y = 1 if delta_y > 0 else -1
-                self.direct_x = 0 # Pohyb jen vertikálně
+                # Pavouk se pohybuje primárně po delší ose k hráči, aby se vyhnul diagonálnímu pohybu,
+                # který by mohl být méně předvídatelný nebo působit nepřirozeně.
+                if abs(delta_x) > abs(delta_y):
+                    self.direct_x = 1 if delta_x > 0 else -1
+                    self.direct_y = 0 # Pohyb jen horizontálně
+                else:
+                    self.direct_y = 1 if delta_y > 0 else -1
+                    self.direct_x = 0 # Pohyb jen vertikálně
         else:
             # V klidovém stavu pavouk náhodně mění směr.
             self.change_dir_timer += 1
@@ -144,19 +145,17 @@ class Pavouk(pygame.sprite.Sprite):
             self.rect.bottom = settings.SCREEN_HEIGHT
             self.direct_x, self.direct_y = self.novy_smer()
 
-    def priblizeni(self, player_rect: pygame.Rect):
+    def priblizeni(self):
         """
         Kontroluje vzdálenost pavouka od hráče.
         Pokud je hráč blízko (v rámci `pavouk_postava_vzdalenost`), pavouk se "naštve",
         změní svůj vizuální vzhled na `image_angry` a zrychlí, aby ho pronásledoval.
         Jinak se vrátí do klidového stavu s normálním obrázkem a rychlostí.
 
-        Args:
-            player_rect (pygame.Rect): Obdélník (rect) hráče pro výpočet vzdálenosti.
         """
         # Výpočet Euklidovské vzdálenosti mezi středem pavouka a středem hráče.
-        vzdalenost_x = player_rect.centerx - self.rect.centerx
-        vzdalenost_y = player_rect.centery - self.rect.centery
+        vzdalenost_x = self.hrac_obj.rect.centerx - self.rect.centerx
+        vzdalenost_y = self.hrac_obj.rect.centery - self.rect.centery
         vzdalenost = (vzdalenost_x ** 2 + vzdalenost_y ** 2) ** 0.5
 
         if vzdalenost < self.pavouk_postava_vzdalenost:
@@ -170,18 +169,14 @@ class Pavouk(pygame.sprite.Sprite):
             self.speed = self.original_speed * self.rychlostni_koeficient
             self.is_angry = False
 
-    def update(self, player_rect: pygame.Rect, player_direction: str | None):
+    def update(self):
         """
         Aktualizuje stav pavouka v každém herním snímku.
         Tato metoda je volána herní smyčkou.
         Pavouci se hýbou a kontrolují blízkost hráče pouze, když se hýbe i hráč.
 
-        Args:
-            player_rect (pygame.Rect): Obdélník (rect) hráče, nutný pro pohyb a kontrolu přiblížení.
-            player_direction (str | None): Směr pohybu hráče. Pavouci se hýbou jen tehdy,
-                                           když se hýbe hráč (jeho direction není None).
         """
         # Pavouci se hýbou a reagují na hráče pouze, když se hráč skutečně pohybuje.
-        if player_direction:
-            self.move(player_rect) # Aktualizuje pozici pavouka
-            self.priblizeni(player_rect) # Kontroluje a mění stav pavouka na základě vzdálenosti od hráče
+        if self.hrac_obj.direction:
+            self.move() # Aktualizuje pozici pavouka
+            self.priblizeni() # Kontroluje a mění stav pavouka na základě vzdálenosti od hráče

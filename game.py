@@ -379,9 +379,10 @@ class Game:
                         self.kapky_od_posledniho_sudu = 0
 
                     self.hrac_obj.aktivovat_imunitu()  # Hráč získá dočasnou imunitu
-                # Pavouk je po kolizi přesunut mimo obrazovku, aby se neustále nespouštěla kolize.
-                pavouk_obj.rect.x = -500
-                pavouk_obj.rect.y = -500
+                    # Pavouk je po kolizi přesunut mimo obrazovku, aby se neustále nespouštěla kolize
+                    # (pouze pokud hrac není imunní, když je imuní pavouk se nepřesune)
+                    pavouk_obj.rect.x = -500
+                    pavouk_obj.rect.y = -500
 
     def pause(self):
         """
@@ -541,7 +542,6 @@ class Game:
         Hlavní herní smyčka. Zpracovává události, aktualizuje herní stav a vykresluje.
         Pokračuje, dokud se proměnná `self.lets_continue` nestane False.
         """
-        hrac_obj = list(self.hrac_group)[0]  # Získáme instanci hráče pro aktualizace pavouků
         while self.lets_continue:
             self.stisknute_klavesy()  # Zpracování uživatelského vstupu
             # self.pohyb_mysi() # Zakomentováno, pokud není použito
@@ -549,6 +549,6 @@ class Game:
                 self.update()  # Aktualizace herní logiky
                 self.hrac_group.update()  # Aktualizace hráče
                 # Pavouci se aktualizují s ohledem na pozici a směr hráče
-                self.pavouci_group.update(hrac_obj.rect, hrac_obj.direction)
+                self.pavouci_group.update()
             self.kresleni()  # Vykreslení všech herních prvků
             pygame.time.Clock().tick(settings.FPS)  # Omezuje rychlost hry na definované FPS
