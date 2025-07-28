@@ -108,6 +108,7 @@ class Game:
         self.max_added = False
         self.eda_added = False
         self.hana_added = False
+        self.any_spider_angry = False
 
         # Stavové flagy pro hru.
         self.game_paused = False
@@ -214,14 +215,14 @@ class Game:
         Aktualizuje barvu pozadí a přehrává/zastavuje alarm na základě toho,
         zda je některý z pavouků v "angry" stavu.
         """
-        any_spider_angry = False
+        self.any_spider_angry = False
         # Prochází všechny pavouky a kontroluje jejich stav.
         for jeden_pavouk in self.pavouci_group:
             if jeden_pavouk.is_angry:
-                any_spider_angry = True
+                self.any_spider_angry = True
                 break  # Stačí najít jednoho "angry" pavouka
 
-        if any_spider_angry:
+        if self. any_spider_angry:
             self.main_color = settings.ANGRY_COLOR  # Změní barvu pozadí na "angry"
             if not self.alarm_hraje:
                 self.kanal4.play(self.angry_sound, loops=-1)  # Spustí alarm ve smyčce
@@ -401,12 +402,70 @@ class Game:
             elif result == "restart":
                 # Zde by se měla přidat logika pro restart hry (např. resetování všech herních proměnných
                 # a pozic objektů, nebo volání metody pro restart).
-                pass
+                self.restart()
             else:  # result == "continue" nebo jakákoli jiná možnost, která nekončí hru
                 pygame.mixer.music.unpause()  # **Pokračuje v hudbě po návratu z menu**
                 if self.alarm_hraje:  # Pokud hrál alarm před pauzou, měl by hrát i teď
                     self.kanal4.play(self.angry_sound, loops=-1)
                 self.hrac_obj.direction = None
+
+    def restart(self):
+        """
+        Resetuje hru do počátečního stavu po restartu.
+        Vynuluje skóre, životy, pozice objektů, vymaže sudy, resetuje pavouky a zvuky.
+        """
+        # Zastav a resetuj zvuky
+        pygame.mixer.music.stop()
+        if self.kanal4.get_busy():
+            self.kanal4.stop()
+        self.alarm_hraje = False  # Resetujte flag, že alarm nehraje
+        pygame.mixer.music.play(-1)  # Znovu spustí hudbu na pozadí
+
+        # Resetuj herní stavové proměnné
+        self.zivoty = settings.ZIVOTY  # Reset životů!
+        self.score = 0
+        self.kapky_od_posledniho_sudu = 0
+        self.rychlost = 1  # Nastaví rychlost zpět na výchozí zobrazení
+        self.main_color = settings.SCREEN_COLOR  # Obnoví normální barvu pozadí
+
+        # Resetuj flagy rychlosti
+        self.rychlost_played_2 = False
+        self.rychlost_played_5 = False
+        self.rychlost_played_8 = False
+
+        # Resetuj hráče
+        # Nastavení směru na nulový vektor, aby se hráč hned nepohyboval
+        self.hrac_obj.direction = None
+        self.hrac_obj.rect.center = (settings.SCREEN_WIDTH // 2,
+                                     settings.SCREEN_HEIGHT // 2 + settings.VYSKA_HORNIHO_PANELU // 2)  # Střed herní plochy
+        self.hrac_obj.aktivovat_imunitu()  # Získá imunitu na začátku nové hry
+        self.hrac_obj.rychlostni_koeficient = settings.RYCHLOST_1  # Reset rychlosti hráče
+        self.hrac_obj.had_segmenty.clear()  # Vyprázdní segmenty hada (sudy)
+        self.sudy_group.empty()  # Odstraní všechny sudy ze skupiny spritů
+
+        # Resetuj pavouky
+        self.pavouci_group.empty()  # Odstraní všechny pavouky ze skupiny spritů
+        self.prida_odebere_pavouka()  # Znovu přidá počáteční pavouky do hry
+        # Resetuj flagy pro přidání pavouků
+        self.max_added = False
+        self.pavouk_max.rect.x = -500
+        self.pavouk_max.rect.y = -500
+        self.tery_added = False
+        self.niky_added = False
+        self.eda_added = False
+        self.hana_added = False
+        self.pavouk_max.is_angry = False
+        self.pavouk_tery.is_angry = False
+        self.pavouk_niky.is_angry = False
+        self.pavouk_eda.is_angry = False
+        self.pavouk_hana.is_angry = False
+
+        # Resetuj jídlo
+        for jedno_jidlo in self.jidla_group:
+            jedno_jidlo.rect.topleft = jedno_jidlo.nahodna_pozice()  # Přemístění jídla
+
+        # Zajišťuje, že se hra po restartu nepřeruší
+        self.lets_continue = True
 
     def stisknute_klavesy(self):
         """
