@@ -71,7 +71,7 @@ class PauseMenu:
     def _request_quit_confirmation(self):
         """Nastaví stav pro zobrazení potvrzení pro ukončení."""
         self.confirm_dialog_active = True
-        self.current_action_pending = "quit"
+        self.current_action_pending = "ukončit"
 
     def _confirm_action(self, confirmed: bool):
         """
@@ -84,7 +84,7 @@ class PauseMenu:
             if self.current_action_pending == "restart":
                 self.restart_requested = True
                 self.paused = False # Ukončí smyčku menu
-            elif self.current_action_pending == "quit":
+            elif self.current_action_pending == "ukončit":
                 self.quit_requested = True
                 self.paused = False # Ukončí smyčku menu
         else:
@@ -151,22 +151,17 @@ class PauseMenu:
                     self.quit_requested = True
                     self.paused = False
                     break
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        # Pokud je aktivní potvrzovací dialog, mezerník by mohl potvrdit (jako ANO)
-                        # nebo se vrátit k hlavnímu menu (jako NE), záleží na preferenci.
-                        # Pro jednoduchost, mezerník vypne pauzu, ať už jsme kdekoliv.
-                        # Možná byste chtěli, aby mezerník zavřel jen potvrzení a vrátil se do hlavního menu.
-                        if self.confirm_dialog_active:
-                            self._confirm_action(False) # Chová se jako "NE"
-                        else:
-                            self.paused = False # Pokud nejsme v potvrzení, resume
-                    elif event.key == pygame.K_F11:
-                        self.game_instance.fullscreen()
-                        # Důležité: Po fullscreenu překreslete menu, aby se správně umístilo
-                        # self.draw() # Tuto metodu nemáte v PauseMenu. Místo toho se menu překreslí v dalším cyklu.
-                        # Není potřeba explicitně nastavit resume_game, show_menu vrátí "resume" po unpause
-                
+                # --- KLÍČOVÁ ZMĚNA ZDE ---
+                # Zpracování mezerníku a F11 pouze pokud NEJSME v potvrzovacím dialogu
+                if not self.confirm_dialog_active:
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_SPACE:
+                            self.paused = False # Resume hru
+                        elif event.key == pygame.K_F11:
+                            self.game_instance.fullscreen()
+                            self.game_instance.kresleni() # Vykreslí herní scénu po změně fullscreenu
+                # --- KONEC KLÍČOVÉ ZMĚNY ---
+# ---------------------------------------- změna fullscreen i při zobrazeni ANO NE ??????????????????????????????????????????????
                 # Předá událost příslušným tlačítkům
                 if not self.confirm_dialog_active:
                     for button in self.buttons:
