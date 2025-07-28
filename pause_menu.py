@@ -1,8 +1,3 @@
-"""
-Modul PauseMenu obsahuje třídu PauseMenu, která vytváří a spravuje pauzovací obrazovku ve hře.
-Nabízí možnosti pro pokračování hry, restartování nebo ukončení.
-"""
-
 import pygame
 import settings
 from button import Button
@@ -12,26 +7,9 @@ class PauseMenu:
     Třída PauseMenu spravuje zobrazení a interakci s pauzovacím menu hry.
 
     Umožňuje hráči pozastavit hru a zvolit si mezi pokračováním, restartem nebo ukončením hry.
-
-    Atributy:
-        screen (pygame.Surface): Hlavní Pygame surface, na kterou se menu vykresluje.
-        screen_width (int): Aktuální šířka obrazovky.
-        screen_height (int): Aktuální výška obrazovky.
-        paused (bool): Logická hodnota indikující, zda je hra v režimu pauzy.
-        quit_requested (bool): Logická hodnota indikující, zda hráč požádal o ukončení hry.
-        restart_requested (bool): Logická hodnota indikující, zda hráč požádal o restart hry.
-        buttons (list[Button]): Seznam objektů Button, které tvoří menu.
     """
 
     def __init__(self, screen: pygame.Surface, screen_width: int, screen_height: int, game_instance):
-        """
-        Inicializuje novou instanci pauzovacího menu.
-
-        Args:
-            screen (pygame.Surface): Hlavní Pygame surface pro vykreslování.
-            screen_width (int): Počáteční šířka okna hry.
-            screen_height (int): Počáteční výška okna hry.
-        """
         self.screen = screen
         self.screen_width = screen_width
         self.screen_height = screen_height
@@ -39,121 +17,167 @@ class PauseMenu:
         self.quit_requested = False
         self.restart_requested = False
         self.game_instance = game_instance
+        self.confirm_dialog_active = False # True, pokud se zobrazuje potvrzovací dialog
+        self.current_action_pending = None # Uloží 'restart' nebo 'quit', pro které čekáme na potvrzení
 
         # Nastavení rozměrů a pozice tlačítek
         button_width = 400
         button_height = 60
-        # Počáteční Y pozice prvního tlačítka, od níž se odvozují ostatní
         self.start_y = (self.screen_height // 2) - 80
-        # Mezera mezi tlačítky
         button_spacing = 80 
 
-        # Vytvoření tlačítek menu s callback funkcemi
+        # Vytvoření tlačítek hlavního menu s callback funkcemi
         self.buttons: list[Button] = [
             Button("Pokračovat", self.screen_width // 2, self.start_y, button_width, button_height, self.resume_game),
-            Button("Restart", self.screen_width // 2, self.start_y + button_spacing, button_width, button_height, self.restart_game),
-            Button("Ukončit", self.screen_width // 2, self.start_y + (2 * button_spacing), button_width, button_height, self.quit_game),
+            Button("Restart", self.screen_width // 2, self.start_y + button_spacing, button_width, button_height, self._request_restart_confirmation), # Změněno
+            Button("Ukončit", self.screen_width // 2, self.start_y + (2 * button_spacing), button_width, button_height, self._request_quit_confirmation), # Změněno
         ]
 
+        # Tlačítka pro potvrzovací dialog (ANO / NE)
+        # Používáme lambdy pro předání True/False do callback funkce confirm_action
+        self.confirm_buttons: list[Button] = [
+            Button("ANO", self.screen_width // 2 - 100, self.screen_height // 2 + 50, 150, 50, lambda: self._confirm_action(True)),
+            Button("NE", self.screen_width // 2 + 100, self.screen_height // 2 + 50, 150, 50, lambda: self._confirm_action(False))
+        ]
+        # Poznamenejte si, že pro `confirm_buttons` jsem zmenšil šířku a výšku a posunul je, aby byly vedle sebe.
+        # Také jsem upravil `start_y` pro `confirm_buttons` aby byly lépe vycentrovány vzhledem k textu.
+
     def update_screen_size(self, width: int, height: int):
-        """
-        Aktualizuje rozměry obrazovky a přepočítá pozice tlačítek.
-
-        Tato metoda by měla být volána, pokud se velikost okna hry změní,
-        aby se tlačítka správně vycentrovala.
-
-        Args:
-            width (int): Nová šířka obrazovky.
-            height (int): Nová výška obrazovky.
-        """
         self.screen_width = width
         self.screen_height = height
         center_x = self.screen_width // 2
         
-        # Aktualizace Y pozice pro centrování tlačítek po změně velikosti okna.
-        # Výchozí Y pozice pro první tlačítko.
         self.start_y = (self.screen_height // 2) - 80
         button_spacing = 80
 
-        # Aktualizuj pozice tlačítek pomocí for cyklu
-        # To je lepší pro rozšiřitelnost, pokud přidáš více tlačítek.
         for i, button in enumerate(self.buttons):
             button.rect.centerx = center_x
             button.rect.centery = self.start_y + (i * button_spacing)
 
+        # Aktualizuj pozice potvrzovacích tlačítek také
+        self.confirm_buttons[0].rect.center = (self.screen_width // 2 - 100, self.screen_height // 2 + 50)
+        self.confirm_buttons[1].rect.center = (self.screen_width // 2 + 100, self.screen_height // 2 + 50)
+
 
     def resume_game(self):
-        """
-        Callback funkce pro tlačítko "Pokračovat".
-        Nastaví stav hry na nepozastavený.
-        """
         self.paused = False
 
-    def restart_game(self):
-        """
-        Callback funkce pro tlačítko "Restart".
-        Nastaví stav hry na nepozastavený a signalizuje požadavek na restart.
-        """
-        self.paused = False
-        self.restart_requested = True
+    # NOVÉ CALLBACK FUNKCE PRO TLAČÍTKA "RESTART" A "UKONČIT"
+    def _request_restart_confirmation(self):
+        """Nastaví stav pro zobrazení potvrzení pro restart."""
+        self.confirm_dialog_active = True
+        self.current_action_pending = "restart"
 
-    def quit_game(self):
+    def _request_quit_confirmation(self):
+        """Nastaví stav pro zobrazení potvrzení pro ukončení."""
+        self.confirm_dialog_active = True
+        self.current_action_pending = "quit"
+
+    def _confirm_action(self, confirmed: bool):
         """
-        Callback funkce pro tlačítko "Ukončit".
-        Nastaví stav hry na nepozastavený a signalizuje požadavek na ukončení.
+        Zpracuje výsledek potvrzovacího dialogu.
+        Args:
+            confirmed (bool): True, pokud uživatel potvrdil akci (ANO), False pokud ne (NE).
         """
-        self.paused = False
-        self.quit_requested = True
+        self.confirm_dialog_active = False # Skryjeme potvrzovací dialog
+        if confirmed:
+            if self.current_action_pending == "restart":
+                self.restart_requested = True
+                self.paused = False # Ukončí smyčku menu
+            elif self.current_action_pending == "quit":
+                self.quit_requested = True
+                self.paused = False # Ukončí smyčku menu
+        else:
+            # Pokud uživatel zvolil NE, resetujeme čekající akci a zůstaneme v hlavním menu pauzy
+            self.current_action_pending = None
+            # Není potřeba nic dělat, show_menu smyčka bude pokračovat a zobrazí hlavní menu
+            self.game_instance.kresleni()
+
 
     def show_menu(self) -> str:
-        """
-        Zobrazí pauzovací menu a zpracovává uživatelské vstupy, dokud není menu opuštěno.
+        self.paused = True
+        self.quit_requested = False
+        self.restart_requested = False
+        self.confirm_dialog_active = False # Zajištění, že začínáme v hlavním menu
+        self.current_action_pending = None
 
-        Vykresluje tlačítka, reaguje na kliknutí a na událost zavření okna.
+        clock = pygame.time.Clock()
 
-        Returns:
-            str: Řetězec indikující výsledek interakce s menu:
-                 "resume" (pokračovat ve hře), "restart" (restartovat hru) nebo "quit" (ukončit hru).
-        """
-        self.paused = True          # Aktivuje stav pauzy
-        self.quit_requested = False # Resetuje požadavky před zobrazením menu
-        self.restart_requested = False # Resetuje požadavky před zobrazením menu
-
-        clock = pygame.time.Clock() # Pro kontrolu FPS menu
-
-        # Hlavní smyčka pauzovacího menu
         while self.paused:
-            # Volitelné: Zde můžeš vykreslit tmavé pozadí nebo jiný vizuální prvek menu
-            # self.screen.fill((30, 30, 30))  # Příklad tmavého pozadí menu
+            # # Vykreslení tmavého překrytí
+            # s = pygame.Surface((self.screen_width, self.screen_height), pygame.SRCALPHA)
+            # s.fill((0, 0, 0, 255)) # Černá s průhledností
+            # self.screen.blit(s, (0, 0))
 
-            # Vykreslení všech tlačítek na obrazovku
-            for button in self.buttons:
-                button.draw(self.screen)
+            if not self.confirm_dialog_active:
+                # Vykreslení hlavních tlačítek menu
+                for button in self.buttons:
+                    button.draw(self.screen)
+            else:
+                # --- NOVÝ KÓD PRO RÁMEČEK POTVRZOVACÍHO DIALOGU ---
+                dialog_width = 500
+                dialog_height = 200
+                dialog_rect = pygame.Rect(0, 0, dialog_width, dialog_height)
+                dialog_rect.center = (self.screen_width // 2, self.screen_height // 2)
+
+                # Vyplnění pozadí dialogu (podobně jako u tlačítek)
+                pygame.draw.rect(self.screen, settings.BARVA_POD_TEXT_NABIDKY, dialog_rect, border_radius=10)
+                # Volitelné: ohraničení dialogu
+                pygame.draw.rect(self.screen, settings.WHITE, dialog_rect, 3,
+                                 border_radius=10)  # Bílý rámeček, tloušťka 3px
+
+                # Text výzvy
+                prompt_text = f"Opravdu {self.current_action_pending}?"
+                font_large = pygame.font.Font(settings.FONT_ROBOT_PATH, 50)
+                prompt_surface = font_large.render(prompt_text, True, settings.WHITE)
+                # Umístíme text relativně k dialog_rect, nikoli k celé obrazovce
+                prompt_rect = prompt_surface.get_rect(center=(dialog_rect.centerx, dialog_rect.top + 50))
+                self.screen.blit(prompt_surface, prompt_rect)
+
+                # Vykreslení ANO/NE tlačítek
+                # Aktualizujeme pozice ANO/NE tlačítek tak, aby byly relativní k dialog_rect
+                # nebo se jen ujistíme, že jejich absolutní pozice sedí uvnitř dialog_rect
+                self.confirm_buttons[0].rect.center = (dialog_rect.centerx - 100, dialog_rect.bottom - 50)
+                self.confirm_buttons[1].rect.center = (dialog_rect.centerx + 100, dialog_rect.bottom - 50)
+
+                for button in self.confirm_buttons:
+                    button.draw(self.screen)
+                # --- KONEC NOVÉHO KÓDU ---
+
 
             # Zpracování událostí
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    # Pokud uživatel zavře okno, nastaví požadavek na ukončení hry
                     self.quit_requested = True
-                    self.paused = False # Ukončí smyčku menu
-                    break  # Opustíme smyčku událostí, protože menu končí
+                    self.paused = False
+                    break
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
-                        self.paused = False  # Ukončí smyčku menu
-                    if event.key == pygame.K_F11:
-                        self.game_instance.fullscreen()  # Přepne režim celé obrazovky
-                        self.game_instance.kresleni()  # Tato metoda vykreslí pozadí a všechny herní prvky
-                        # Není potřeba explicitně nastavit resume_game, protože 'else' vrátí "resume"
-                        break  # Opustíme smyčku událostí, protože menu končí
+                        # Pokud je aktivní potvrzovací dialog, mezerník by mohl potvrdit (jako ANO)
+                        # nebo se vrátit k hlavnímu menu (jako NE), záleží na preferenci.
+                        # Pro jednoduchost, mezerník vypne pauzu, ať už jsme kdekoliv.
+                        # Možná byste chtěli, aby mezerník zavřel jen potvrzení a vrátil se do hlavního menu.
+                        if self.confirm_dialog_active:
+                            self._confirm_action(False) # Chová se jako "NE"
+                        else:
+                            self.paused = False # Pokud nejsme v potvrzení, resume
+                    elif event.key == pygame.K_F11:
+                        self.game_instance.fullscreen()
+                        # Důležité: Po fullscreenu překreslete menu, aby se správně umístilo
+                        # self.draw() # Tuto metodu nemáte v PauseMenu. Místo toho se menu překreslí v dalším cyklu.
+                        # Není potřeba explicitně nastavit resume_game, show_menu vrátí "resume" po unpause
                 
-                # Předá událost každému tlačítku pro zpracování kliknutí
-                for button in self.buttons:
-                    button.handle_event(event)
+                # Předá událost příslušným tlačítkům
+                if not self.confirm_dialog_active:
+                    for button in self.buttons:
+                        button.handle_event(event)
+                else:
+                    for button in self.confirm_buttons:
+                        button.handle_event(event)
 
-            pygame.display.flip() # Aktualizuje celou obrazovku pro zobrazení menu
-            clock.tick(settings.FPS) # Omezí počet snímků za sekundu pro menu
+            pygame.display.flip()
+            clock.tick(settings.FPS)
 
-        # Po ukončení smyčky menu vrátí výsledek akce
         if self.quit_requested:
             return "quit"
         elif self.restart_requested:

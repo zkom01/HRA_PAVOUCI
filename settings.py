@@ -70,6 +70,7 @@ BARVA_TEXTU = (50, 103, 6)        # Specifická zelená barva pro texty
 WHITE = (255, 255, 255)           # Čistě bílá barva
 ANGRY_COLOR = (128, 0, 0)         # Tmavě červená barva, např. pro indikaci "naštvaného" stavu
 BARVA_HOVER = (58, 88, 255)       # Světle modrá barva pro efekt najetí myši na tlačítka
+BARVA_POD_TEXT_NABIDKY = (128, 0, 0)
 
 # --- Cesty k souborům s médii ---
 # Cesta k souboru s ikonou okna hry.
