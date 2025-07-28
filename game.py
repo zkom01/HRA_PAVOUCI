@@ -436,8 +436,7 @@ class Game:
         # Resetuj hráče
         # Nastavení směru na nulový vektor, aby se hráč hned nepohyboval
         self.hrac_obj.direction = None
-        self.hrac_obj.rect.center = (settings.SCREEN_WIDTH // 2,
-                                     settings.SCREEN_HEIGHT // 2 + settings.VYSKA_HORNIHO_PANELU // 2)  # Střed herní plochy
+        self.hrac_obj.rect.center = (settings.SCREEN_WIDTH // 2, settings.SCREEN_HEIGHT // 2)  # Střed herní plochy
         self.hrac_obj.aktivovat_imunitu()  # Získá imunitu na začátku nové hry
         self.hrac_obj.rychlostni_koeficient = settings.RYCHLOST_1  # Reset rychlosti hráče
         self.hrac_obj.had_segmenty.clear()  # Vyprázdní segmenty hada (sudy)
