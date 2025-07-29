@@ -75,12 +75,15 @@ class Game:
             obrazovka (pygame.Surface): Objekt Surface hlavního okna hry.
         """
         self.screen = obrazovka
-                     
-        name_input = NameInput(screen)
+        # --------------------------------------------------------------------------------------------------------------------             
+        name_input = NameInput(self.screen)
         player_name = name_input.run()
+        font = pygame.font.SysFont(None, 50)
+        text = font.render(f"Vítej, {settings.PLAYER_NAME}", True, (255, 255, 255))
+        # ----------------------------------------------------------------------------------------------------------------------
              
         # Inicializace menu pro pauzu, předáváme aktuální obrazovku a její rozměry.
-        self.pause_menu = PauseMenu(obrazovka, settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT, self)
+        self.pause_menu = PauseMenu(self.screen, settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT, self)
 
         # Skupiny spritů pro snadnou správu herních objektů.
         self.hrac_group = hrac_group
