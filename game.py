@@ -75,12 +75,12 @@ class Game:
             obrazovka (pygame.Surface): Objekt Surface hlavního okna hry.
         """
         self.screen = obrazovka
-        # --------------------------------------------------------------------------------------------------------------------             
-        name_input = NameInput(self.screen)
-        self.player_name = name_input.run()
-        self.text = self.font_robot.render(f"{self.player_name}", True, self.barva_textu)
-        self.text_rect = self.text.get_rect(center=((settings.SCREEN_WIDTH // 2) + 240, settings.VYSKA_HORNIHO_PANELU // 2))
-        # ----------------------------------------------------------------------------------------------------------------------
+        # # --------------------------------------------------------------------------------------------------------------------             
+        # name_input = NameInput(self.screen)
+        # self.player_name = name_input.run()
+        # self.text = self.font_robot.render(f"{self.player_name}", True, self.barva_textu)
+        # self.text_rect = self.text.get_rect(center=((settings.SCREEN_WIDTH // 2) + 240, settings.VYSKA_HORNIHO_PANELU // 2))
+        # # ----------------------------------------------------------------------------------------------------------------------
              
         # Inicializace menu pro pauzu, předáváme aktuální obrazovku a její rozměry.
         self.pause_menu = PauseMenu(self.screen, settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT, self)
@@ -210,6 +210,13 @@ class Game:
         rychlost_text = self.font_robot.render(f"RYCHLOST HRY: {speed}", True, self.barva_textu)
         rychlost_text_rect = rychlost_text.get_rect(center=(450, settings.VYSKA_HORNIHO_PANELU // 2))
 
+        # --------------------------------------------------------------------------------------------------------------------             
+        name_input = NameInput(self.screen)
+        self.player_name = name_input.run()
+        text_jmeno = self.font_robot.render(f"{self.player_name}", True, self.barva_textu)
+        text_jmeno_rect = text_jmeno.get_rect(center=((settings.SCREEN_WIDTH // 2) + 240, settings.VYSKA_HORNIHO_PANELU // 2))
+        # ----------------------------------------------------------------------------------------------------------------------
+
         lives_text = self.font_robot.render(f"ZIVOTY: {lives}", True, self.barva_textu)
         lives_text_rect = lives_text.get_rect(topright=(settings.SCREEN_WIDTH - 10, 0))
 
@@ -220,7 +227,7 @@ class Game:
         self.screen.blit(self.nadpis_text, self.nadpis_text_rect)  # Používáme předrenderovaný nadpis
         self.screen.blit(score_text, score_text_rect)
         # ----------------------------------------------------------------------------------------------------------------------------------
-        self.screen.blit(self.text, self.text_rect)
+        self.screen.blit(text_jmeno, text_jmeno_rect)
         # ----------------------------------------------------------------------------------------------------------------------------------
 
     def update_stav_is_angry(self):
