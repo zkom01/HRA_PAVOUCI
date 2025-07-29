@@ -14,6 +14,8 @@ POCET_KAPEK_NA_SUD = 2
 # Počáteční skóre hráče.
 SCORE = 0
 
+PLAYER_NAME = "anonym"
+
 # --- Rychlosti herních objektů ---
 # Základní rychlost pohybu pavouků (v pixelech za snímek).
 SPIDER_RYCHLOST = 6
