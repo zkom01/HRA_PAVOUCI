@@ -10,6 +10,8 @@ import pygame
 import settings
 from barrel import Sud
 from pause_menu import PauseMenu
+from name_input import NameInput
+
 
 # Definujte protokol pro objekty, které mají 'rect' atribut
 # (jinak hlásí chybu "Unresolved attribute reference 'rect' for class 'Sprite'").
@@ -73,6 +75,10 @@ class Game:
             obrazovka (pygame.Surface): Objekt Surface hlavního okna hry.
         """
         self.screen = obrazovka
+                     
+        name_input = NameInput(screen)
+        player_name = name_input.run()
+             
         # Inicializace menu pro pauzu, předáváme aktuální obrazovku a její rozměry.
         self.pause_menu = PauseMenu(obrazovka, settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT, self)
 
@@ -82,6 +88,7 @@ class Game:
         self.pavouci_group = pavouci_group
         self.sudy_group = sudy_group
         self.hrac_obj = list(self.hrac_group)[0]  # Získejte referenci na hráče
+        self.player_name = settings.PLAYER_NAME
 
         # Herní stavové proměnné.
         self.zivoty = settings.ZIVOTY
