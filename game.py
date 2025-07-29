@@ -78,8 +78,8 @@ class Game:
         # --------------------------------------------------------------------------------------------------------------------             
         name_input = NameInput(self.screen)
         player_name = name_input.run()
-        font = pygame.font.SysFont(None, 50)
-        text = font.render(f"Vítej, {settings.PLAYER_NAME}", True, (255, 255, 255))
+        self.text = self.font_robot.render(f"{settings.PLAYER_NAME}", True, self.barva_textu)
+        self.text_rect = self.text.get_rect(center=(settings.SCREEN_WIDTH // 2, settings.VYSKA_HORNIHO_PANELU // 2))
         # ----------------------------------------------------------------------------------------------------------------------
              
         # Inicializace menu pro pauzu, předáváme aktuální obrazovku a její rozměry.
@@ -219,6 +219,9 @@ class Game:
         self.screen.blit(rychlost_text, rychlost_text_rect)
         self.screen.blit(self.nadpis_text, self.nadpis_text_rect)  # Používáme předrenderovaný nadpis
         self.screen.blit(score_text, score_text_rect)
+        # ----------------------------------------------------------------------------------------------------------------------------------
+        self.screen.blit(self.text, self.text_rect)
+        # ----------------------------------------------------------------------------------------------------------------------------------
 
     def update_stav_is_angry(self):
         """
