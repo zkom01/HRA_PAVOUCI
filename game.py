@@ -181,7 +181,7 @@ class Game:
         # Nyní používáme již škálovaný obrázek a umisťujeme ho pod horní panel.
         pozadi_image_rect = self.scaled_pozadi_image.get_rect(topleft=(0, settings.VYSKA_HORNIHO_PANELU))
         self.screen.blit(self.scaled_pozadi_image, pozadi_image_rect)
-
+# -------------------------------------------------------------------------------------------score, lives, speed atd dát na self.score a přestat předávat v parametru
     def kresleni_horniho_panelu(self, score, lives, speed):
         """
         Vykresluje horní informační panel s aktuálním skóre, počtem sudů, rychlostí a životy.
@@ -201,6 +201,7 @@ class Game:
                          (settings.SCREEN_WIDTH, settings.VYSKA_HORNIHO_PANELU))
 
         # Dynamické texty, které se mění, a proto se musí renderovat v každém snímku.
+# -------------------------------------------------------------------------------------------score, lives, speed atd dát na self.score a přestat předávat v parametru
         score_text = self.font_robot_small.render(f"POCET_KAPEK: {score}", True, self.barva_textu)
         score_text_rect = score_text.get_rect(topleft=(10, 0))
 
