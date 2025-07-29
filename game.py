@@ -79,7 +79,7 @@ class Game:
         name_input = NameInput(self.screen)
         player_name = name_input.run()
         self.text = self.font_robot.render(f"{settings.PLAYER_NAME}", True, self.barva_textu)
-        self.text_rect = self.text.get_rect(center=(settings.SCREEN_WIDTH // 2, settings.VYSKA_HORNIHO_PANELU // 2))
+        self.text_rect = self.text.get_rect(center=((settings.SCREEN_WIDTH // 2) + 240, settings.VYSKA_HORNIHO_PANELU // 2))
         # ----------------------------------------------------------------------------------------------------------------------
              
         # Inicializace menu pro pauzu, předáváme aktuální obrazovku a její rozměry.
