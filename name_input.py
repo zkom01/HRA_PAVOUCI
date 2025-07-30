@@ -92,7 +92,7 @@ class NameInput:
         """
         # 1. Krok: Vyplňte pozadí dialogu (tzn. vnitřek rámečku)
         # Použijeme tmavě šedou barvu pro pozadí dialogu
-        panel_color = (40, 40, 40)
+        panel_color = settings.BARVA_POD_TEXT_NABIDKYf
         pygame.draw.rect(screen, panel_color, (self.dialog_x, self.dialog_y, self.dialog_width, self.dialog_height),
                          border_radius=20)
 
