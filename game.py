@@ -642,9 +642,10 @@ class Game:
         Hlavní herní smyčka. Zpracovává události, aktualizuje herní stav a vykresluje.
         Pokračuje, dokud se proměnná `self.lets_continue` nestane False.
         """
+        self.kresleni()
+        self.zadani_jmena()
         while self.lets_continue:
             self.stisknute_klavesy()  # Zpracování uživatelského vstupu
-            self.zadani_jmena()
             if not self.game_paused:
                 self.update()  # Aktualizace herní logiky
                 self.hrac_group.update()  # Aktualizace hráče
