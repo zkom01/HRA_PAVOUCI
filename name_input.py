@@ -1,5 +1,5 @@
 import pygame
-
+import settings
 
 class NameInput:
     """
@@ -34,11 +34,11 @@ class NameInput:
 
         # Parametry dialogového rámečku
         # Tyto hodnoty určují velikost dialogu
-        self.dialog_width = 700
-        self.dialog_height = 350
+        self.dialog_width = 500
+        self.dialog_height = 200
         # Vypočítáme pozici dialogu, aby byl vycentrován na obrazovce
-        self.dialog_x = (screen.get_width() - self.dialog_width) // 2
-        self.dialog_y = (screen.get_height() - self.dialog_height) // 2
+        self.dialog_x = (self.screen.get_width() //2)
+        self.dialog_y = (self.screen.get_height() //2 + settings.VYSKA_HORNIHO_PANELU)
 
         # Vstupní pole - Inicializujeme s jeho skutečnými rozměry,
         # pozici pak doladíme v draw metodě, aby bylo vycentrováno uvnitř dialogu
@@ -69,13 +69,7 @@ class NameInput:
                     self.player_name += event.unicode
             self.cursor_visible = True  # Resetuje blikání kurzoru po každém stisku
             self.cursor_timer = pygame.time.get_ticks()
-
-        # Pokud input není aktivní (jméno už je zadané),
-        # čekáme na kliknutí myší pro pokračování do hry.
-        if not self.input_active:
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                return self.player_name
-        return None  # Jméno zatím nebylo potvrzeno
+        return None
 
     def update(self):
         """
