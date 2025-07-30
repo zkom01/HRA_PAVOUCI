@@ -81,7 +81,7 @@ class Game:
         self.player_name_entered = False  # Flag, který bude True, až když je jméno hotové
 
         # Inicializace menu pro pauzu, předáváme aktuální obrazovku a její rozměry.
-        self.pause_menu = PauseMenu(self.screen, settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT, self)
+        self.pause_menu = PauseMenu(self.screen, self)
 
         # Skupiny spritů pro snadnou správu herních objektů.
         self.hrac_group = hrac_group
