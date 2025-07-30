@@ -75,13 +75,11 @@ class Game:
             obrazovka (pygame.Surface): Objekt Surface hlavního okna hry.
         """
         self.screen = obrazovka
-        # # --------------------------------------------------------------------------------------------------------------------             
-        # name_input = NameInput(self.screen)
-        # self.player_name = name_input.run()
-        # self.text = self.font_robot.render(f"{self.player_name}", True, self.barva_textu)
-        # self.text_rect = self.text.get_rect(center=((settings.SCREEN_WIDTH // 2) + 240, settings.VYSKA_HORNIHO_PANELU // 2))
-        # # ----------------------------------------------------------------------------------------------------------------------
-             
+        # --- Fáze zadávání jména ---
+        # Vytvoření instance NameInput
+        self.name_input_screen = NameInput(self.screen)
+        self.player_name_entered = False  # Flag, který bude True, až když je jméno hotové
+
         # Inicializace menu pro pauzu, předáváme aktuální obrazovku a její rozměry.
         self.pause_menu = PauseMenu(self.screen, settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT, self)
 
@@ -172,6 +170,31 @@ class Game:
             center=(settings.SCREEN_WIDTH // 2, settings.VYSKA_HORNIHO_PANELU // 2)
         )
 
+    def zadani_jmena(self):
+        # Smyčka pro zadávání jména
+        while not self.player_name_entered:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return  # Ukončí program, pokud uživatel zavře okno
+
+                # Zpracování události třídou NameInput
+                returned_name = self.name_input_screen.handle_event(event)
+
+                # Pokud handle_event vrátí jméno, znamená to, že bylo potvrzeno
+                if returned_name:
+                    settings.PLAYER_NAME = returned_name  # Uložíme jméno do settings
+                    self.player_name_entered = True  # Nastavíme flag pro ukončení smyčky zadávání jména
+                    print(returned_name)
+
+            # Aktualizace a vykreslení obrazovky zadávání jména
+            self.name_input_screen.update()  # Aktualizuje kurzor
+            self.name_input_screen.draw(self.screen)  # Vykreslí aktuální stav na obrazovku
+
+            pygame.display.flip()  # Aktualizuje celou obrazovku
+            pygame.time.Clock().tick(settings.FPS)  # Řídí FPS pro fázi zadávání jména
+
+
     def kresleni_pozadi(self):
         """
         Vykreslí pozadí herní obrazovky.
@@ -181,7 +204,7 @@ class Game:
         # Nyní používáme již škálovaný obrázek a umisťujeme ho pod horní panel.
         pozadi_image_rect = self.scaled_pozadi_image.get_rect(topleft=(0, settings.VYSKA_HORNIHO_PANELU))
         self.screen.blit(self.scaled_pozadi_image, pozadi_image_rect)
-# -------------------------------------------------------------------------------------------score, lives, speed atd dát na self.score a přestat předávat v parametru
+# ---------------------------------------score, lives, speed atd dát na self.score a přestat předávat v parametru
     def kresleni_horniho_panelu(self, score, lives, speed):
         """
         Vykresluje horní informační panel s aktuálním skóre, počtem sudů, rychlostí a životy.
@@ -201,7 +224,7 @@ class Game:
                          (settings.SCREEN_WIDTH, settings.VYSKA_HORNIHO_PANELU))
 
         # Dynamické texty, které se mění, a proto se musí renderovat v každém snímku.
-# -------------------------------------------------------------------------------------------score, lives, speed atd dát na self.score a přestat předávat v parametru
+# -----------------------score, lives, speed atd dát na self.score a přestat předávat v parametru
         score_text = self.font_robot_small.render(f"POCET_KAPEK: {score}", True, self.barva_textu)
         score_text_rect = score_text.get_rect(topleft=(10, 0))
 
@@ -211,12 +234,11 @@ class Game:
         rychlost_text = self.font_robot.render(f"RYCHLOST HRY: {speed}", True, self.barva_textu)
         rychlost_text_rect = rychlost_text.get_rect(center=(450, settings.VYSKA_HORNIHO_PANELU // 2))
 
-        # --------------------------------------------------------------------------------------------------------------------             
-        name_input = NameInput(self.screen)
-        self.player_name = name_input.run()
-        text_jmeno = self.font_robot.render(f"{self.player_name}", True, self.barva_textu)
-        text_jmeno_rect = text_jmeno.get_rect(center=((settings.SCREEN_WIDTH // 2) + 240, settings.VYSKA_HORNIHO_PANELU // 2))
-        # ----------------------------------------------------------------------------------------------------------------------
+        # # --------------------------------------------------------------------------------------------------------------------
+
+        text_jmeno = self.font_robot.render(f"player: {settings.PLAYER_NAME}", True, self.barva_textu)
+        text_jmeno_rect = text_jmeno.get_rect(center=((settings.SCREEN_WIDTH // 2) + 480, settings.VYSKA_HORNIHO_PANELU // 2))
+        # # ----------------------------------------------------------------------------------------------------------------------
 
         lives_text = self.font_robot.render(f"ZIVOTY: {lives}", True, self.barva_textu)
         lives_text_rect = lives_text.get_rect(topright=(settings.SCREEN_WIDTH - 10, 0))
@@ -622,6 +644,7 @@ class Game:
         """
         while self.lets_continue:
             self.stisknute_klavesy()  # Zpracování uživatelského vstupu
+            self.zadani_jmena()
             if not self.game_paused:
                 self.update()  # Aktualizace herní logiky
                 self.hrac_group.update()  # Aktualizace hráče
