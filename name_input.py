@@ -132,15 +132,14 @@ class NameInput:
         text_surface = self.font.render(self.player_name, True, self.TEXT_COLOR)
         # Text je vycentrován v input boxu
         text_x = self.input_box.x + (self.input_box.width - text_surface.get_width()) // 2
-        text_y = self.input_box.y + (self.input_box.height - text_surface.get_height()) // 2
-        screen.blit(text_surface, (text_x, text_y))
+        text_y = self.input_box.y
 
         # --- Krok 5: Vykreslení blikajícího kurzoru ---
         if self.cursor_visible and self.input_active:
             cursor_x = text_x + text_surface.get_width() + 5  # Kousek za textem
             cursor_y = text_y
             pygame.draw.line(screen, self.WHITE, (cursor_x, cursor_y),
-                             (cursor_x, cursor_y + self.font.get_height()), 2)
+                             (cursor_x, cursor_y + self.font.get_height()))
 
         # --- Krok 6: Zpráva pro pokračování po zadání jména ---
         if not self.input_active:
