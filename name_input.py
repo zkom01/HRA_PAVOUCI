@@ -15,6 +15,8 @@ class NameInput:
             screen (pygame.Surface): Objekt Surface, na který se bude vykreslovat.
         """
         self.screen = screen
+        self.screen_width = settings.SCREEN_WIDTH
+        self.screen_height = settings.SCREEN_HEIGHT
         self.player_name = ""
         self.input_active = True  # Určuje, zda je vstupní pole aktivní pro psaní
         self.cursor_visible = True
@@ -29,8 +31,7 @@ class NameInput:
         self.TEXT_COLOR = (255, 255, 255)
 
         # Fonty
-        self.font_large = pygame.font.SysFont(None, 74)
-        self.font_medium = pygame.font.SysFont(None, 50)
+        self.font_large = pygame.font.Font(settings.FONT_ROBOT_PATH, 50)
 
         # Parametry dialogového rámečku
         # Tyto hodnoty určují velikost dialogu
@@ -118,15 +119,24 @@ class NameInput:
         pygame.draw.rect(screen, self.BORDER_COLOR, self.input_box, 2, border_radius=30)
 
         # 5. Krok: Vykreslení zadaného textu jména uvnitř input_boxu
-        text_surface = self.font_medium.render(self.player_name, True, self.TEXT_COLOR)
+        # Použijeme self.font_large pro vykreslení jména hráče
+        text_surface = self.font_large.render(self.player_name, True, self.TEXT_COLOR)
+
         # Text je vycentrován v input boxu
         text_x = self.input_box.x + (self.input_box.width - text_surface.get_width()) // 2
-        text_y = self.input_box.y + (self.input_box.height - text_surface.get_height()) // 2
+        text_y = self.input_box.y + (self.input_box.height - text_surface.get_height() - 3) // 2
         screen.blit(text_surface, (text_x, text_y))
 
         # 6. Krok: Vykreslení blikajícího kurzoru
         if self.cursor_visible and self.input_active:
             cursor_x = text_x + text_surface.get_width() + 5  # Kousek za textem
-            cursor_y = text_y
+            # --- ZDE JE ZMĚNA ---
+            # Definujeme umělou výšku kurzoru, např. 70 % výšky input boxu
+            cursor_height = self.input_box.height * 0.7
+
+            # Vypočítáme pozici Y, aby byl kurzor vertikálně vycentrován v input boxu
+            cursor_y = self.input_box.centery - (cursor_height // 2)
+
+            # Vykreslíme linku s upravenou výškou a pozicí
             pygame.draw.line(screen, self.WHITE, (cursor_x, cursor_y),
-                             (cursor_x, cursor_y + self.font_medium.get_height()), 2)
+                             (cursor_x, cursor_y + cursor_height), 2)

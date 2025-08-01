@@ -5,6 +5,7 @@ spouštějí předdefinované akce.
 """
 
 import pygame
+import settings
 
 class Button:
     """
@@ -45,7 +46,7 @@ class Button:
         self.text_color = (255, 255, 255)  # Bílá barva textu
 
         self.callback = callback # Funkce, která se spustí po kliknutí
-        self.font = pygame.font.SysFont(None, 40) # Nastavení písma pro text tlačítka (výchozí systémové, velikost 40)
+        self.font = pygame.font.Font(settings.FONT_ROBOT_PATH, 40) # Nastavení písma pro text tlačítka (výchozí systémové, velikost 40)
 
     def draw(self, surface: pygame.Surface):
         """
@@ -72,6 +73,7 @@ class Button:
         # Vykreslení textu na tlačítku
         text_surf = self.font.render(self.text, True, self.text_color) # Vytvoří surface s textem
         text_rect = text_surf.get_rect(center=self.rect.center)       # Získá obdélník textu a vycentruje ho na tlačítku
+        text_rect.y -= 3
         surface.blit(text_surf, text_rect) # Nakreslí text na surface
 
     def handle_event(self, event: pygame.event.Event):

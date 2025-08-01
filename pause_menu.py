@@ -9,10 +9,10 @@ class PauseMenu:
     Umožňuje hráči pozastavit hru a zvolit si mezi pokračováním, restartem nebo ukončením hry.
     """
 
-    def __init__(self, screen: pygame.Surface, screen_width: int, screen_height: int, game_instance):
+    def __init__(self, screen: pygame.Surface, game_instance):
         self.screen = screen
-        self.screen_width = screen_width
-        self.screen_height = screen_height
+        self.screen_width = settings.SCREEN_WIDTH
+        self.screen_height = settings.SCREEN_HEIGHT
         self.paused = False
         self.quit_requested = False
         self.restart_requested = False
