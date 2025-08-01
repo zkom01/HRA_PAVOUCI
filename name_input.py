@@ -23,12 +23,10 @@ class NameInput:
         self.cursor_timer = pygame.time.get_ticks()  # Pro blikání kurzoru
 
         # Barvy (můžete je později přesunout do settings.py pro jednotnost)
-        self.WHITE = (255, 255, 255)
-        # self.BLACK je zakomentováno, protože pozadí se řeší v main.py
-        self.GRAY = (70, 70, 70)
-        self.LIGHT_GRAY = (100, 100, 100)
-        self.BORDER_COLOR = (200, 200, 200)
-        self.TEXT_COLOR = (255, 255, 255)
+        self.WHITE = settings.WHITE
+        self.POZADI_INPUT= settings.SCREEN_COLOR
+        self.BORDER_COLOR = settings.WHITE
+        self.TEXT_COLOR = settings.BARVA_TEXTU
 
         # Fonty
         self.font_large = pygame.font.Font(settings.FONT_ROBOT_PATH, 50)
@@ -115,7 +113,7 @@ class NameInput:
         # Umístíme input_box pod text výzvy s mezerou 20 pixelů
         self.input_box.y = prompt_rect.bottom + 20
 
-        pygame.draw.rect(screen, self.GRAY, self.input_box, border_radius=20)
+        pygame.draw.rect(screen, self.POZADI_INPUT, self.input_box, border_radius=20)
         pygame.draw.rect(screen, self.BORDER_COLOR, self.input_box, 2, border_radius=20)
 
         # Vykreslení zadaného textu jména uvnitř input_boxu
