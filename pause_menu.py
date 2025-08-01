@@ -104,27 +104,21 @@ class PauseMenu:
         clock = pygame.time.Clock()
 
         while self.paused:
-            # # Vykreslení tmavého překrytí
-            # s = pygame.Surface((self.screen_width, self.screen_height), pygame.SRCALPHA)
-            # s.fill((0, 0, 0, 255)) # Černá s průhledností
-            # self.screen.blit(s, (0, 0))
-
             if not self.confirm_dialog_active:
                 # Vykreslení hlavních tlačítek menu
                 for button in self.buttons:
                     button.draw(self.screen)
             else:
-                # --- NOVÝ KÓD PRO RÁMEČEK POTVRZOVACÍHO DIALOGU ---
                 dialog_width = 500
                 dialog_height = 200
                 dialog_rect = pygame.Rect(0, 0, dialog_width, dialog_height)
                 dialog_rect.center = (self.screen_width // 2, self.screen_height // 2)
 
                 # Vyplnění pozadí dialogu (podobně jako u tlačítek)
-                pygame.draw.rect(self.screen, settings.BARVA_POD_TEXT_NABIDKY, dialog_rect, border_radius=10)
+                pygame.draw.rect(self.screen, settings.ANGRY_COLOR, dialog_rect, border_radius=20)
                 # Volitelné: ohraničení dialogu
                 pygame.draw.rect(self.screen, settings.WHITE, dialog_rect, 3,
-                                 border_radius=10)  # Bílý rámeček, tloušťka 3px
+                                 border_radius=20)  # Bílý rámeček, tloušťka 3px
 
                 # Text výzvy
                 prompt_text = f"Opravdu {self.current_action_pending}?"
@@ -142,8 +136,6 @@ class PauseMenu:
 
                 for button in self.confirm_buttons:
                     button.draw(self.screen)
-                # --- KONEC NOVÉHO KÓDU ---
-
 
             # Zpracování událostí
             for event in pygame.event.get():
@@ -151,21 +143,14 @@ class PauseMenu:
                     self.quit_requested = True
                     self.paused = False
                     break
-                # --- KLÍČOVÁ ZMĚNA ZDE ---
-                # Zpracování mezerníku a F11 pouze pokud NEJSME v potvrzovacím dialogu
-                if not self.confirm_dialog_active:
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_SPACE:
-                            self.paused = False # Resume hru
-                        elif event.key == pygame.K_F11:
-                            self.game_instance.fullscreen()
-                            self.game_instance.kresleni() # Vykreslí herní scénu po změně fullscreenu
-                # --- KONEC KLÍČOVÉ ZMĚNY ---
-# ---------------------------------------- změna fullscreen i při zobrazeni ANO NE ??????????????????????????????????????????????
-                # Předá událost příslušným tlačítkům
-                if not self.confirm_dialog_active:
-                    for button in self.buttons:
-                        button.handle_event(event)
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        self.paused = False # Resume hru
+                    elif event.key == pygame.K_F11:
+                        self.game_instance.fullscreen()
+                        self.game_instance.kresleni() # Vykreslí herní scénu po změně fullscreenu
+                for button in self.buttons:
+                    button.handle_event(event)
                 else:
                     for button in self.confirm_buttons:
                         button.handle_event(event)

@@ -91,35 +91,34 @@ class NameInput:
         Args:
             screen (pygame.Surface): Pygame surface, na kterou se má vykreslit.
         """
-        # 1. Krok: Vyplňte pozadí dialogu (tzn. vnitřek rámečku)
+        # Vyplňte pozadí dialogu (tzn. vnitřek rámečku)
         # Použijeme tmavě šedou barvu pro pozadí dialogu
-        panel_color = settings.BARVA_POD_TEXT_NABIDKY
+        panel_color = settings.ANGRY_COLOR
         pygame.draw.rect(screen, panel_color, (self.dialog_x, self.dialog_y, self.dialog_width, self.dialog_height),
                          border_radius=20)
 
-        # 2. Krok: Vykreslete okraj rámečku
+        # Vykreslete okraj rámečku
         # Použijeme světlejší šedou barvu pro okraj
-        border_color = (200, 200, 200)
+        border_color = settings.WHITE
         pygame.draw.rect(screen, border_color, (self.dialog_x, self.dialog_y, self.dialog_width, self.dialog_height), 3,
                          border_radius=20)
 
-        # 3. Krok: Vykreslete text výzvy "Zadejte jméno:"
+        # Vykreslete text výzvy "Zadejte jméno:"
         prompt = self.font_large.render("Zadejte jméno:", True, self.WHITE)
         # Centrování textu uvnitř dialogového rámečku, s odsazením shora
-        prompt_rect = prompt.get_rect(center=(self.dialog_x + self.dialog_width // 2, self.dialog_y + 70))
+        prompt_rect = prompt.get_rect(center=(self.dialog_x + self.dialog_width // 2, self.dialog_y + 50))
         screen.blit(prompt, prompt_rect)
 
-        # 4. Krok: Pozicování a vykreslení vstupního pole (input_box)
+        # Pozicování a vykreslení vstupního pole (input_box)
         # Vycentrujeme input_box horizontálně v dialogu
         self.input_box.centerx = self.dialog_x + self.dialog_width // 2
         # Umístíme input_box pod text výzvy s mezerou 20 pixelů
         self.input_box.y = prompt_rect.bottom + 20
 
-        pygame.draw.rect(screen, self.GRAY, self.input_box, border_radius=30)
-        pygame.draw.rect(screen, self.BORDER_COLOR, self.input_box, 2, border_radius=30)
+        pygame.draw.rect(screen, self.GRAY, self.input_box, border_radius=20)
+        pygame.draw.rect(screen, self.BORDER_COLOR, self.input_box, 2, border_radius=20)
 
-        # 5. Krok: Vykreslení zadaného textu jména uvnitř input_boxu
-        # Použijeme self.font_large pro vykreslení jména hráče
+        # Vykreslení zadaného textu jména uvnitř input_boxu
         text_surface = self.font_large.render(self.player_name, True, self.TEXT_COLOR)
 
         # Text je vycentrován v input boxu
@@ -127,10 +126,9 @@ class NameInput:
         text_y = self.input_box.y + (self.input_box.height - text_surface.get_height() - 3) // 2
         screen.blit(text_surface, (text_x, text_y))
 
-        # 6. Krok: Vykreslení blikajícího kurzoru
+        # Vykreslení blikajícího kurzoru
         if self.cursor_visible and self.input_active:
             cursor_x = text_x + text_surface.get_width() + 5  # Kousek za textem
-            # --- ZDE JE ZMĚNA ---
             # Definujeme umělou výšku kurzoru, např. 70 % výšky input boxu
             cursor_height = self.input_box.height * 0.7
 

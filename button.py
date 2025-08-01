@@ -66,14 +66,14 @@ class Button:
         color = self.color_hover if is_hover else self.color_normal
         
         # Vykreslí pozadí tlačítka se zaoblenými rohy
-        pygame.draw.rect(surface, color, self.rect, border_radius=30)
+        pygame.draw.rect(surface, color, self.rect, border_radius=20)
         # Vykreslí tenký okraj kolem tlačítka
-        pygame.draw.rect(surface, (200, 200, 200), self.rect, 2, border_radius=30)
+        pygame.draw.rect(surface, (200, 200, 200), self.rect, 3, border_radius=20)
         
         # Vykreslení textu na tlačítku
         text_surf = self.font.render(self.text, True, self.text_color) # Vytvoří surface s textem
         text_rect = text_surf.get_rect(center=self.rect.center)       # Získá obdélník textu a vycentruje ho na tlačítku
-        text_rect.y -= 3
+        text_rect.y -= 3 # použitý font je ve skutečnosti vyšší (diakritika) proto -3px
         surface.blit(text_surf, text_rect) # Nakreslí text na surface
 
     def handle_event(self, event: pygame.event.Event):
