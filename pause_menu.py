@@ -115,15 +115,15 @@ class PauseMenu:
                 dialog_rect.center = (self.screen_width // 2, self.screen_height // 2)
 
                 # Vyplnění pozadí dialogu (podobně jako u tlačítek)
-                pygame.draw.rect(self.screen, settings.ANGRY_COLOR, dialog_rect, border_radius=20)
+                pygame.draw.rect(self.screen, settings.POZADI_MENU, dialog_rect, border_radius=20)
                 # Volitelné: ohraničení dialogu
-                pygame.draw.rect(self.screen, settings.WHITE, dialog_rect, 3,
+                pygame.draw.rect(self.screen, settings.BORDER, dialog_rect, 3,
                                  border_radius=20)  # Bílý rámeček, tloušťka 3px
 
                 # Text výzvy
                 prompt_text = f"Opravdu {self.current_action_pending}?"
                 font_large = pygame.font.Font(settings.FONT_ROBOT_PATH, 50)
-                prompt_surface = font_large.render(prompt_text, True, settings.WHITE)
+                prompt_surface = font_large.render(prompt_text, True, settings.BARVA_TEXTU_MENU )
                 # Umístíme text relativně k dialog_rect, nikoli k celé obrazovce
                 prompt_rect = prompt_surface.get_rect(center=(dialog_rect.centerx, dialog_rect.top + 50))
                 self.screen.blit(prompt_surface, prompt_rect)

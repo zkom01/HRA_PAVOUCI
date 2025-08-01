@@ -25,8 +25,8 @@ class NameInput:
         # Barvy (můžete je později přesunout do settings.py pro jednotnost)
         self.WHITE = settings.WHITE
         self.POZADI_INPUT= settings.SCREEN_COLOR
-        self.BORDER_COLOR = settings.WHITE
-        self.TEXT_COLOR = settings.BARVA_TEXTU
+        self.BORDER_COLOR = settings.BORDER
+        self.TEXT_COLOR = settings.BARVA_TEXTU_MENU
 
         # Fonty
         self.font_large = pygame.font.Font(settings.FONT_ROBOT_PATH, 50)
@@ -91,18 +91,18 @@ class NameInput:
         """
         # Vyplňte pozadí dialogu (tzn. vnitřek rámečku)
         # Použijeme tmavě šedou barvu pro pozadí dialogu
-        panel_color = settings.ANGRY_COLOR
+        panel_color = settings.POZADI_MENU
         pygame.draw.rect(screen, panel_color, (self.dialog_x, self.dialog_y, self.dialog_width, self.dialog_height),
                          border_radius=20)
 
         # Vykreslete okraj rámečku
         # Použijeme světlejší šedou barvu pro okraj
-        border_color = settings.WHITE
+        border_color = settings.BORDER
         pygame.draw.rect(screen, border_color, (self.dialog_x, self.dialog_y, self.dialog_width, self.dialog_height), 3,
                          border_radius=20)
 
         # Vykreslete text výzvy "Zadejte jméno:"
-        prompt = self.font_large.render("Zadejte jméno:", True, self.WHITE)
+        prompt = self.font_large.render("Zadejte jméno:", True, settings.BARVA_TEXTU_MENU)
         # Centrování textu uvnitř dialogového rámečku, s odsazením shora
         prompt_rect = prompt.get_rect(center=(self.dialog_x + self.dialog_width // 2, self.dialog_y + 50))
         screen.blit(prompt, prompt_rect)

@@ -3,7 +3,6 @@ Modul settings.py obsahuje globální konstanty a konfigurační parametry pro h
 Definuje herní pravidla, rozměry obrazovky, rychlosti objektů, barvy,
 cesty k souborům s médii a další důležitá nastavení.
 """
-
 from screeninfo import get_monitors
 
 # --- Základní herní pravidla ---
@@ -71,7 +70,13 @@ SCREEN_COLOR = (0, 0, 0)                # Černá barva pozadí obrazovky
 BARVA_TEXTU = (50, 103, 6)              # Specifická zelená barva pro texty
 WHITE = (255, 255, 255)                 # Čistě bílá barva
 ANGRY_COLOR = (128, 0, 0)               # Tmavě červená barva, např. pro indikaci "naštvaného" stavu
-BARVA_HOVER = (58, 88, 255)             # Světle modrá barva pro efekt najetí myši na tlačítka
+
+# --- Barvy pro tlačítka a menu ---
+BORDER = (242, 216, 82)
+POZADI_TLACITKA = (0, 0, 0) # Černá
+POZADI_TLACITKA_HOVER = (50, 103, 6)
+POZADI_MENU = (128, 0, 0) # Tmavě červená barva
+BARVA_TEXTU_MENU = BORDER
 
 # --- Cesty k souborům s médii ---
 # Cesta k souboru s ikonou okna hry.

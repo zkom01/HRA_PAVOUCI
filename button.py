@@ -41,9 +41,9 @@ class Button:
         self.rect = pygame.Rect(x, y, width, height) # Vytvoří obdélníkovou oblast pro tlačítko
         
         # Barevná schémata pro různé stavy tlačítka
-        self.color_normal = settings.SCREEN_COLOR   # Tmavší šedá pro normální stav
-        self.color_hover = settings.WHITE # Světlejší šedá pro najetí myši
-        self.text_color = settings.BARVA_TEXTU  # Bílá barva textu
+        self.color_normal = settings.POZADI_TLACITKA
+        self.color_hover = settings.POZADI_TLACITKA_HOVER
+        self.text_color = settings.BARVA_TEXTU_MENU
 
         self.callback = callback # Funkce, která se spustí po kliknutí
         self.font = pygame.font.Font(settings.FONT_ROBOT_PATH, 40) # Nastavení písma pro text tlačítka
@@ -68,7 +68,7 @@ class Button:
         # Vykreslí pozadí tlačítka se zaoblenými rohy
         pygame.draw.rect(surface, color, self.rect, border_radius=20)
         # Vykreslí tenký okraj kolem tlačítka
-        pygame.draw.rect(surface, settings.WHITE, self.rect, 3, border_radius=20)
+        pygame.draw.rect(surface, settings.BORDER, self.rect, 3, border_radius=20)
         
         # Vykreslení textu na tlačítku
         text_surf = self.font.render(self.text, True, self.text_color) # Vytvoří surface s textem
