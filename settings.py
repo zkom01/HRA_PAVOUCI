@@ -74,7 +74,7 @@ ANGRY_COLOR = (128, 0, 0)               # Tmavě červená barva, např. pro ind
 # --- Barvy pro tlačítka a menu ---
 BORDER = (242, 216, 82)
 POZADI_TLACITKA = (0, 0, 0) # Černá
-POZADI_TLACITKA_HOVER = (50, 103, 6)
+POZADI_TLACITKA_HOVER = (50, 103, 6) # Specifická zelená barva pro texty
 POZADI_MENU = (128, 0, 0) # Tmavě červená barva
 BARVA_TEXTU_MENU = BORDER
 

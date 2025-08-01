@@ -59,12 +59,12 @@ class NameInput:
                 if self.player_name:
                     self.input_active = False  # Zneaktivní input po stisku Enter
                     self.cursor_visible = False  # Skryje kurzor
-                    return self.player_name  # Vrátí zadané jméno
+                    return self.player_name
             elif event.key == pygame.K_BACKSPACE:
                 self.player_name = self.player_name[:-1]
             else:
-                # Přidá znak, pokud je tisknutelný a jméno není příliš dlouhé (max. 8 znaků)
-                if event.unicode.isprintable() and len(self.player_name) < 8:
+                # Přidá znak, pokud je tisknutelný a jméno není příliš dlouhé (max. 8 znaků) a není mezerník
+                if event.unicode.isprintable() and len(self.player_name) <= 8 and event.key != pygame.K_SPACE:
                     self.player_name += event.unicode
             self.cursor_visible = True  # Resetuje blikání kurzoru po každém stisku
             self.cursor_timer = pygame.time.get_ticks()
