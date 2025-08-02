@@ -7,13 +7,13 @@ from screeninfo import get_monitors
 
 # --- Základní herní pravidla ---
 # Počáteční počet životů hráče.
-ZIVOTY = 3
+ZIVOTY = 1
 # Počet sebraných kapek jídla potřebných k získání jednoho sudu (segmentu "hada").
 POCET_KAPEK_NA_SUD = 2
 # Počáteční skóre hráče.
 SCORE = 0
 
-PLAYER_NAME = "anonym"
+PLAYER_NAME = ""
 
 # --- Rychlosti herních objektů ---
 # Základní rychlost pohybu pavouků (v pixelech za snímek).
@@ -92,7 +92,7 @@ KOUSANEC_SOUND_PATH = "media/sounds/kousanec.ogg"
 # Cesta k souboru se zvukem aktivace rychlostního bonusu.
 RYCHLOST_SOUND_PATH = "media/sounds/rychlost.ogg"
 # Cesta k souboru se zvukem, když se pavouk "naštve".
-ANGRY_SOUND_PATH = "media/sounds/angry.ogg"
+ANGRY_SOUND_PATH = "media/sounds/alarm.ogg"
 # Cesta k souboru s obrázkem pozadí hry.
 POZADI_IMAGE_PATH = "media/img/pozadi.png"
 

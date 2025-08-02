@@ -170,6 +170,9 @@ class Game:
             center=(settings.SCREEN_WIDTH // 2, settings.VYSKA_HORNIHO_PANELU // 2)
         )
 
+
+
+
     def zadani_jmena(self):
         # Smyčka pro zadávání jména
         while not self.player_name_entered:
@@ -203,15 +206,11 @@ class Game:
         # Nyní používáme již škálovaný obrázek a umisťujeme ho pod horní panel.
         pozadi_image_rect = self.scaled_pozadi_image.get_rect(topleft=(0, settings.VYSKA_HORNIHO_PANELU))
         self.screen.blit(self.scaled_pozadi_image, pozadi_image_rect)
-# ---------------------------------------score, lives, speed atd dát na self.score a přestat předávat v parametru
-    def kresleni_horniho_panelu(self, score, lives, speed):
+
+    def kresleni_horniho_panelu(self):
         """
         Vykresluje horní informační panel s aktuálním skóre, počtem sudů, rychlostí a životy.
 
-        Args:
-            score (int): Aktuální skóre hráče (počet kapek).
-            lives (int): Aktuální počet životů hráče.
-            speed (str/int): Aktuální rychlost hry (textový popis nebo číslo).
         """
         # Přistup k player objektu. Předpokládá se, že v hrací skupině je jen jeden hráč.
         pocet_sudu = len(list(self.hrac_group)[0].had_segmenty)
@@ -223,23 +222,20 @@ class Game:
                          (settings.SCREEN_WIDTH, settings.VYSKA_HORNIHO_PANELU))
 
         # Dynamické texty, které se mění, a proto se musí renderovat v každém snímku.
-# -----------------------score, lives, speed atd dát na self.score a přestat předávat v parametru
-        score_text = self.font_robot_small.render(f"POCET_KAPEK: {score}", True, self.barva_textu)
+
+        score_text = self.font_robot_small.render(f"POCET_KAPEK: {self.score}", True, self.barva_textu)
         score_text_rect = score_text.get_rect(topleft=(10, 0))
 
         barel_text = self.font_robot_small.render(f"POCET_SUDU: {pocet_sudu}", True, self.barva_textu)
         barel_text_rect = barel_text.get_rect(topleft=(10, 25))
 
-        rychlost_text = self.font_robot.render(f"RYCHLOST HRY: {speed}", True, self.barva_textu)
+        rychlost_text = self.font_robot.render(f"RYCHLOST HRY: {self.rychlost}", True, self.barva_textu)
         rychlost_text_rect = rychlost_text.get_rect(center=(450, settings.VYSKA_HORNIHO_PANELU // 2))
-
-        # # --------------------------------------------------------------------------------------------------------------------
 
         text_jmeno = self.font_robot.render(f"player: {settings.PLAYER_NAME}", True, self.barva_textu)
         text_jmeno_rect = text_jmeno.get_rect(center=((settings.SCREEN_WIDTH // 2) + 480, settings.VYSKA_HORNIHO_PANELU // 2))
-        # # ----------------------------------------------------------------------------------------------------------------------
 
-        lives_text = self.font_robot.render(f"ZIVOTY: {lives}", True, self.barva_textu)
+        lives_text = self.font_robot.render(f"ZIVOTY: {self.zivoty}", True, self.barva_textu)
         lives_text_rect = lives_text.get_rect(topright=(settings.SCREEN_WIDTH - 10, 0))
 
         # Vykreslení všech textů na obrazovku.
@@ -248,9 +244,9 @@ class Game:
         self.screen.blit(rychlost_text, rychlost_text_rect)
         self.screen.blit(self.nadpis_text, self.nadpis_text_rect)  # Používáme předrenderovaný nadpis
         self.screen.blit(score_text, score_text_rect)
-        # ----------------------------------------------------------------------------------------------------------------------------------
         self.screen.blit(text_jmeno, text_jmeno_rect)
-        # ----------------------------------------------------------------------------------------------------------------------------------
+
+
 
     def update_stav_is_angry(self):
         """
@@ -426,6 +422,8 @@ class Game:
                     # (pouze pokud hrac není imunní, když je imuní pavouk se nepřesune)
                     pavouk_obj.rect.x = -500
                     pavouk_obj.rect.y = -500
+            if self.zivoty == 0:
+                self.game_over()
 
     def pause(self):
         """
@@ -507,6 +505,27 @@ class Game:
 
         # Zajišťuje, že se hra po restartu nepřeruší
         self.lets_continue = True
+
+    def game_over(self):
+# -------------------------------------------------------------------------------------------------------------------------------
+        self.zivoty = 0
+        self.kresleni_horniho_panelu()
+        dialog_width = 500
+        dialog_height = 200
+        dialog_rect = pygame.Rect(0, 0, dialog_width, dialog_height)
+        dialog_rect.center = (settings.SCREEN_WIDTH // 2, 300 + 3)
+
+        # Vyplnění pozadí dialogu (podobně jako u tlačítek)
+        pygame.draw.rect(self.screen, settings.POZADI_MENU, dialog_rect, border_radius=20)
+        # Volitelné: ohraničení dialogu
+        pygame.draw.rect(self.screen, settings.BORDER, dialog_rect, 3,
+                         border_radius=20)  # Bílý rámeček, tloušťka 3px
+
+        text_game_over = self.font_robot_big_1.render("GAME OVER", True, settings.BARVA_TEXTU_MENU)
+        text_game_over_rect = text_game_over.get_rect(center=((settings.SCREEN_WIDTH // 2), 300))
+        self.screen.blit(text_game_over, text_game_over_rect)
+        self.pause()  # Pozastaví/rozjede hru
+
 
     def stisknute_klavesy(self):
         """
@@ -623,7 +642,7 @@ class Game:
         self.pavouci_group.draw(self.screen)  # Vykreslí všechny pavouky
         self.hrac_group.draw(self.screen)  # Vykreslí hráče
         # Vykreslí horní panel s aktuálními herními informacemi
-        self.kresleni_horniho_panelu(self.score, self.zivoty, self.rychlost)
+        self.kresleni_horniho_panelu()
         pygame.display.update()  # Aktualizuje celou obrazovku
 
     def update(self):
