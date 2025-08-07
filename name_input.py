@@ -45,7 +45,7 @@ class NameInput:
         self.input_box = pygame.Rect(0, 0, 400, 50)  # Šířka 400, výška 50
         self.ok_button = Button("OK",
                                 self.dialog_x + self.dialog_width // 2,
-                                self.dialog_y + self.dialog_height - 30,
+                                self.dialog_y + self.dialog_height - 35,
                                 150, 50,
                                 self.confirm_name)
 
@@ -128,7 +128,7 @@ class NameInput:
         # Vycentrujeme input_box horizontálně v dialogu
         self.input_box.centerx = self.dialog_x + self.dialog_width // 2
         # Umístíme input_box pod text výzvy s mezerou 20 pixelů
-        self.input_box.y = prompt_rect.bottom + 20
+        self.input_box.y = prompt_rect.bottom
 
         pygame.draw.rect(screen, self.POZADI_INPUT, self.input_box, border_radius=20)
         pygame.draw.rect(screen, self.BORDER_COLOR, self.input_box, 2, border_radius=20)
@@ -155,5 +155,5 @@ class NameInput:
                              (cursor_x, cursor_y + cursor_height), 2)
 
         self.ok_button.rect.centerx = self.dialog_x + self.dialog_width // 2
-        self.ok_button.rect.centery = self.dialog_y + self.dialog_height - 30
+        self.ok_button.rect.centery = self.dialog_y + self.dialog_height - 35
         self.ok_button.draw(screen)
