@@ -1,5 +1,6 @@
 import pygame
 import settings
+from button import Button
 
 class NameInput:
     """
@@ -42,6 +43,17 @@ class NameInput:
         # Vstupní pole - Inicializujeme s jeho skutečnými rozměry,
         # pozici pak doladíme v draw metodě, aby bylo vycentrováno uvnitř dialogu
         self.input_box = pygame.Rect(0, 0, 400, 50)  # Šířka 400, výška 50
+        self.ok_button = Button("OK",
+                                self.dialog_x + self.dialog_width // 2,
+                                self.dialog_y + self.dialog_height - 30,
+                                150, 50,
+                                self.confirm_name)
+
+    def confirm_name(self):
+        """Callback pro tlačítko OK – potvrdí jméno, pokud nějaké je."""
+        if self.player_name:
+            self.input_active = False
+            self.cursor_visible = False
 
     def handle_event(self, event: pygame.event.Event) -> str | None:
         """
@@ -51,23 +63,28 @@ class NameInput:
             event (pygame.event.Event): Událost Pygame k zpracování.
 
         Returns:
-            str | None: Vrátí zadané jméno, pokud bylo potvrzeno klávesou Enter
-                        a je delší než 0, jinak None.
+            str | None: Vrátí zadané jméno, pokud bylo potvrzeno, jinak None.
         """
+        # Zpracování kliknutí na OK tlačítko
+        self.ok_button.handle_event(event)
+
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN:
                 if self.player_name:
-                    self.input_active = False  # Zneaktivní input po stisku Enter
-                    self.cursor_visible = False  # Skryje kurzor
+                    self.confirm_name()  # Použijeme stejnou logiku jako tlačítko OK
                     return self.player_name
             elif event.key == pygame.K_BACKSPACE:
                 self.player_name = self.player_name[:-1]
             else:
-                # Přidá znak, pokud je tisknutelný a jméno není příliš dlouhé (max. 8 znaků) a není mezerník
                 if event.unicode.isprintable() and len(self.player_name) <= 8 and event.key != pygame.K_SPACE:
                     self.player_name += event.unicode
-            self.cursor_visible = True  # Resetuje blikání kurzoru po každém stisku
+            self.cursor_visible = True
             self.cursor_timer = pygame.time.get_ticks()
+
+        # Ověří, zda bylo jméno potvrzeno (buď Enter, nebo tlačítkem OK)
+        if not self.input_active and self.player_name:
+            return self.player_name
+
         return None
 
     def update(self):
@@ -136,3 +153,7 @@ class NameInput:
             # Vykreslíme linku s upravenou výškou a pozicí
             pygame.draw.line(screen, self.WHITE, (cursor_x, cursor_y),
                              (cursor_x, cursor_y + cursor_height), 2)
+
+        self.ok_button.rect.centerx = self.dialog_x + self.dialog_width // 2
+        self.ok_button.rect.centery = self.dialog_y + self.dialog_height - 30
+        self.ok_button.draw(screen)

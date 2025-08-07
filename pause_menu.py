@@ -149,8 +149,10 @@ class PauseMenu:
                     elif event.key == pygame.K_F11:
                         self.game_instance.fullscreen()
                         self.game_instance.kresleni() # Vykreslí herní scénu po změně fullscreenu
-                for button in self.buttons:
-                    button.handle_event(event)
+                # Zpracování kliknutí jen na aktivní sadu tlačítek
+                if not self.confirm_dialog_active:
+                    for button in self.buttons:
+                        button.handle_event(event)
                 else:
                     for button in self.confirm_buttons:
                         button.handle_event(event)
