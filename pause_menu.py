@@ -94,6 +94,7 @@ class PauseMenu:
             elif self.current_action_pending == "ukončit":
                 self.quit_requested = True
                 self.paused = False # Ukončí smyčku menu
+# ------------------ dodělat zobrazení opravdu text talčítka
             elif self.current_action_pending == "new_game":
                 self.new_game_requested = True
                 self.paused = False # Ukončí smyčku menu
