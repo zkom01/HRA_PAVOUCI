@@ -8,13 +8,14 @@ class NameInput:
     Spravuje vykreslování vstupního pole, kurzoru a zpracování klávesových událostí.
     """
 
-    def __init__(self, screen):
+    def __init__(self, screen, game_instance):
         """
         Inicializuje instanci NameInput.
 
         Args:
             screen (pygame.Surface): Objekt Surface, na který se bude vykreslovat.
         """
+        self.game_instance = game_instance
         self.screen = screen
         self.screen_width = settings.SCREEN_WIDTH
         self.screen_height = settings.SCREEN_HEIGHT
@@ -86,6 +87,16 @@ class NameInput:
             return self.player_name
 
         return None
+
+    def reset(self):
+        """
+        Tato metoda resetuje stav NameInput pro novou hru.
+        """
+        self.game_instance.kresleni()
+        self.player_name = ""
+        self.input_active = True
+        self.cursor_visible = True
+        self.cursor_timer = pygame.time.get_ticks()
 
     def update(self):
         """

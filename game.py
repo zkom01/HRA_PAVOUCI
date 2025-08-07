@@ -77,7 +77,7 @@ class Game:
         self.screen = obrazovka
         # --- Fáze zadávání jména ---
         # Vytvoření instance NameInput
-        self.name_input_screen = NameInput(self.screen)
+        self.name_input_screen = NameInput(self.screen, self)
         self.player_name_entered = False  # Flag, který bude True, až když je jméno hotové
 
         # Inicializace menu pro pauzu, předáváme aktuální obrazovku a její rozměry.
@@ -170,11 +170,11 @@ class Game:
             center=(settings.SCREEN_WIDTH // 2, settings.VYSKA_HORNIHO_PANELU // 2)
         )
 
-
-
-
     def zadani_jmena(self):
         # Smyčka pro zadávání jména
+
+        self.name_input_screen.reset()
+        self.player_name_entered = False
         while not self.player_name_entered:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -245,8 +245,6 @@ class Game:
         self.screen.blit(self.nadpis_text, self.nadpis_text_rect)  # Používáme předrenderovaný nadpis
         self.screen.blit(score_text, score_text_rect)
         self.screen.blit(text_jmeno, text_jmeno_rect)
-
-
 
     def update_stav_is_angry(self):
         """
@@ -443,11 +441,21 @@ class Game:
                 # Zde by se měla přidat logika pro restart hry (např. resetování všech herních proměnných
                 # a pozic objektů, nebo volání metody pro restart).
                 self.restart()
+            elif result == "new_game":
+                # Zde by se měla přidat logika pro restart hry (např. resetování všech herních proměnných
+                # a pozic objektů, nebo volání metody pro restart).
+                self.new_game()
+
             else:  # result == "continue" nebo jakákoli jiná možnost, která nekončí hru
                 pygame.mixer.music.unpause()  # **Pokračuje v hudbě po návratu z menu**
                 if self.alarm_hraje:  # Pokud hrál alarm před pauzou, měl by hrát i teď
                     self.kanal4.play(self.angry_sound, loops=-1)
                 self.hrac_obj.direction = None
+
+    def new_game(self):
+        self.zadani_jmena()
+        if self.player_name_entered:
+            self.restart()
 
     def restart(self):
         """
@@ -661,7 +669,8 @@ class Game:
         Pokračuje, dokud se proměnná `self.lets_continue` nestane False.
         """
         self.kresleni()
-        self.zadani_jmena()
+        # self.zadani_jmena()
+        self.new_game()
         while self.lets_continue:
             self.stisknute_klavesy()  # Zpracování uživatelského vstupu
             if not self.game_paused:
