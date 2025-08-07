@@ -16,6 +16,7 @@ class PauseMenu:
         self.paused = False
         self.quit_requested = False
         self.restart_requested = False
+        self.new_game_requested = False
         self.game_instance = game_instance
         self.confirm_dialog_active = False # True, pokud se zobrazuje potvrzovací dialog
         self.current_action_pending = None # Uloží 'restart' nebo 'quit', pro které čekáme na potvrzení
@@ -28,6 +29,7 @@ class PauseMenu:
 
         # Vytvoření tlačítek hlavního menu s callback funkcemi
         self.buttons: list[Button] = [
+            Button("Nová hra", self.screen_width // 2, self.start_y, button_width, button_height, self._request_new_game_confirmation),
             Button("Pokračovat", self.screen_width // 2, self.start_y, button_width, button_height, self.resume_game),
             Button("Restart", self.screen_width // 2, self.start_y + button_spacing, button_width, button_height, self._request_restart_confirmation), # Změněno
             Button("Ukončit", self.screen_width // 2, self.start_y + (2 * button_spacing), button_width, button_height, self._request_quit_confirmation), # Změněno
@@ -62,7 +64,12 @@ class PauseMenu:
     def resume_game(self):
         self.paused = False
 
-    # NOVÉ CALLBACK FUNKCE PRO TLAČÍTKA "RESTART" A "UKONČIT"
+    # NOVÉ CALLBACK FUNKCE PRO TLAČÍTKA "RESTART" A "UKONČIT A "NOVÁ HRA" "
+    def _request_new_game_confirmation(self):
+        """Nastaví stav pro zobrazení potvrzení pro restart."""
+        self.confirm_dialog_active = True
+        self.current_action_pending = "new_game"
+
     def _request_restart_confirmation(self):
         """Nastaví stav pro zobrazení potvrzení pro restart."""
         self.confirm_dialog_active = True
@@ -87,6 +94,9 @@ class PauseMenu:
             elif self.current_action_pending == "ukončit":
                 self.quit_requested = True
                 self.paused = False # Ukončí smyčku menu
+            elif self.current_action_pending == "new_game":
+                self.new_game_requested = True
+                self.paused = False # Ukončí smyčku menu
         else:
             # Pokud uživatel zvolil NE, resetujeme čekající akci a zůstaneme v hlavním menu pauzy
             self.current_action_pending = None
@@ -98,6 +108,7 @@ class PauseMenu:
         self.paused = True
         self.quit_requested = False
         self.restart_requested = False
+        self.new_game_requested = False
         self.confirm_dialog_active = False # Zajištění, že začínáme v hlavním menu
         self.current_action_pending = None
 
@@ -164,5 +175,7 @@ class PauseMenu:
             return "quit"
         elif self.restart_requested:
             return "restart"
+        elif self.new_game_requested:
+            return "new_game"
         else:
             return "resume"
