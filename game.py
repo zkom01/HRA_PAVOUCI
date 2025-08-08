@@ -11,6 +11,7 @@ import settings
 from barrel import Sud
 from pause_menu import PauseMenu
 from name_input import NameInput
+from score import Score
 
 
 # Definujte protokol pro objekty, které mají 'rect' atribut
@@ -82,6 +83,7 @@ class Game:
 
         # Inicializace menu pro pauzu, předáváme aktuální obrazovku a její rozměry.
         self.pause_menu = PauseMenu(self.screen, self)
+        self.score_list = Score()
 
         # Skupiny spritů pro snadnou správu herních objektů.
         self.hrac_group = hrac_group
@@ -516,6 +518,10 @@ class Game:
 
     def game_over(self):
 # -------------------------------------------------------------------------------------------------------------------------------
+        top_scores = self.score_list.save_score(settings.PLAYER_NAME, self.score)
+        print(top_scores[0])
+        print(f"Jmeno hrače: {top_scores[0][0]} , Score: {top_scores[0][1]}")
+# --------------------------------------------------------------------------------------------------------------------------------
         self.zivoty = 0
         self.kresleni_horniho_panelu()
         dialog_width = 500
