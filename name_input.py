@@ -38,8 +38,8 @@ class NameInput:
         self.dialog_width = 500
         self.dialog_height = 200
         # Vypočítáme pozici dialogu, aby byl vycentrován na obrazovce
-        self.dialog_x = (settings.SCREEN_WIDTH //2 + 10)
-        self.dialog_y = (settings.SCREEN_HEIGHT //2 + settings.VYSKA_HORNIHO_PANELU + 25)
+        self.dialog_x = (self.screen_width //2 + 10)
+        self.dialog_y = (self.screen_height //2 + settings.VYSKA_HORNIHO_PANELU + 25)
 
         # Vstupní pole - Inicializujeme s jeho skutečnými rozměry,
         # pozici pak doladíme v draw metodě, aby bylo vycentrováno uvnitř dialogu

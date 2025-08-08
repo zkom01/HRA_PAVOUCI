@@ -70,19 +70,19 @@ class PauseMenu:
         """Nastaví stav pro zobrazení potvrzení pro restart."""
         self.confirm_dialog_active = True
         self.current_action_pending = "new_game"
-        self.text_confirm_dialog = "nová hra"
+        self.text_confirm_dialog = "NOVÁ HRA"
 
     def _request_restart_confirmation(self):
         """Nastaví stav pro zobrazení potvrzení pro restart."""
         self.confirm_dialog_active = True
         self.current_action_pending = "restart"
-        self.text_confirm_dialog = "restart"
+        self.text_confirm_dialog = "RESTART"
 
     def _request_quit_confirmation(self):
         """Nastaví stav pro zobrazení potvrzení pro ukončení."""
         self.confirm_dialog_active = True
         self.current_action_pending = "ukončit"
-        self.text_confirm_dialog = "ukončit"
+        self.text_confirm_dialog = "UKONČIT"
 
     def _confirm_action(self, confirmed: bool):
         """
@@ -115,6 +115,7 @@ class PauseMenu:
         self.new_game_requested = False
         self.confirm_dialog_active = False # Zajištění, že začínáme v hlavním menu
         self.current_action_pending = None
+        self.update_screen_size(settings.SCREEN_WIDTH,settings.SCREEN_HEIGHT)
 
         clock = pygame.time.Clock()
 
