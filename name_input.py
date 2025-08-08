@@ -70,7 +70,7 @@ class NameInput:
         self.ok_button.handle_event(event)
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RETURN:
+            if event.key == pygame.K_RETURN  or event.key == pygame.K_KP_ENTER:
                 if self.player_name:
                     self.confirm_name()  # Použijeme stejnou logiku jako tlačítko OK
                     return self.player_name

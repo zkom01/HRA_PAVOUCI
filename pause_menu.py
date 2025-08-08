@@ -20,6 +20,7 @@ class PauseMenu:
         self.game_instance = game_instance
         self.confirm_dialog_active = False # True, pokud se zobrazuje potvrzovací dialog
         self.current_action_pending = None # Uloží 'restart' nebo 'quit', pro které čekáme na potvrzení
+        self.text_confirm_dialog = ""
 
         # Nastavení rozměrů a pozice tlačítek
         button_width = 400
@@ -69,16 +70,19 @@ class PauseMenu:
         """Nastaví stav pro zobrazení potvrzení pro restart."""
         self.confirm_dialog_active = True
         self.current_action_pending = "new_game"
+        self.text_confirm_dialog = "nová hra"
 
     def _request_restart_confirmation(self):
         """Nastaví stav pro zobrazení potvrzení pro restart."""
         self.confirm_dialog_active = True
         self.current_action_pending = "restart"
+        self.text_confirm_dialog = "restart"
 
     def _request_quit_confirmation(self):
         """Nastaví stav pro zobrazení potvrzení pro ukončení."""
         self.confirm_dialog_active = True
         self.current_action_pending = "ukončit"
+        self.text_confirm_dialog = "ukončit"
 
     def _confirm_action(self, confirmed: bool):
         """
@@ -94,7 +98,6 @@ class PauseMenu:
             elif self.current_action_pending == "ukončit":
                 self.quit_requested = True
                 self.paused = False # Ukončí smyčku menu
-# ------------------ dodělat zobrazení opravdu text talčítka
             elif self.current_action_pending == "new_game":
                 self.new_game_requested = True
                 self.paused = False # Ukončí smyčku menu
@@ -133,7 +136,7 @@ class PauseMenu:
                                  border_radius=20)  # Bílý rámeček, tloušťka 3px
 
                 # Text výzvy
-                prompt_text = f"Opravdu {self.current_action_pending}?"
+                prompt_text = f"Opravdu {self.text_confirm_dialog}?"
                 font_large = pygame.font.Font(settings.FONT_ROBOT_PATH, 50)
                 prompt_surface = font_large.render(prompt_text, True, settings.BARVA_TEXTU_MENU )
                 # Umístíme text relativně k dialog_rect, nikoli k celé obrazovce
