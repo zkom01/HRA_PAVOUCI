@@ -37,3 +37,4 @@ coverage.*
 # např. exporty, dočasné soubory
 /export/
 profil.txt
+score.txt

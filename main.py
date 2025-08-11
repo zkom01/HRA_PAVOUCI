@@ -72,7 +72,6 @@ hra.fullscreen()
 # # Importy pro ladění a profilování výkonu.
 # import cProfile
 # import pstats
-#
 # # Inicializace a spuštění profilování kódu.
 # profiler = cProfile.Profile()
 # profiler.enable()
@@ -86,8 +85,8 @@ hra.run()
 # stats = pstats.Stats(profiler).sort_stats('cumtime')
 # # Vypíše top 20 nejpomalejších funkcí do standardního výstupu.
 # stats.print_stats(20)
-#
-# # Uloží statistiky profilování do souboru 'profil.txt'.
+
+## Uloží statistiky profilování do souboru 'profil.txt'.
 # with open("profil.txt", "w") as f:
 #     stats = pstats.Stats(profiler, stream=f).sort_stats('cumtime')
 #     stats.print_stats(20)
