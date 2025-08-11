@@ -83,7 +83,7 @@ class Game:
 
         # Inicializace menu pro pauzu, předáváme aktuální obrazovku a její rozměry.
         self.pause_menu = PauseMenu(self.screen, self)
-        self.score_list = Score()
+        self.score_list = Score(self.screen)
 
         # Skupiny spritů pro snadnou správu herních objektů.
         self.hrac_group = hrac_group
@@ -96,7 +96,7 @@ class Game:
         # Herní stavové proměnné.
         self.zivoty = settings.ZIVOTY
         self.pocet_kapek_na_sud = settings.POCET_KAPEK_NA_SUD
-        self.score = 0
+        self.score = settings.SCORE
         self.kapky_od_posledniho_sudu = 0
 
         # Proměnné pro řízení rychlosti hry a zvukových efektů.
@@ -392,6 +392,7 @@ class Game:
                 jedno_jidlo.rect.topleft = jedno_jidlo.nahodna_pozice()  # Přemístění jídla
                 self.score += 1
                 self.kapky_od_posledniho_sudu += 1
+                settings.SCORE =self.score
                 # Pokud hráč sebral dostatek kapek, přidá se nový sud (segment hada).
                 if self.kapky_od_posledniho_sudu >= self.pocet_kapek_na_sud:
                     # Nový sud se objeví na pozici hráče.
@@ -430,6 +431,7 @@ class Game:
         Přepíná stav pozastavení hry. Pokud je hra pozastavena, zobrazí se pauza menu.
         Zpracovává volby z pauza menu (pokračování, restart, ukončení).
         """
+        self.score_list.draw()
         if not self.game_paused:
             # Hru pozastavíme a spustíme menu.
             pygame.mixer.music.pause()  # Zastaví hudbu
@@ -455,6 +457,10 @@ class Game:
                 self.hrac_obj.direction = None
 
     def new_game(self):
+        settings.PLAYER_NAME = ""
+        self.score = 0
+        self.hrac_obj.had_segmenty.clear()  # Vyprázdní segmenty hada (sudy)
+        self.kresleni_horniho_panelu()
         self.zadani_jmena()
         if self.player_name_entered:
             self.restart()
@@ -474,6 +480,7 @@ class Game:
         # Resetuj herní stavové proměnné
         self.zivoty = settings.ZIVOTY  # Reset životů!
         self.score = 0
+        settings.SCORE = 0
         self.kapky_od_posledniho_sudu = 0
         self.rychlost = 1  # Nastaví rychlost zpět na výchozí zobrazení
         self.main_color = settings.SCREEN_COLOR  # Obnoví normální barvu pozadí
@@ -518,9 +525,8 @@ class Game:
 
     def game_over(self):
 # -------------------------------------------------------------------------------------------------------------------------------
-        top_scores = self.score_list.save_score(settings.PLAYER_NAME, self.score)
-        print(top_scores[0])
-        print(f"Jmeno hrače: {top_scores[0][0]} , Score: {top_scores[0][1]}")
+        self.score_list.save_score(settings.PLAYER_NAME, settings.SCORE)
+        self.score_list.draw()
 # --------------------------------------------------------------------------------------------------------------------------------
         self.zivoty = 0
         self.kresleni_horniho_panelu()
