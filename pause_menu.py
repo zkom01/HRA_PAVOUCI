@@ -21,6 +21,7 @@ class PauseMenu:
         self.confirm_dialog_active = False # True, pokud se zobrazuje potvrzovací dialog
         self.current_action_pending = None # Uloží 'restart' nebo 'quit', pro které čekáme na potvrzení
         self.text_confirm_dialog = ""
+        self.confirm = ""
 
         # Nastavení rozměrů a pozice tlačítek
         button_width = 400
@@ -39,8 +40,8 @@ class PauseMenu:
         # Tlačítka pro potvrzovací dialog (ANO / NE)
         # Používáme lambdy pro předání True/False do callback funkce confirm_action
         self.confirm_buttons: list[Button] = [
-            Button("ANO", self.screen_width // 2 - 100, self.screen_height // 2 + 50, 150, 50, lambda: self._confirm_action(True)),
-            Button("NE", self.screen_width // 2 + 100, self.screen_height // 2 + 50, 150, 50, lambda: self._confirm_action(False))
+            Button("ANO", self.screen_width // 2 - 100, self.screen_height // 2 + 50, 150, 50, self.ano),
+            Button("NE", self.screen_width // 2 + 100, self.screen_height // 2 + 50, 150, 50, self.ne)
         ]
         # Poznamenejte si, že pro `confirm_buttons` jsem zmenšil šířku a výšku a posunul je, aby byly vedle sebe.
         # Také jsem upravil `start_y` pro `confirm_buttons` aby byly lépe vycentrovány vzhledem k textu.
@@ -84,14 +85,20 @@ class PauseMenu:
         self.current_action_pending = "ukončit"
         self.text_confirm_dialog = "UKONČIT"
 
-    def _confirm_action(self, confirmed: bool):
+    def ano(self):
+        self.confirm = "ANO"
+        self._confirm_action()
+    def ne(self):
+        self.confirm = "NE"
+        self._confirm_action()
+
+    def _confirm_action(self):
         """
         Zpracuje výsledek potvrzovacího dialogu.
-        Args:
-            confirmed (bool): True, pokud uživatel potvrdil akci (ANO), False pokud ne (NE).
+
         """
         self.confirm_dialog_active = False # Skryjeme potvrzovací dialog
-        if confirmed:
+        if self.confirm == "ANO":
             if self.current_action_pending == "restart":
                 self.restart_requested = True
                 self.paused = False # Ukončí smyčku menu
