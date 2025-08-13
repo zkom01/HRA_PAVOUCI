@@ -75,6 +75,7 @@ class Game:
             pavouk_hana_obj (Pavouk): Instance pavouka Hana.
             obrazovka (pygame.Surface): Objekt Surface hlavního okna hry.
         """
+        self.ulozit_score = True
         self.screen = obrazovka
         # --- Fáze zadávání jména ---
         # Vytvoření instance NameInput
@@ -456,6 +457,7 @@ class Game:
                 self.hrac_obj.direction = None
 
     def new_game(self):
+        self.ulozit_score = True
         settings.PLAYER_NAME = ""
         self.score = 0
         self.hrac_obj.had_segmenty.clear()  # Vyprázdní segmenty hada (sudy)
@@ -520,11 +522,14 @@ class Game:
             jedno_jidlo.rect.topleft = jedno_jidlo.nahodna_pozice()  # Přemístění jídla
 
         # Zajišťuje, že se hra po restartu nepřeruší
+        self.ulozit_score = True
         self.lets_continue = True
 
     def game_over(self):
 # -------------------------------------------------------------------------------------------------------------------------------
-        self.score_list.save_score(settings.PLAYER_NAME, settings.SCORE)
+        if self.ulozit_score:
+            self.score_list.save_score(settings.PLAYER_NAME, settings.SCORE)
+            self.ulozit_score = False
 # --------------------------------------------------------------------------------------------------------------------------------
         self.zivoty = 0
         self.kresleni_horniho_panelu()
