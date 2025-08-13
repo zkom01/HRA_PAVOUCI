@@ -68,7 +68,6 @@ class PauseMenu:
     def resume_game(self):
         self.paused = False
 
-    # NOVÉ CALLBACK FUNKCE PRO TLAČÍTKA "RESTART" A "UKONČIT A "NOVÁ HRA" "
     def _request_new_game_confirmation(self):
         """Nastaví stav pro zobrazení potvrzení pro restart."""
         self.confirm_dialog_active = True
@@ -115,6 +114,8 @@ class PauseMenu:
             self.current_action_pending = None
             # Není potřeba nic dělat, show_menu smyčka bude pokračovat a zobrazí hlavní menu
             self.game_instance.kresleni()
+            if settings.SCORE == 0 and settings.GAME_OVER:
+                self.game_instance.draw_game_over()
             self.score_list.draw()
 
 

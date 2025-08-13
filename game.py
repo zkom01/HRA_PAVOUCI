@@ -457,6 +457,7 @@ class Game:
                 self.hrac_obj.direction = None
 
     def new_game(self):
+        settings.GAME_OVER = False
         self.ulozit_score = True
         settings.PLAYER_NAME = ""
         self.score = 0
@@ -480,6 +481,7 @@ class Game:
 
         # Resetuj herní stavové proměnné
         self.zivoty = settings.ZIVOTY  # Reset životů!
+        settings.GAME_OVER = False
         self.score = 0
         settings.SCORE = 0
         self.kapky_od_posledniho_sudu = 0
@@ -530,24 +532,29 @@ class Game:
         if self.ulozit_score:
             self.score_list.save_score(settings.PLAYER_NAME, settings.SCORE)
             self.ulozit_score = False
+        settings.SCORE = 0
+        settings.GAME_OVER = True
 # --------------------------------------------------------------------------------------------------------------------------------
+        self.draw_game_over()
         self.zivoty = 0
         self.kresleni_horniho_panelu()
-        dialog_width = 500
-        dialog_height = 200
-        dialog_rect = pygame.Rect(0, 0, dialog_width, dialog_height)
-        dialog_rect.center = (settings.SCREEN_WIDTH // 2, 300 + 3)
-
-        # Vyplnění pozadí dialogu (podobně jako u tlačítek)
-        pygame.draw.rect(self.screen, settings.POZADI_MENU, dialog_rect, border_radius=20)
-        # Volitelné: ohraničení dialogu
-        pygame.draw.rect(self.screen, settings.BORDER, dialog_rect, 3,
-                         border_radius=20)  # Bílý rámeček, tloušťka 3px
-
-        text_game_over = self.font_robot_big_1.render("GAME OVER", True, settings.BARVA_TEXTU_MENU)
-        text_game_over_rect = text_game_over.get_rect(center=((settings.SCREEN_WIDTH // 2), 300))
-        self.screen.blit(text_game_over, text_game_over_rect)
         self.pause()  # Pozastaví/rozjede hru
+    def draw_game_over(self):
+            dialog_width = 500
+            dialog_height = 200
+            dialog_rect = pygame.Rect(0, 0, dialog_width, dialog_height)
+            dialog_rect.center = (settings.SCREEN_WIDTH // 2, 300 + 3)
+
+            # Vyplnění pozadí dialogu (podobně jako u tlačítek)
+            pygame.draw.rect(self.screen, settings.POZADI_MENU, dialog_rect, border_radius=20)
+            # Volitelné: ohraničení dialogu
+            pygame.draw.rect(self.screen, settings.BORDER, dialog_rect, 3,
+                             border_radius=20)  # Bílý rámeček, tloušťka 3px
+
+            text_game_over = self.font_robot_big_1.render("GAME OVER", True, settings.BARVA_TEXTU_MENU)
+            text_game_over_rect = text_game_over.get_rect(center=((settings.SCREEN_WIDTH // 2), 300))
+            self.screen.blit(text_game_over, text_game_over_rect)
+
 
 
     def stisknute_klavesy(self):

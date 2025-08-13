@@ -8,6 +8,7 @@ from screeninfo import get_monitors
 # --- Základní herní pravidla ---
 # Počáteční počet životů hráče.
 ZIVOTY = 1
+GAME_OVER = False
 # Počet sebraných kapek jídla potřebných k získání jednoho sudu (segmentu "hada").
 POCET_KAPEK_NA_SUD = 2
 # Počáteční skóre hráče.
