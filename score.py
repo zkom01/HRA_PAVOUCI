@@ -25,6 +25,7 @@ class Score:
                     except ValueError:
                         continue
                     skore_list.append((jmeno, score))
+                skore_list.sort(key=lambda x: x[1], reverse=True)
         except FileNotFoundError:
             # Soubor neexistuje, vrátí prázdný list
             pass
@@ -36,10 +37,10 @@ class Score:
         skore_list.sort(key=lambda x: x[1], reverse=True)
 
         with open(self.filename, "w") as f:
-            for jmeno, score in skore_list[:11]:
+            for jmeno, score in skore_list[:10]:
                 f.write(f"{jmeno},{score}\n")
 
-        return skore_list[:11]
+        return skore_list[:10]
 
     def draw(self):
         score_dialog_width = 500
@@ -56,15 +57,20 @@ class Score:
         nadpis = self.font_large.render("SCORE TOP10", True, settings.BARVA_TEXTU_MENU)
         text_game_over_rect = nadpis.get_rect(center=(400, 240))
         self.screen.blit(nadpis, text_game_over_rect)
-        pygame.draw.line(self.screen, settings.BORDER, (170, 270),(620, 270))
+        pygame.draw.line(self.screen, settings.BORDER, (170, 270),(630, 270))
 
-        # Výpis top 10
         next_line = 0
-        height = 300
-        for i, (jmeno, score) in enumerate(self.load_scores()[:10], start=1):
-            one_line = self.font_large.render(f"{jmeno} _____ {score}", True, settings.BARVA_TEXTU_MENU)
+        height = 270
+        for i, (jmeno, score) in enumerate(self.load_scores()):
+            score = str(score)
+            one_line_jmeno = self.font_large.render(f"{jmeno}", True, settings.BARVA_TEXTU_MENU)
+            one_line_score = self.font_large.render(f"{score}", True, settings.BARVA_TEXTU_MENU)
 
             height += next_line
-            one_line_rect = one_line.get_rect(center=(400, height))
-            self.screen.blit(one_line, one_line_rect)
+            one_line_jmeno_rect = one_line_jmeno.get_rect(topleft=(180, height))
+            self.screen.blit(one_line_jmeno, one_line_jmeno_rect)
+            one_line_score_rect = one_line_score.get_rect(topright=(620, height))
+            self.screen.blit(one_line_score, one_line_score_rect)
             next_line = 50
+            # pygame.draw.line(self.screen, settings.BORDER, (170, height + 60), (630, height + 60))
+

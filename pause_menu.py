@@ -1,6 +1,7 @@
 import pygame
 import settings
 from button import Button
+from score import Score
 
 class PauseMenu:
     """
@@ -22,6 +23,7 @@ class PauseMenu:
         self.current_action_pending = None # Uloží 'restart' nebo 'quit', pro které čekáme na potvrzení
         self.text_confirm_dialog = ""
         self.confirm = ""
+        self.score_list = Score(self.screen)
 
         # Nastavení rozměrů a pozice tlačítek
         button_width = 400
@@ -113,6 +115,7 @@ class PauseMenu:
             self.current_action_pending = None
             # Není potřeba nic dělat, show_menu smyčka bude pokračovat a zobrazí hlavní menu
             self.game_instance.kresleni()
+            self.score_list.draw()
 
 
     def show_menu(self) -> str:
@@ -123,6 +126,7 @@ class PauseMenu:
         self.confirm_dialog_active = False # Zajištění, že začínáme v hlavním menu
         self.current_action_pending = None
         self.update_screen_size(settings.SCREEN_WIDTH,settings.SCREEN_HEIGHT)
+        self.score_list.draw()
 
         clock = pygame.time.Clock()
 

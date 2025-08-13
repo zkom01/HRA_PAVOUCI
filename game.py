@@ -84,6 +84,7 @@ class Game:
         # Inicializace menu pro pauzu, předáváme aktuální obrazovku a její rozměry.
         self.pause_menu = PauseMenu(self.screen, self)
         self.score_list = Score(self.screen)
+        self.score = settings.SCORE
 
         # Skupiny spritů pro snadnou správu herních objektů.
         self.hrac_group = hrac_group
@@ -96,7 +97,6 @@ class Game:
         # Herní stavové proměnné.
         self.zivoty = settings.ZIVOTY
         self.pocet_kapek_na_sud = settings.POCET_KAPEK_NA_SUD
-        self.score = settings.SCORE
         self.kapky_od_posledniho_sudu = 0
 
         # Proměnné pro řízení rychlosti hry a zvukových efektů.
@@ -431,7 +431,6 @@ class Game:
         Přepíná stav pozastavení hry. Pokud je hra pozastavena, zobrazí se pauza menu.
         Zpracovává volby z pauza menu (pokračování, restart, ukončení).
         """
-        self.score_list.draw()
         if not self.game_paused:
             # Hru pozastavíme a spustíme menu.
             pygame.mixer.music.pause()  # Zastaví hudbu
@@ -526,7 +525,6 @@ class Game:
     def game_over(self):
 # -------------------------------------------------------------------------------------------------------------------------------
         self.score_list.save_score(settings.PLAYER_NAME, settings.SCORE)
-        self.score_list.draw()
 # --------------------------------------------------------------------------------------------------------------------------------
         self.zivoty = 0
         self.kresleni_horniho_panelu()
