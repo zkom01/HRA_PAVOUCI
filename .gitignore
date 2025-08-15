@@ -38,3 +38,4 @@ coverage.*
 /export/
 profil.txt
 score.txt
+score.json
