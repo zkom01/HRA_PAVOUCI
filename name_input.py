@@ -77,7 +77,7 @@ class NameInput:
             elif event.key == pygame.K_BACKSPACE:
                 self.player_name = self.player_name[:-1]
             else:
-                if event.unicode.isprintable() and len(self.player_name) <= 8 and event.key != pygame.K_SPACE:
+                if event.unicode.isprintable() and len(self.player_name) <= 7 and event.key != pygame.K_SPACE:
                     self.player_name += event.unicode
             self.cursor_visible = True
             self.cursor_timer = pygame.time.get_ticks()

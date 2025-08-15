@@ -41,7 +41,7 @@ class ScoreJson:
             top10.append(zaznam)  # přidá slovník do seznamu top10
 
         with open(self.filename, "w", encoding="utf-8") as f:
-            json.dump(top10, f, ensure_ascii=False, indent=4)  
+            json.dump(top10, f, ensure_ascii=False, indent=2)
             # ensure_ascii=False → diakritika zůstane čitelná
             # indent=4 → hezky formátovaný soubor
 
