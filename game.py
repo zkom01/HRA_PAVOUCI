@@ -342,7 +342,7 @@ class Game:
                 self.niky_added = True
 
         # Podmínka pro Eda pavouka.
-        if len(self.hrac_obj.had_segmenty) >= 5:
+        if len(self.hrac_obj.had_segmenty) >= 4:
             if not self.eda_added:
                 self.pavouci_group.add(self.pavouk_eda)
                 self.pavouk_eda.rychlostni_koeficient = self.hrac_obj.rychlostni_koeficient
@@ -352,7 +352,7 @@ class Game:
         # Podmínka pro Hana pavouka.
         # Poznámka: Tato podmínka je stejná jako pro Eda pavouka (>= 5).
         # Zkontrolujte, zda je to záměr, nebo zda by zde měla být jiná hodnota (např. >= 7 nebo 8).
-        if len(self.hrac_obj.had_segmenty) >= 5:
+        if len(self.hrac_obj.had_segmenty) >= 4:
             if not self.hana_added:
                 self.pavouci_group.add(self.pavouk_hana)
                 self.pavouk_hana.rychlostni_koeficient = self.hrac_obj.rychlostni_koeficient

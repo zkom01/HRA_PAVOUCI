@@ -7,10 +7,10 @@ from screeninfo import get_monitors
 
 # --- Základní herní pravidla ---
 # Počáteční počet životů hráče.
-ZIVOTY = 1
+ZIVOTY = 3
 GAME_OVER = False
 # Počet sebraných kapek jídla potřebných k získání jednoho sudu (segmentu "hada").
-POCET_KAPEK_NA_SUD = 2
+POCET_KAPEK_NA_SUD = 3
 # Počáteční skóre hráče.
 SCORE = 0
 
@@ -32,11 +32,11 @@ RYCHLOST_MAX = 1.5 # Maximální rychlostní koeficient (150%)
 # Vzdálenost v pixelech mezi segmenty (sudy) hada.
 MEZERA_MEZI_SUDY = 5
 # Doba trvání imunity hráče po zásahu (v milisekundách). 2000 ms = 2 sekundy.
-DOBA_IMUNITY = 2000 
+DOBA_IMUNITY = 1000
 # Vzdálenost v pixelech, pod kterou se pavouk stane "naštvaným" a začne pronásledovat hráče.
 ANGRY_VZDALENOST = 400
 # Násobitel rychlosti pavouka, když je "naštvaný". (Přidáno pro lepší konfiguraci a oddělení od SPIDER_RYCHLOST)
-ANGRY_SPEED_MULTIPLIER = 1 # Příklad: 1.5x původní rychlost
+ANGRY_SPEED_MULTIPLIER = 1 # Příklad: 1.5x původní rychlost (když je naštvaný tak je rychlejší 1 = není rychlejší)
 
 
 # --- Nastavení obrazovky ---
