@@ -62,6 +62,8 @@ class Score:
             one_line_score = self.font_large.render(score_str, True, settings.BARVA_TEXTU_MENU)
 
             height += next_line
-            self.screen.blit(one_line_jmeno, (180, height))
-            self.screen.blit(one_line_score, one_line_score.get_rect(topright=(620, height)))
+            one_line_jmeno_rect = one_line_jmeno.get_rect(topleft=(180, height))
+            self.screen.blit(one_line_jmeno, one_line_jmeno_rect)
+            one_line_score_rect = one_line_score.get_rect(topright=(620, height))
+            self.screen.blit(one_line_score, one_line_score_rect)
             next_line = 50
