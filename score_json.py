@@ -32,7 +32,13 @@ class ScoreJson:
         skore_list.sort(key=lambda x: x[1], reverse=True)
 
         # Uloží jen top 10
-        top10 = [{"name": jmeno, "score": score} for jmeno, score in skore_list[:10]]
+        top10 = []  # prázdný seznam pro uložení prvních 10 záznamů
+        for jmeno, score in skore_list[:10]:  # vezme prvních 10 dvojic (jmeno, score)
+            zaznam = {  # vytvoří slovník s klíči "name" a "score"
+                "name": jmeno,
+                "score": score
+            }
+            top10.append(zaznam)  # přidá slovník do seznamu top10
 
         with open(self.filename, "w", encoding="utf-8") as f:
             json.dump(top10, f, ensure_ascii=False, indent=4)  
