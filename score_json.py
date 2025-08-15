@@ -3,7 +3,7 @@ import settings
 import json
 import os
 
-class Score:
+class ScoreJson:
     def __init__(self, screen, filename="score.json"):
         self.filename = filename
         self.screen = screen
