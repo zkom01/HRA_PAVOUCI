@@ -11,7 +11,7 @@ import settings
 from barrel import Sud
 from pause_menu import PauseMenu
 from name_input import NameInput
-from score import Score
+from score_json import ScoreJson
 
 
 # Definujte protokol pro objekty, které mají 'rect' atribut
@@ -84,7 +84,7 @@ class Game:
 
         # Inicializace menu pro pauzu, předáváme aktuální obrazovku a její rozměry.
         self.pause_menu = PauseMenu(self.screen, self)
-        self.score_list = Score(self.screen)
+        self.score_list = ScoreJson(self.screen)
         self.score = settings.SCORE
 
         # Skupiny spritů pro snadnou správu herních objektů.

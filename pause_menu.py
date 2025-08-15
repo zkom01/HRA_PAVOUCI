@@ -1,7 +1,7 @@
 import pygame
 import settings
 from button import Button
-from score import Score
+from score_json import ScoreJson
 
 class PauseMenu:
     """
@@ -23,7 +23,7 @@ class PauseMenu:
         self.current_action_pending = None # Uloží 'restart' nebo 'quit', pro které čekáme na potvrzení
         self.text_confirm_dialog = ""
         self.confirm = ""
-        self.score_list = Score(self.screen)
+        self.score_list = ScoreJson(self.screen)
 
         # Nastavení rozměrů a pozice tlačítek
         button_width = 400

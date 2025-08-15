@@ -15,7 +15,7 @@ class ScoreJson:
             return []
 
         try:
-            with open(self.filename, "r", encoding="utf-8") as f:
+            with open(self.filename, encoding="utf-8") as f:
                 data = json.load(f)  # Načte JSON jako Python list/dict
         except (json.JSONDecodeError, FileNotFoundError):
             return []
@@ -23,6 +23,7 @@ class ScoreJson:
         # data bude list slovníků [{"name": "Eda", "score": 100}, ...]
         skore_list = [(item["name"], int(item["score"])) for item in data]
         skore_list.sort(key=lambda x: x[1], reverse=True)
+
         return skore_list
 
     def save_score(self, player_name, player_score):
