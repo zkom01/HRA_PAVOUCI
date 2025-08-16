@@ -235,7 +235,7 @@ class Game:
         rychlost_text = self.font_robot.render(f"RYCHLOST HRY: {self.rychlost}", True, self.barva_textu)
         rychlost_text_rect = rychlost_text.get_rect(center=(450, settings.VYSKA_HORNIHO_PANELU // 2))
 
-        text_jmeno = self.font_robot.render(f"player: {settings.PLAYER_NAME}", True, self.barva_textu)
+        text_jmeno = self.font_robot.render(f"HRÁČ: {settings.PLAYER_NAME}", True, self.barva_textu)
         text_jmeno_rect = text_jmeno.get_rect(center=((settings.SCREEN_WIDTH // 2) + 480, settings.VYSKA_HORNIHO_PANELU // 2))
 
         lives_text = self.font_robot.render(f"ZIVOTY: {self.zivoty}", True, self.barva_textu)
