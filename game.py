@@ -18,7 +18,7 @@ class RectHolder(Protocol):
     Tento protokol slouží k type-hintingu a zajišťuje, že metody pracující
     s herními objekty budou mít přístup k jejich pozici a rozměrům,
     čímž se zabrání chybám jako "Unresolved attribute reference 'rect' for class 'Sprite'".
-"""
+    """
     rect: pygame.Rect
 
 class Game:
@@ -506,7 +506,6 @@ class Game:
     def game_over(self):
         """
         Zpracuje stav 'game over'.
-
         Uloží skóre hráče, nastaví stav hry na konec a zobrazí
         obrazovku 'game over' a menu pauzy pro další volby.
         """
@@ -670,7 +669,6 @@ class Game:
     def update(self):
         """
         Aktualizuje herní logiku.
-
         Volá metody pro přidávání pavouků, kontrolu kolizí, aktualizaci
         stavu "angry" a rychlosti hry.
         """
