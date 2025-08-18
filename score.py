@@ -2,6 +2,16 @@ import pygame
 import settings
 
 class Score:
+    """
+    Spravuje skóre, včetně ukládání, načítání a zobrazení nejlepších výsledků.
+    Třída zajišťuje práci se souborem 'score.txt', kam ukládá jména a dosažená skóre.
+    Udržuje se zde seznam 10 nejvyšších skóre.
+
+    Atributy:
+        screen (pygame.Surface): Povrch obrazovky, na který se bude vykreslovat.
+        filename (str): Cesta k souboru se skóre.
+        font_large (pygame.font.Font): Písmo použité pro vykreslování textu.
+    """
     def __init__(self, screen, filename="score.txt"):
         self.filename = filename
         self.screen = screen
