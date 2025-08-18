@@ -75,7 +75,7 @@ def _confirm_action(self):
 # Jednoduše upravíme metodu _confirm_action(self) tak, aby jen nastavila, co se má stát, a hlavní smyčka se postará o provedení.
 # 1. Uprav metodu _confirm_action
 # Změň kód tak, aby se logika ukončení prováděla až za smyčkou. Odstraň self.paused = False z obou podmínek, kde se nastavuje restart_requested a quit_requested. 
-###############################################################################################
+
 def _confirm_action(self):
     self.confirm_dialog_active = False
     if self.confirm == "ANO":
@@ -142,4 +142,5 @@ def show_menu(self) -> str:
         return "new_game"
     else:
         return "resume"
-Tím, že přesuneš self.paused = False do správného bloku a zajistíš konzistentní vykreslování, se problém vyřeší. Hra bude reagovat spolehlivě a menu se bude chovat přesně tak, jak očekáváš.
+# Tím, že přesuneš self.paused = False do správného bloku a zajistíš konzistentní vykreslování, se problém vyřeší. 
+# Hra bude reagovat spolehlivě a menu se bude chovat přesně tak, jak očekáváš.
