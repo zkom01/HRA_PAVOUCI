@@ -41,7 +41,7 @@ def show_menu(self) -> str:
         # ... (původní kód pro vykreslování hlavního a potvrzovacího menu)
 # Tato úprava zajistí, že se celý obsah obrazovky správně překreslí v každém snímku, což odstraní zmíněné chyby.
 
-
+###############################################################################################################################################################################
 # ---- když kliknu na ukončit a potom na ANO, někdy se hra neukončí ale zobrazí se znovu menu před potvrzovacím dialogem. 
 # musím znovu kliknout na ukončit a znovu na ano.
 
