@@ -1,41 +1,30 @@
-Děkuji, že jsi mi poskytl kód pro PauseMenu. Problém spočívá ve způsobu, jakým se spouští dialogové okno s potvrzením. Po kliknutí na tlačítko "NE" v potvrzovacím dialogu se sice skryje, ale v pozadí zůstává vykresleno původní menu, které se už nepřekreslí, protože se nedostane do smyčky show_menu.
+# Děkuji, že jsi mi poskytl kód pro PauseMenu. Problém spočívá ve způsobu, jakým se spouští dialogové okno s potvrzením. 
+# Po kliknutí na tlačítko "NE" v potvrzovacím dialogu se sice skryje, ale v pozadí zůstává vykresleno původní menu, které se už nepřekreslí, protože se nedostane do smyčky show_menu.
 
-Problém
-Když uživatel klikne na "Restart" nebo "Ukončit", zobrazí se potvrzovací dialog. Pokud ale v něm klikne na "NE", metoda _confirm_action provede následující:
+# Problém
+# Když uživatel klikne na "Restart" nebo "Ukončit", zobrazí se potvrzovací dialog. Pokud ale v něm klikne na "NE", metoda _confirm_action provede následující:
+# Nastaví self.confirm_dialog_active = False
+# Poté zavolá self.game_instance.kresleni() a self.score_list.draw()
+# Toto vykreslení proběhne mimo hlavní smyčku v show_menu. Smyčka while self.paused: se pak na začátku další iterace pokusí znovu vykreslit menu, ale to původní překreslení (z _confirm_action) už není vidět, protože se překryje.
+# Hlavní problém je v tom, že se v _confirm_action spouští vykreslování, které by mělo být pouze v show_menu smyčce. To vede k nekonzistentnímu stavu.
 
-Nastaví self.confirm_dialog_active = False
+# Řešení
+# Nejlepší řešení je odstranit řádky pro vykreslení z metody _confirm_action. Všechno vykreslování by mělo být centralizováno v hlavní smyčce while self.paused: v metodě show_menu.
+# Když uživatel klikne na "NE", stačí pouze nastavit self.confirm_dialog_active = False. Hlavní smyčka v show_menu se o zbytek postará. Na začátku dalšího průchodu smyčkou uvidí, že self.confirm_dialog_active je False a správně vykreslí hlavní menu.
 
-Poté zavolá self.game_instance.kresleni() a self.score_list.draw()
-
-Toto vykreslení proběhne mimo hlavní smyčku v show_menu. Smyčka while self.paused: se pak na začátku další iterace pokusí znovu vykreslit menu, ale to původní překreslení (z _confirm_action) už není vidět, protože se překryje.
-
-Hlavní problém je v tom, že se v _confirm_action spouští vykreslování, které by mělo být pouze v show_menu smyčce. To vede k nekonzistentnímu stavu.
-
-Řešení
-Nejlepší řešení je odstranit řádky pro vykreslení z metody _confirm_action. Všechno vykreslování by mělo být centralizováno v hlavní smyčce while self.paused: v metodě show_menu.
-
-Když uživatel klikne na "NE", stačí pouze nastavit self.confirm_dialog_active = False. Hlavní smyčka v show_menu se o zbytek postará. Na začátku dalšího průchodu smyčkou uvidí, že self.confirm_dialog_active je False a správně vykreslí hlavní menu.
-
-Navrhované úpravy
-Odstraň z _confirm_action zbytečné volání vykreslování:
-
-Najdi metodu _confirm_action(self) ve třídě PauseMenu.
-
-V bloku else (pro "NE") smaž následující řádky:
-
-Python
+# Navrhované úpravy
+# Odstraň z _confirm_action zbytečné volání vykreslování:
+# Najdi metodu _confirm_action(self) ve třídě PauseMenu.
+# V bloku else (pro "NE") smaž následující řádky:
 
 self.game_instance.kresleni()
 if settings.SCORE == 0 and settings.GAME_OVER:
     self.game_instance.draw_game_over()
 self.score_list.draw()
-Ověř si v show_menu, že se správně vykreslí "GAME OVER" dialog:
+# Ověř si v show_menu, že se správně vykreslí "GAME OVER" dialog:
+# Tento kód už tam je, takže je to spíše kontrola. Když se menu zobrazuje, je potřeba správně vykreslit pozadí, a pokud je hra ve stavu "GAME OVER", pak i ten dialog.
+# Doporučuji umístit logiku pro vykreslení herní obrazovky (včetně dialogu "GAME OVER") před vykreslením tlačítek menu.
 
-Tento kód už tam je, takže je to spíše kontrola. Když se menu zobrazuje, je potřeba správně vykreslit pozadí, a pokud je hra ve stavu "GAME OVER", pak i ten dialog.
-
-Doporučuji umístit logiku pro vykreslení herní obrazovky (včetně dialogu "GAME OVER") před vykreslením tlačítek menu.
-
-Python
 
 def show_menu(self) -> str:
     # ... (původní kód)
@@ -50,25 +39,16 @@ def show_menu(self) -> str:
 
         # 3. Vykresli menu nad herní scénu
         # ... (původní kód pro vykreslování hlavního a potvrzovacího menu)
-Tato úprava zajistí, že se celý obsah obrazovky správně překreslí v každém snímku, což odstraní zmíněné chyby.
+# Tato úprava zajistí, že se celý obsah obrazovky správně překreslí v každém snímku, což odstraní zmíněné chyby.
 
 
+# ---- když kliknu na ukončit a potom na ANO, někdy se hra neukončí ale zobrazí se znovu menu před potvrzovacím dialogem. 
+# musím znovu kliknout na ukončit a znovu na ano.
 
+# Tenhle problém je opravdu matoucí! Děje se to proto, že potvrzovací dialog není správně ukončen a občas se vrací do hlavní smyčky menu místo toho, aby rovnou poslal signál pro ukončení hry.
 
-
-
-
-když kliknu na ukončit a potom na ANO, někdy se hra neukončí ale zobrazí se znovu menu před potvrzovacím dialogem. musím znovu kliknout na ukončit a znovu na ano.
-
-
-
-Tenhle problém je opravdu matoucí! Děje se to proto, že potvrzovací dialog není správně ukončen a občas se vrací do hlavní smyčky menu místo toho, aby rovnou poslal signál pro ukončení hry.
-
-Analýza chyby
-Podívejme se na kód v metodě _confirm_action(self):
-
-Python
-
+# Analýza chyby
+# Podívejme se na kód v metodě _confirm_action(self):
 def _confirm_action(self):
     self.confirm_dialog_active = False
     if self.confirm == "ANO":
@@ -87,21 +67,15 @@ def _confirm_action(self):
         if settings.SCORE == 0 and settings.GAME_OVER:
             self.game_instance.draw_game_over()
         self.score_list.draw()
-Když klikneš na Ukončit a pak na ANO, nastaví se self.quit_requested = True a self.paused = False. To by mělo ukončit smyčku while self.paused: v metodě show_menu a vrátit hodnotu "quit".
-
-Problém je, že se to občas neprovede hned. Pygame potřebuje zpracovat všechny události, včetně kliknutí myší, a pokud se smyčka show_menu zrovna nachází uprostřed zpracování událostí, nemusí self.paused = False zareagovat okamžitě a smyčka while se provede ještě jednou. To způsobí, že se menu znovu vykreslí a ty musíš kliknout znovu.
-
-Jak to opravit
-Nejlepší řešení je nechat logiku pro ukončení hry zpracovat až po opuštění smyčky menu. Místo okamžitého nastavení self.paused = False a self.quit_requested = True přenecháme rozhodnutí na konci metody show_menu.
-
-Jednoduše upravíme metodu _confirm_action(self) tak, aby jen nastavila, co se má stát, a hlavní smyčka se postará o provedení.
-
-1. Uprav metodu _confirm_action
-
-Změň kód tak, aby se logika ukončení prováděla až za smyčkou. Odstraň self.paused = False z obou podmínek, kde se nastavuje restart_requested a quit_requested. Toto zajistí, že smyčka menu skončí až přirozeně, když se dokončí zpracování všech událostí.
-
-Python
-
+        
+# Když klikneš na Ukončit a pak na ANO, nastaví se self.quit_requested = True a self.paused = False. To by mělo ukončit smyčku while self.paused: v metodě show_menu a vrátit hodnotu "quit".
+# Problém je, že se to občas neprovede hned. Pygame potřebuje zpracovat všechny události, včetně kliknutí myší, a pokud se smyčka show_menu zrovna nachází uprostřed zpracování událostí, nemusí self.paused = False zareagovat okamžitě a smyčka while se provede ještě jednou. To způsobí, že se menu znovu vykreslí a ty musíš kliknout znovu.
+# Jak to opravit
+# Nejlepší řešení je nechat logiku pro ukončení hry zpracovat až po opuštění smyčky menu. Místo okamžitého nastavení self.paused = False a self.quit_requested = True přenecháme rozhodnutí na konci metody show_menu.
+# Jednoduše upravíme metodu _confirm_action(self) tak, aby jen nastavila, co se má stát, a hlavní smyčka se postará o provedení.
+# 1. Uprav metodu _confirm_action
+# Změň kód tak, aby se logika ukončení prováděla až za smyčkou. Odstraň self.paused = False z obou podmínek, kde se nastavuje restart_requested a quit_requested. 
+###############################################################################################
 def _confirm_action(self):
     self.confirm_dialog_active = False
     if self.confirm == "ANO":
@@ -116,13 +90,10 @@ def _confirm_action(self):
         self.paused = False 
     else: # Když klikneš na "NE"
         self.current_action_pending = None
-Vysvětlení: Teď se self.paused = False nastaví vždy, když se klikne na ANO. Tím se zajistí, že se smyčka while self.paused: okamžitě ukončí, ať už je akce restart, ukončení, nebo nová hra.
-
-2. Uprav metodu show_menu
-
-V této metodě zajisti, že se na začátku smyčky while vždy vykreslí herní pozadí, nad kterým bude menu. To zabrání „blikání“ nebo zobrazení nekonzistentního obsahu.
-
-Python
+        
+# Vysvětlení: Teď se self.paused = False nastaví vždy, když se klikne na ANO. Tím se zajistí, že se smyčka while self.paused: okamžitě ukončí, ať už je akce restart, ukončení, nebo nová hra.
+# 2. Uprav metodu show_menu
+# V této metodě zajisti, že se na začátku smyčky while vždy vykreslí herní pozadí, nad kterým bude menu. To zabrání „blikání“ nebo zobrazení nekonzistentního obsahu.
 
 def show_menu(self) -> str:
     self.paused = True
