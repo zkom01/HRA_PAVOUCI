@@ -96,28 +96,21 @@ class PauseMenu:
     def _confirm_action(self):
         """
         Zpracuje výsledek potvrzovacího dialogu.
-
         """
         self.confirm_dialog_active = False # Skryjeme potvrzovací dialog
         if self.confirm == "ANO":
             if self.current_action_pending == "restart":
                 self.restart_requested = True
-                self.paused = False # Ukončí smyčku menu
             elif self.current_action_pending == "ukončit":
                 self.quit_requested = True
-                self.paused = False # Ukončí smyčku menu
             elif self.current_action_pending == "new_game":
                 self.new_game_requested = True
-                self.paused = False # Ukončí smyčku menu
+            self.paused = False # Ukončí smyčku menu
         else:
             # Pokud uživatel zvolil NE, resetujeme čekající akci a zůstaneme v hlavním menu pauzy
             self.current_action_pending = None
-            # Není potřeba nic dělat, show_menu smyčka bude pokračovat a zobrazí hlavní menu
             self.game_instance.kresleni()
-            if settings.SCORE == 0 and settings.GAME_OVER:
-                self.game_instance.draw_game_over()
             self.score_list.draw()
-
 
     def show_menu(self) -> str:
         self.paused = True
@@ -128,10 +121,12 @@ class PauseMenu:
         self.current_action_pending = None
         self.update_screen_size(settings.SCREEN_WIDTH,settings.SCREEN_HEIGHT)
         self.score_list.draw()
-
         clock = pygame.time.Clock()
 
         while self.paused:
+            if settings.GAME_OVER:
+                self.game_instance.draw_game_over()
+
             if not self.confirm_dialog_active:
                 # Vykreslení hlavních tlačítek menu
                 for button in self.buttons:
@@ -144,7 +139,7 @@ class PauseMenu:
 
                 # Vyplnění pozadí dialogu (podobně jako u tlačítek)
                 pygame.draw.rect(self.screen, settings.POZADI_MENU, dialog_rect, border_radius=20)
-                # Volitelné: ohraničení dialogu
+                # ohraničení dialogu
                 pygame.draw.rect(self.screen, settings.BORDER, dialog_rect, 3,
                                  border_radius=20)  # Bílý rámeček, tloušťka 3px
 

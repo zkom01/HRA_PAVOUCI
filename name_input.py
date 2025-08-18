@@ -1,6 +1,7 @@
 import pygame
 import settings
 from button import Button
+from score_json import ScoreJson
 
 class NameInput:
     """
@@ -23,6 +24,7 @@ class NameInput:
         self.input_active = True  # Určuje, zda je vstupní pole aktivní pro psaní
         self.cursor_visible = True
         self.cursor_timer = pygame.time.get_ticks()  # Pro blikání kurzoru
+        self.score_list = ScoreJson(self.screen)
 
         # Barvy (můžete je později přesunout do settings.py pro jednotnost)
         self.WHITE = settings.WHITE
@@ -45,10 +47,19 @@ class NameInput:
         # pozici pak doladíme v draw metodě, aby bylo vycentrováno uvnitř dialogu
         self.input_box = pygame.Rect(0, 0, 400, 50)  # Šířka 400, výška 50
         self.ok_button = Button("OK",
-                                self.dialog_x + self.dialog_width // 2,
-                                self.dialog_y + self.dialog_height - 35,
+                                0,
+                                0,
                                 150, 50,
                                 self.confirm_name)
+
+        self.exit_button = Button("KONEC",
+                                0,
+                                0,
+                                150, 50,
+                                self.exit)
+
+    def exit(self):
+        pygame.quit()
 
     def confirm_name(self):
         """Callback pro tlačítko OK – potvrdí jméno, pokud nějaké je."""
@@ -68,6 +79,8 @@ class NameInput:
         """
         # Zpracování kliknutí na OK tlačítko
         self.ok_button.handle_event(event)
+        # Zpracování kliknutí na tlačítko KONEC
+        self.exit_button.handle_event(event)
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN  or event.key == pygame.K_KP_ENTER:
@@ -165,6 +178,15 @@ class NameInput:
             pygame.draw.line(screen, self.WHITE, (cursor_x, cursor_y),
                              (cursor_x, cursor_y + cursor_height), 2)
 
-        self.ok_button.rect.centerx = self.dialog_x + self.dialog_width // 2
+        self.ok_button.rect.centerx = self.dialog_x + 150
         self.ok_button.rect.centery = self.dialog_y + self.dialog_height - 35
         self.ok_button.draw(screen)
+
+        self.exit_button.rect.centerx = self.dialog_x + 350
+        self.exit_button.rect.centery = self.dialog_y + self.dialog_height - 35
+        self.exit_button.draw(screen)
+
+        self.score_list.draw()
+
+        # self.confirm_buttons[0].rect.center = (dialog_rect.centerx - 100, dialog_rect.bottom - 50)
+        # self.confirm_buttons[1].rect.center = (dialog_rect.centerx + 100, dialog_rect.bottom - 50)

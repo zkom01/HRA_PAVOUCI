@@ -45,7 +45,7 @@ class Game:
             pavouk_hana_obj: Instance pavouka Hana.
             obrazovka: Pygame surface pro vykreslování.
         """
-                     
+        self.result = None
         self.ulozit_score = True
         self.screen = obrazovka
         # --- Fáze zadávání jména ---
@@ -405,15 +405,15 @@ class Game:
             pygame.mixer.music.pause()  # Zastaví hudbu
             pygame.mixer.Sound.stop(self.angry_sound)  # Zastaví "angry" alarm, pokud hraje
             self.game_paused = True
-            result = self.pause_menu.show_menu()  # Zobrazí menu a čeká na volbu
+            self.result = self.pause_menu.show_menu()  # Zobrazí menu a čeká na volbu
             self.game_paused = False  # Po návratu z menu hru vždy rozjedeme (nebo ukončíme)
-            if result == "quit":
+            if self.result == "quit":
                 self.lets_continue = False  # Nastaví flag pro ukončení hlavní smyčky
-            elif result == "restart":
+            elif self.result == "restart":
                 # Zde by se měla přidat logika pro restart hry (např. resetování všech herních proměnných
                 # a pozic objektů, nebo volání metody pro restart).
                 self.restart()
-            elif result == "new_game":
+            elif self.result == "new_game":
                 # Zde by se měla přidat logika pro restart hry (např. resetování všech herních proměnných
                 # a pozic objektů, nebo volání metody pro restart).
                 self.new_game()
@@ -523,20 +523,20 @@ class Game:
         """
         Vykreslí dialogové okno 'Game Over'.
         """
-            dialog_width = 500
-            dialog_height = 200
-            dialog_rect = pygame.Rect(0, 0, dialog_width, dialog_height)
-            dialog_rect.center = (settings.SCREEN_WIDTH // 2, 300 + 3)
+        dialog_width = 500
+        dialog_height = 200
+        dialog_rect = pygame.Rect(0, 0, dialog_width, dialog_height)
+        dialog_rect.center = (settings.SCREEN_WIDTH // 2, 300 + 3)
 
-            # Vyplnění pozadí dialogu (podobně jako u tlačítek)
-            pygame.draw.rect(self.screen, settings.POZADI_MENU, dialog_rect, border_radius=20)
-            # Volitelné: ohraničení dialogu
-            pygame.draw.rect(self.screen, settings.BORDER, dialog_rect, 3,
-                             border_radius=20)  # Bílý rámeček, tloušťka 3px
+        # Vyplnění pozadí dialogu (podobně jako u tlačítek)
+        pygame.draw.rect(self.screen, settings.POZADI_MENU, dialog_rect, border_radius=20)
+        # Volitelné: ohraničení dialogu
+        pygame.draw.rect(self.screen, settings.BORDER, dialog_rect, 3,
+                         border_radius=20)  # Bílý rámeček, tloušťka 3px
 
-            text_game_over = self.font_robot_big_1.render("GAME OVER", True, settings.BARVA_TEXTU_MENU)
-            text_game_over_rect = text_game_over.get_rect(center=((settings.SCREEN_WIDTH // 2), 300))
-            self.screen.blit(text_game_over, text_game_over_rect)
+        text_game_over = self.font_robot_big_1.render("GAME OVER", True, settings.BARVA_TEXTU_MENU)
+        text_game_over_rect = text_game_over.get_rect(center=((settings.SCREEN_WIDTH // 2), 300))
+        self.screen.blit(text_game_over, text_game_over_rect)
 
     def stisknute_klavesy(self):
         """
