@@ -59,7 +59,7 @@ class NameInput:
                                 self.exit)
 
     def exit(self):
-        pygame.quit()
+        self.game_instance.lets_continue = False
 
     def confirm_name(self):
         """Callback pro tlačítko OK – potvrdí jméno, pokud nějaké je."""

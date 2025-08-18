@@ -45,7 +45,6 @@ class Game:
             pavouk_hana_obj: Instance pavouka Hana.
             obrazovka: Pygame surface pro vykreslování.
         """
-        self.result = None
         self.ulozit_score = True
         self.screen = obrazovka
         # --- Fáze zadávání jména ---
@@ -151,27 +150,38 @@ class Game:
         hlavní smyčku, která zpracovává uživatelské události (psaní)
         a vykresluje aktuální stav, dokud není jméno potvrzeno.
         """
-        # Smyčka pro zadávání jména
         self.name_input_screen.reset()
-        self.player_name_entered = False
-        while not self.player_name_entered:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    return  # Ukončí program, pokud uživatel zavře okno
-                # Zpracování události třídou NameInput
-                returned_name = self.name_input_screen.handle_event(event)
-                # Pokud handle_event vrátí jméno, znamená to, že bylo potvrzeno
-                if returned_name:
-                    settings.PLAYER_NAME = returned_name  # Uložíme jméno do settings
-                    self.player_name_entered = True  # Nastavíme flag pro ukončení smyčky zadávání jména
-
-            # Aktualizace a vykreslení obrazovky zadávání jména
+        for event in pygame.event.get():
+            returned_name = self.name_input_screen.handle_event(event)
             self.name_input_screen.update()  # Aktualizuje kurzor
             self.name_input_screen.draw(self.screen)  # Vykreslí aktuální stav na obrazovku
-
             pygame.display.flip()  # Aktualizuje celou obrazovku
             pygame.time.Clock().tick(settings.FPS)  # Řídí FPS pro fázi zadávání jména
+            if returned_name:
+                settings.PLAYER_NAME = returned_name  # Uložíme jméno do settings
+
+
+        # # Smyčka pro zadávání jména
+        # self.name_input_screen.reset()
+        # self.player_name_entered = False
+        # while not self.player_name_entered:
+        #     for event in pygame.event.get():
+        #         if event.type == pygame.QUIT:
+        #             pygame.quit()
+        #             return  # Ukončí program, pokud uživatel zavře okno
+        #         # Zpracování události třídou NameInput
+        #         returned_name = self.name_input_screen.handle_event(event)
+        #         # Pokud handle_event vrátí jméno, znamená to, že bylo potvrzeno
+        #         if returned_name:
+        #             settings.PLAYER_NAME = returned_name  # Uložíme jméno do settings
+        #             self.player_name_entered = True  # Nastavíme flag pro ukončení smyčky zadávání jména
+        #
+        #     # Aktualizace a vykreslení obrazovky zadávání jména
+        #     self.name_input_screen.update()  # Aktualizuje kurzor
+        #     self.name_input_screen.draw(self.screen)  # Vykreslí aktuální stav na obrazovku
+        #
+        #     pygame.display.flip()  # Aktualizuje celou obrazovku
+        #     pygame.time.Clock().tick(settings.FPS)  # Řídí FPS pro fázi zadávání jména
 
 
     def kresleni_pozadi(self):
