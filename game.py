@@ -1,6 +1,5 @@
 """
 Modul Game obsahuje hlavní herní logiku a smyčku.
-
 Třída Game inicializuje herní prostředí, spravuje herní objekty (hráč, jídlo, pavouci, sudy),
 zpracovává interakce (kolize, stisky kláves), aktualizuje herní stav a vykresluje vše na obrazovku.
 """
@@ -13,68 +12,40 @@ from pause_menu import PauseMenu
 from name_input import NameInput
 from score_json import ScoreJson
 
-
-# Definujte protokol pro objekty, které mají 'rect' atribut
-# (jinak hlásí chybu "Unresolved attribute reference 'rect' for class 'Sprite'").
 class RectHolder(Protocol):
+    """
+    Definuje protokol pro objekty, které mají atribut 'rect' typu pygame.Rect.
+    Tento protokol slouží k type-hintingu a zajišťuje, že metody pracující
+    s herními objekty budou mít přístup k jejich pozici a rozměrům,
+    čímž se zabrání chybám jako "Unresolved attribute reference 'rect' for class 'Sprite'".
+"""
     rect: pygame.Rect
 
 class Game:
     """
-    Hlavní třída hry, která řídí celou herní smyčku, logiku, vykreslování a stav hry.
-
-    Atributy:
-        screen (pygame.Surface): Objekt Surface, na který se vše vykresluje.
-        pause_menu (PauseMenu): Instance menu pro pozastavení hry.
-        hrac_group (pygame.sprite.Group): Skupina spritů pro hráče.
-        jidla_group (pygame.sprite.Group): Skupina spritů pro objekty jídla.
-        pavouci_group (pygame.sprite.Group): Skupina spritů pro pavouky.
-        sudy_group (pygame.sprite.Group): Skupina spritů pro sudy.
-        zivoty (int): Aktuální počet životů hráče.
-        pocet_kapek_na_sud (int): Počet kapek jídla potřebných pro získání sudu.
-        score (int): Aktuální skóre hráče (počet sebraných kapek).
-        kapky_od_posledniho_sudu (int): Počet sebraných kapek od posledního získaného sudu.
-        rychlost (str/int): Aktuální úroveň rychlosti hry (pro zobrazení na panelu).
-        rychlost_played_X (bool): Flagy indikující, zda už byl zvuk rychlosti pro danou úroveň přehrán.
-        pavouk_X_obj (Pavouk): Instance jednotlivých pavouků.
-        X_added (bool): Flagy indikující, zda už byl daný pavouk přidán do hry.
-        game_paused (bool): True, pokud je hra pozastavena, jinak False.
-        lets_continue (bool): True, pokud má herní smyčka běžet, jinak False (pro ukončení hry).
-        is_fullscreen (bool): True, pokud je hra v režimu celé obrazovky, jinak False.
-        zvuk_kapky (pygame.mixer.Sound): Zvuk přehrávaný při sebrání kapky.
-        kousanec_sound (pygame.mixer.Sound): Zvuk přehrávaný při kousnutí pavoukem.
-        rychlost_sound (pygame.mixer.Sound): Zvuk přehrávaný při změně rychlosti.
-        angry_sound (pygame.mixer.Sound): Zvuk alarmu, když je pavouk "angry".
-        alarm_hraje (bool): True, pokud hraje alarm "angry" pavouka.
-        font_robot_X (pygame.font.Font): Různé velikosti fontů pro texty ve hře.
-        barva_textu (tuple): Barva textu.
-        white (tuple): Bílá barva.
-        main_color (tuple): Hlavní barva pozadí (mění se, když jsou pavouci "angry").
-        barva_textu_nabidky (tuple): Barva textu v menu.
-        barva_pod_text_nabidky (tuple): Barva pozadí pod textem v menu.
-        original_pozadi_image (pygame.Surface): Původní obrázek pozadí.
-        scaled_pozadi_image (pygame.Surface): Škálovaný obrázek pozadí pro aktuální rozlišení.
-        nadpis_text (pygame.Surface): Předrenderovaný text nadpisu pro horní panel.
-        nadpis_text_rect (pygame.Rect): Obdélník pro umístění nadpisu.
+    Třída, která řídí celou herní logiku, stav a interakce.
+    Obsahuje metody pro inicializaci hry, zpracování uživatelského vstupu,
+    aktualizaci herního stavu, detekci kolizí, správu grafických prvků
+    a zvuků a ovládání herního cyklu.
     """
 
     def __init__(self, hrac_group, jidla_group, pavouci_group, sudy_group, pavouk_max_obj, pavouk_tery_obj,
                  pavouk_niky_obj, pavouk_eda_obj, pavouk_hana_obj, obrazovka):
         """
         Inicializuje herní objekt.
-
         Args:
-            hrac_group (pygame.sprite.Group): Skupina spritů obsahující hráče.
-            jidla_group (pygame.sprite.Group): Skupina spritů obsahující jídlo.
-            pavouci_group (pygame.sprite.Group): Skupina spritů obsahující pavouky.
-            sudy_group (pygame.sprite.Group): Skupina spritů obsahující sudy (segmenty hada).
-            pavouk_max_obj (Pavouk): Instance pavouka Max.
-            pavouk_tery_obj (Pavouk): Instance pavouka Tery.
-            pavouk_niky_obj (Pavouk): Instance pavouka Niky.
-            pavouk_eda_obj (Pavouk): Instance pavouka Eda.
-            pavouk_hana_obj (Pavouk): Instance pavouka Hana.
-            obrazovka (pygame.Surface): Objekt Surface hlavního okna hry.
+            hrac_group: Skupina spritů pro hráče.
+            jidla_group: Skupina spritů pro objekty jídla.
+            pavouci_group: Skupina spritů pro pavouky.
+            sudy_group: Skupina spritů pro sudy.
+            pavouk_max_obj: Instance pavouka Max.
+            pavouk_tery_obj: Instance pavouka Tery.
+            pavouk_niky_obj: Instance pavouka Niky.
+            pavouk_eda_obj: Instance pavouka Eda.
+            pavouk_hana_obj: Instance pavouka Hana.
+            obrazovka: Pygame surface pro vykreslování.
         """
+                     
         self.ulozit_score = True
         self.screen = obrazovka
         # --- Fáze zadávání jména ---
@@ -174,8 +145,13 @@ class Game:
         )
 
     def zadani_jmena(self):
+        """
+        Spustí fázi zadávání jména hráče.
+        Tato metoda resetuje obrazovku pro zadávání jména a spouští
+        hlavní smyčku, která zpracovává uživatelské události (psaní)
+        a vykresluje aktuální stav, dokud není jméno potvrzeno.
+        """
         # Smyčka pro zadávání jména
-
         self.name_input_screen.reset()
         self.player_name_entered = False
         while not self.player_name_entered:
@@ -183,10 +159,8 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     return  # Ukončí program, pokud uživatel zavře okno
-
                 # Zpracování události třídou NameInput
                 returned_name = self.name_input_screen.handle_event(event)
-
                 # Pokud handle_event vrátí jméno, znamená to, že bylo potvrzeno
                 if returned_name:
                     settings.PLAYER_NAME = returned_name  # Uložíme jméno do settings
@@ -202,22 +176,21 @@ class Game:
 
     def kresleni_pozadi(self):
         """
-        Vykreslí pozadí herní obrazovky.
-
-        Používá předem škálovaný obrázek pozadí.
+        Vykreslí pozadí herní plochy.
+        Používá předem škálovaný obrázek pozadí pro optimalizaci výkonu
+        a umisťuje ho pod horní panel hry.
         """
-        # Nyní používáme již škálovaný obrázek a umisťujeme ho pod horní panel.
         pozadi_image_rect = self.scaled_pozadi_image.get_rect(topleft=(0, settings.VYSKA_HORNIHO_PANELU))
         self.screen.blit(self.scaled_pozadi_image, pozadi_image_rect)
 
     def kresleni_horniho_panelu(self):
         """
-        Vykresluje horní informační panel s aktuálním skóre, počtem sudů, rychlostí a životy.
-
+        Vykreslí horní panel s herními informacemi.
+        Tato metoda vykresluje dynamické textové prvky, jako je skóre,
+        počet sudů, rychlost hry, jméno hráče a počet životů.
         """
         # Přistup k player objektu. Předpokládá se, že v hrací skupině je jen jeden hráč.
         pocet_sudu = len(list(self.hrac_group)[0].had_segmenty)
-
         # Vyplnění pozadí horního panelu.
         self.screen.fill(self.main_color, (0, 0, settings.SCREEN_WIDTH, settings.VYSKA_HORNIHO_PANELU))
         # Vykreslení oddělovací čáry pod horním panelem.
@@ -225,7 +198,6 @@ class Game:
                          (settings.SCREEN_WIDTH, settings.VYSKA_HORNIHO_PANELU))
 
         # Dynamické texty, které se mění, a proto se musí renderovat v každém snímku.
-
         score_text = self.font_robot_small.render(f"POCET_KAPEK: {self.score}", True, self.barva_textu)
         score_text_rect = score_text.get_rect(topleft=(10, 0))
 
@@ -251,8 +223,10 @@ class Game:
 
     def update_stav_is_angry(self):
         """
-        Aktualizuje barvu pozadí a přehrává/zastavuje alarm na základě toho,
-        zda je některý z pavouků v "angry" stavu.
+        Aktualizuje stav "angry" (naštvaný) pavouků a mění barvu pozadí.
+        Pokud je alespoň jeden pavouk ve stavu "is_angry", barva pozadí
+        se změní na `ANGRY_COLOR` a spustí se zvuk alarmu.
+        Pokud žádný pavouk není naštvaný, vrátí se normální barva a alarm se zastaví.
         """
         self.any_spider_angry = False
         # Prochází všechny pavouky a kontroluje jejich stav.
@@ -275,11 +249,10 @@ class Game:
     def update_rychlosti(self):
         """
         Aktualizuje rychlost hráče a pavouků na základě počtu získaných sudů.
-        Přehrává zvukový efekt při každé změně rychlosti.
+        Rychlost se zvyšuje v definovaných fázích a pro každou fázi se přehraje
+        zvukový efekt, ale pouze jednou.
         """
-
         velikost = len(self.hrac_obj.had_segmenty)  # Počet sudů určuje úroveň rychlosti
-
         # Podmínky pro zvýšení rychlosti a přehrání zvuku (pouze jednou pro každou úroveň).
         if velikost >= 8 and not self.rychlost_played_8:
             self.kanal3.play(self.rychlost_sound)
@@ -289,9 +262,6 @@ class Game:
             self.rychlost = "MAX"  # Text pro zobrazení
 
         if velikost >= 5 and not self.rychlost_played_5:
-            # Kontrola pořadí: tato podmínka se může splnit dříve než pro 8 sudů,
-            # takže je důležité, aby neblokovala další úrovně.
-            # Zde je pořadí důležité pro správnou aktivaci rychlostí.
             self.kanal3.play(self.rychlost_sound)
             self.rychlost_played_5 = True
             self.hrac_obj.rychlostni_koeficient = settings.RYCHLOST_3
@@ -311,10 +281,9 @@ class Game:
 
     def prida_odebere_pavouka(self):
         """
-        Dynamicky přidává nové pavouky do hry na základě počtu získaných sudů hráčem.
-        Při přidání pavouka se hráči aktivuje dočasná imunita.
+        Dynamicky přidává nové pavouky do hry na základě počtu získaných sudů.
+        Při přidání každého pavouka se hráči aktivuje dočasná imunita.
         """
-
         # Podmínka pro Max pavouka.
         # Poznámka: `len(hrac_obj.had_segmenty) >= 0` je vždy True, takže pavouk Max se přidá vždy.
         if len(self.hrac_obj.had_segmenty) >= 0:
@@ -350,8 +319,6 @@ class Game:
                 self.eda_added = True
 
         # Podmínka pro Hana pavouka.
-        # Poznámka: Tato podmínka je stejná jako pro Eda pavouka (>= 5).
-        # Zkontrolujte, zda je to záměr, nebo zda by zde měla být jiná hodnota (např. >= 7 nebo 8).
         if len(self.hrac_obj.had_segmenty) >= 4:
             if not self.hana_added:
                 self.pavouci_group.add(self.pavouk_hana)
@@ -366,14 +333,13 @@ class Game:
     @staticmethod
     def get_offset(sprite1: RectHolder, sprite2: RectHolder):
         """
-        Vypočítá offset mezi dvěma spritovými objekty pro použití s maskovou kolizí.
-
+        Vypočítá offset (posun) mezi dvěma spritami pro přesnou detekci kolizí.
         Args:
-            sprite1 (pygame.sprite.Sprite): První sprite (obvykle hráč).
-            sprite2 (pygame.sprite.Sprite): Druhý sprite (jídlo, pavouk, sud).
+            sprite1: První sprite (typicky hráč).
+            sprite2: Druhý sprite (typicky jídlo nebo pavouk).
 
         Returns:
-            tuple: Offset ve formátu (offset_x, offset_y).
+            Dvojice (tuple) s hodnotami offsetu na osách x a y.
         """
         offset_x = sprite2.rect.x - sprite1.rect.x
         offset_y = sprite2.rect.y - sprite1.rect.y
@@ -381,10 +347,11 @@ class Game:
 
     def kontrola_kolize(self):
         """
-        Kontroluje kolize mezi hráčem a jídlem, a mezi hráčem a pavouky.
-        Zpracovává důsledky kolizí (sběr jídla, ztráta sudů/životů).
+        Kontroluje a řeší kolize mezi hráčem a herními objekty.
+        Zahrnuje detekci kolizí s jídlem (přidání skóre a sudů) a
+        s pavouky (ztráta sudů nebo životů). Po kolizi s pavoukem
+        se hráči aktivuje imunita a pavouk se dočasně odstraní z obrazovky.
         """
-
         # Kontrola kolize s jídlem.
         for jedno_jidlo in self.jidla_group:
             offset_j = self.get_offset(self.hrac_obj, jedno_jidlo)
@@ -429,8 +396,9 @@ class Game:
 
     def pause(self):
         """
-        Přepíná stav pozastavení hry. Pokud je hra pozastavena, zobrazí se pauza menu.
-        Zpracovává volby z pauza menu (pokračování, restart, ukončení).
+        Zastaví nebo obnoví hru a zobrazí menu pauzy.
+        V závislosti na volbě hráče (nová hra, pokračovat, restartovat, ukončit)
+        upraví stav hry a herní smyčky.
         """
         if not self.game_paused:
             # Hru pozastavíme a spustíme menu.
@@ -457,6 +425,12 @@ class Game:
                 self.hrac_obj.direction = None
 
     def new_game(self):
+        """
+        Připraví hru na nový začátek, včetně zadání jména.
+        Tato metoda se volá před spuštěním nového herního cyklu,
+        aby se resetovalo skóre, jméno hráče a zahájila se fáze
+        zadávání jména.
+        """
         settings.GAME_OVER = False
         self.ulozit_score = True
         settings.PLAYER_NAME = ""
@@ -469,8 +443,10 @@ class Game:
 
     def restart(self):
         """
-        Resetuje hru do počátečního stavu po restartu.
-        Vynuluje skóre, životy, pozice objektů, vymaže sudy, resetuje pavouky a zvuky.
+        Restartuje hru do počátečního stavu.
+        Tato metoda se stará o reset všech herních proměnných,
+        pozic objektů a herního stavu, aby bylo možné začít
+        novou hru s výchozími nastaveními.
         """
         # Zastav a resetuj zvuky
         pygame.mixer.music.stop()
@@ -528,18 +504,26 @@ class Game:
         self.lets_continue = True
 
     def game_over(self):
-# -------------------------------------------------------------------------------------------------------------------------------
+        """
+        Zpracuje stav 'game over'.
+
+        Uloží skóre hráče, nastaví stav hry na konec a zobrazí
+        obrazovku 'game over' a menu pauzy pro další volby.
+        """
         if self.ulozit_score:
             self.score_list.save_score(settings.PLAYER_NAME, settings.SCORE)
             self.ulozit_score = False
         settings.SCORE = 0
         settings.GAME_OVER = True
-# --------------------------------------------------------------------------------------------------------------------------------
         self.draw_game_over()
         self.zivoty = 0
         self.kresleni_horniho_panelu()
         self.pause()  # Pozastaví/rozjede hru
+        
     def draw_game_over(self):
+        """
+        Vykreslí dialogové okno 'Game Over'.
+        """
             dialog_width = 500
             dialog_height = 200
             dialog_rect = pygame.Rect(0, 0, dialog_width, dialog_height)
@@ -555,12 +539,12 @@ class Game:
             text_game_over_rect = text_game_over.get_rect(center=((settings.SCREEN_WIDTH // 2), 300))
             self.screen.blit(text_game_over, text_game_over_rect)
 
-
-
     def stisknute_klavesy(self):
         """
-        Zpracovává události stisku kláves a ukončení okna.
-        Řídí pauzu hry, přepínání fullscreenu a pohyb hráče.
+        Zpracovává stisknutí kláves uživatelem.
+        Řeší události jako ukončení hry (pygame.QUIT),
+        pauzu (K_SPACE), přepnutí na celou obrazovku (K_F11)
+        a ovládání hráče.
         """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -577,15 +561,17 @@ class Game:
     @staticmethod
     def get_relative_positions(group, current_width, current_height):
         """
-        Získá relativní pozice všech spritů v dané skupině vzhledem k aktuálním rozměrům obrazovky.
+        Vypočítá a vrací relativní pozice spritů v dané skupině.
+        Pozice jsou vyjádřeny jako poměr (procento) šířky a výšky obrazovky,
+        což je užitečné pro udržení proporcí při změně rozlišení.
 
         Args:
-            group (pygame.sprite.Group): Skupina spritů, pro které se mají získat pozice.
-            current_width (int): Aktuální šířka obrazovky.
-            current_height (int): Aktuální výška obrazovky.
+            group: Skupina spritů (pygame.sprite.Group).
+            current_width: Aktuální šířka obrazovky.
+            current_height: Aktuální výška obrazovky.
 
         Returns:
-            list: Seznam tuplic, kde každá tuplice obsahuje (objekt, relativní_x, relativní_y).
+            Seznam n-tic (objekt, relativní_x, relativní_y).
         """
         relative_positions = []
         for obj in group:
@@ -597,12 +583,14 @@ class Game:
     @staticmethod
     def apply_relative_positions(relative_positions_data, new_width, new_height):
         """
-        Aplikuje dříve získané relativní pozice na sprity v nové velikosti obrazovky.
+        Aplikuje relativní pozice na spritky po změně rozlišení.
+        Přebírá seznam relativních pozic a přepočítává je na nové
+        absolutní pozice podle nových rozměrů obrazovky.
 
         Args:
-            relative_positions_data (list): Seznam tuplic s objekty a jejich relativními pozicemi.
-            new_width (int): Nová šířka obrazovky.
-            new_height (int): Nová výška obrazovky.
+            relative_positions_data: Seznam n-tic z `get_relative_positions`.
+            new_width: Nová šířka obrazovky.
+            new_height: Nová výška obrazovky.
         """
         for obj, rel_x, rel_y in relative_positions_data:
             if hasattr(obj, 'rect') and obj.rect:
@@ -613,7 +601,8 @@ class Game:
     def fullscreen(self):
         """
         Přepíná režim zobrazení mezi oknem a celou obrazovkou.
-        Zachovává relativní pozice všech herních objektů a aktualizuje nastavení.
+        Před změnou rozlišení se uloží relativní pozice všech herních objektů,
+        aby se po změně správně přemístily a zachovaly si své proporce.
         """
         original_screen_width = self.screen.get_width()
         original_screen_height = self.screen.get_height()
@@ -663,7 +652,10 @@ class Game:
 
     def kresleni(self):
         """
-        Vykreslí všechny herní objekty a UI prvky na obrazovku.
+        Vykresluje všechny herní prvky na obrazovku.
+        Zahrnuje vyplnění pozadí, vykreslení pozadí herní plochy,
+        a vykreslení všech spritů v jejich příslušných skupinách,
+        následované horním panelem.
         """
         self.screen.fill(self.main_color)  # Vyplní celou obrazovku hlavní barvou (změní se při "angry" stavu)
         self.kresleni_pozadi()  # Vykreslí pozadí herní plochy
@@ -677,8 +669,10 @@ class Game:
 
     def update(self):
         """
-        Aktualizuje stav všech herních objektů a logiky v každém snímku.
-        Zahrnuje přidávání pavouků, kontrolu kolizí a aktualizaci rychlosti.
+        Aktualizuje herní logiku.
+
+        Volá metody pro přidávání pavouků, kontrolu kolizí, aktualizaci
+        stavu "angry" a rychlosti hry.
         """
         self.prida_odebere_pavouka()
         self.kontrola_kolize()
@@ -687,11 +681,13 @@ class Game:
 
     def run(self):
         """
-        Hlavní herní smyčka. Zpracovává události, aktualizuje herní stav a vykresluje.
-        Pokračuje, dokud se proměnná `self.lets_continue` nestane False.
+        Spouští hlavní herní smyčku.
+        V této smyčce se zpracovává uživatelský vstup, aktualizuje
+        se herní stav (pokud není hra pozastavena) a následně se
+        vše vykresluje na obrazovku. Rychlost smyčky je omezena
+        na definované FPS.
         """
         self.kresleni()
-        # self.zadani_jmena()
         self.new_game()
         while self.lets_continue:
             self.stisknute_klavesy()  # Zpracování uživatelského vstupu
