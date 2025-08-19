@@ -32,7 +32,7 @@ RYCHLOST_MAX = 1.5 # Maximální rychlostní koeficient (150%)
 # Vzdálenost v pixelech mezi segmenty (sudy) hada.
 MEZERA_MEZI_SUDY = 5
 # Doba trvání imunity hráče po zásahu (v milisekundách). 2000 ms = 2 sekundy.
-DOBA_IMUNITY = 1000
+DOBA_IMUNITY = 2000
 # Vzdálenost v pixelech, pod kterou se pavouk stane "naštvaným" a začne pronásledovat hráče.
 ANGRY_VZDALENOST = 400
 # Násobitel rychlosti pavouka, když je "naštvaný". (Přidáno pro lepší konfiguraci a oddělení od SPIDER_RYCHLOST)

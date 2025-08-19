@@ -456,9 +456,18 @@ class Game:
         self.pavouk_max.rect.x = -500
         self.pavouk_max.rect.y = -500
         self.tery_added = False
+        self.pavouk_tery.rect.x = -500
+        self.pavouk_tery.rect.y = settings.SCREEN_HEIGHT + 500
         self.niky_added = False
+        self.pavouk_niky.rect.x = settings.SCREEN_WIDTH + 500
+        self.pavouk_niky.rect.y = -500
         self.eda_added = False
+        self.pavouk_eda.rect.x = settings.SCREEN_WIDTH + 500
+        self.pavouk_eda.rect.y = settings.SCREEN_HEIGHT + 500
         self.hana_added = False
+        self.pavouk_hana.rect.x = settings.SCREEN_WIDTH + 500
+        self.pavouk_hana.rect.y = settings.SCREEN_HEIGHT + 500
+
         self.pavouk_max.is_angry = False
         self.pavouk_tery.is_angry = False
         self.pavouk_niky.is_angry = False
@@ -488,7 +497,7 @@ class Game:
         self.zivoty = 0
         self.kresleni_horniho_panelu()
         self.pause()  # Pozastaví/rozjede hru
-        
+
     def draw_game_over(self):
         """
         Vykreslí dialogové okno 'Game Over'.
