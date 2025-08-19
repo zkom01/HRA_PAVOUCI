@@ -46,20 +46,12 @@ class NameInput:
         # Vstupní pole - Inicializujeme s jeho skutečnými rozměry,
         # pozici pak doladíme v draw metodě, aby bylo vycentrováno uvnitř dialogu
         self.input_box = pygame.Rect(0, 0, 400, 50)  # Šířka 400, výška 50
-        self.ok_button = Button("OK",
-                                0,
-                                0,
-                                150, 50,
-                                self.confirm_name)
-
-        self.exit_button = Button("KONEC",
-                                0,
-                                0,
-                                150, 50,
-                                self.exit)
+        self.ok_button = Button("OK", 0, 0,150, 50, self.confirm_name)
+        self.exit_button = Button("KONEC",0, 0,150, 50,self.exit)
 
     def exit(self):
-        pygame.quit()
+        self.input_active = False
+        self.game_instance.lets_continue = False
 
     def confirm_name(self):
         """Callback pro tlačítko OK – potvrdí jméno, pokud nějaké je."""
