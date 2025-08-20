@@ -16,6 +16,7 @@ class NameInput:
         Args:
             screen (pygame.Surface): Objekt Surface, na který se bude vykreslovat.
         """
+        self.exit = "ex"
         self.game_instance = game_instance
         self.screen = screen
         self.screen_width = settings.SCREEN_WIDTH
@@ -47,9 +48,9 @@ class NameInput:
         # pozici pak doladíme v draw metodě, aby bylo vycentrováno uvnitř dialogu
         self.input_box = pygame.Rect(0, 0, 400, 50)  # Šířka 400, výška 50
         self.ok_button = Button("OK", 0, 0,150, 50, self.confirm_name)
-        self.exit_button = Button("KONEC",0, 0,150, 50,self.exit)
+        self.exit_button = Button("KONEC",0, 0,150, 50,self.exit_game)
 
-    def exit(self):
+    def exit_game(self):
         self.exit = "exit"
 
     def confirm_name(self):
@@ -73,8 +74,7 @@ class NameInput:
         # Zpracování kliknutí na tlačítko KONEC
         self.exit_button.handle_event(event)
         if self.exit == "exit":
-            self.game_instance.lets_continue = False
-            return "ex"
+            return "exit"
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN  or event.key == pygame.K_KP_ENTER:

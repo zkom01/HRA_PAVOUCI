@@ -665,8 +665,8 @@ class Game:
                     for event in pygame.event.get():
                         # Zpracování události třídou NameInput
                         returned_name = self.name_input_screen.handle_event(event)
-                        if returned_name = "ex":
-                            self.lets_contunie = False
+                        if returned_name == "ex":
+                            self.lets_continue = False
                         # Pokud handle_event vrátí jméno, znamená to, že bylo potvrzeno
                         if returned_name:
                             settings.PLAYER_NAME = returned_name  # Uložíme jméno do settings
