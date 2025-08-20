@@ -45,8 +45,6 @@ class PauseMenu:
             Button("ANO", self.screen_width // 2 - 100, self.screen_height // 2 + 50, 150, 50, self.ano, True),
             Button("NE", self.screen_width // 2 + 100, self.screen_height // 2 + 50, 150, 50, self.ne, True)
         ]
-        # Poznamenejte si, že pro `confirm_buttons` jsem zmenšil šířku a výšku a posunul je, aby byly vedle sebe.
-        # Také jsem upravil `start_y` pro `confirm_buttons` aby byly lépe vycentrovány vzhledem k textu.
 
     def update_screen_size(self, width: int, height: int):
         self.screen_width = width
@@ -112,13 +110,17 @@ class PauseMenu:
             self.game_instance.kresleni()
             self.score_list.draw()
 
-    def enable_buton(self, nazev_tlacitka,  is_active: bool):
+    def enable_buton(self, nazev_tlacitka: str,  is_active: bool):
         """Aktivuje nebo deaktivuje tlačítko "Pokračovat"."""
         # Najdeme tlačítko s textem "Pokračovat"
         for button in self.buttons:
             if button.text == nazev_tlacitka:
                 button.stav = is_active
                 break  # Až ho najdeme, ukončíme cyklus
+        for button in self.confirm_buttons:
+            if button.text == nazev_tlacitka:
+                button.stav = is_active
+                break
 
     def show_menu(self) -> str:
         self.paused = True

@@ -56,9 +56,11 @@ class Game:
         self.pause_menu = PauseMenu(self.screen, self)
         self.score_list = ScoreJson(self.screen)
         self.score = settings.SCORE
-
+        d
+#-------------------------------------------------------------------------------------
         self.pause_menu.enable_buton("Pokračovat", False)
-
+        self.pause_menu.enable_buton("ANO", False)
+#---------------------------------------------------------------------------------------
         # continue_button = self.pause_menu.buttons[1]
         # continue_button.stav = False
 
