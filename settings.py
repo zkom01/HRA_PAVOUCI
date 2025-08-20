@@ -78,6 +78,7 @@ POZADI_TLACITKA = (0, 0, 0) # Černá
 POZADI_TLACITKA_HOVER = (50, 103, 6) # Specifická zelená barva pro texty
 POZADI_MENU = (128, 0, 0) # Tmavě červená barva
 BARVA_TEXTU_MENU = BORDER
+POZADI_TLACITKA_PASIVE = (128,128,128)
 
 # --- Cesty k souborům s médii ---
 # Cesta k souboru s ikonou okna hry.

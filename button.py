@@ -24,7 +24,7 @@ class Button:
         font (pygame.font.Font): Písmo použité pro text tlačítka.
     """
 
-    def __init__(self, text: str, x: int, y: int, width: int, height: int, callback: callable):
+    def __init__(self, text: str, x: int, y: int, width: int, height: int, callback: callable, stav: bool):
         """
         Inicializuje novou instanci tlačítka.
 
@@ -39,11 +39,13 @@ class Button:
         """
         self.text = text
         self.rect = pygame.Rect(x, y, width, height) # Vytvoří obdélníkovou oblast pro tlačítko
+        self.stav = stav
         
         # Barevná schémata pro různé stavy tlačítka
         self.color_normal = settings.POZADI_TLACITKA
         self.color_hover = settings.POZADI_TLACITKA_HOVER
         self.text_color = settings.BARVA_TEXTU_MENU
+        self.color_pasiv = settings.POZADI_TLACITKA_PASIVE
 
         self.callback = callback # Funkce, která se spustí po kliknutí
         self.font = pygame.font.Font(settings.FONT_ROBOT_PATH, 40) # Nastavení písma pro text tlačítka
@@ -59,22 +61,34 @@ class Button:
         Args:
             surface (pygame.Surface): Pygame surface, na kterou se má tlačítko vykreslit.
         """
-        mouse_pos = pygame.mouse.get_pos() # Získá aktuální pozici kurzoru myši
-        is_hover = self.rect.collidepoint(mouse_pos) # Zjistí, zda se kurzor nachází nad tlačítkem
+        if self.stav:
+            mouse_pos = pygame.mouse.get_pos() # Získá aktuální pozici kurzoru myši
+            is_hover = self.rect.collidepoint(mouse_pos) # Zjistí, zda se kurzor nachází nad tlačítkem
         
-        # Vybere barvu na základě stavu najetí myši
-        color = self.color_hover if is_hover else self.color_normal
-        
-        # Vykreslí pozadí tlačítka se zaoblenými rohy
-        pygame.draw.rect(surface, color, self.rect, border_radius=20)
-        # Vykreslí tenký okraj kolem tlačítka
-        pygame.draw.rect(surface, settings.BORDER, self.rect, 3, border_radius=20)
-        
-        # Vykreslení textu na tlačítku
-        text_surf = self.font.render(self.text, True, self.text_color) # Vytvoří surface s textem
-        text_rect = text_surf.get_rect(center=self.rect.center)       # Získá obdélník textu a vycentruje ho na tlačítku
-        text_rect.y -= 3 # použitý font je ve skutečnosti vyšší (diakritika) proto -3px
-        surface.blit(text_surf, text_rect) # Nakreslí text na surface
+            # Vybere barvu na základě stavu najetí myši
+            color = self.color_hover if is_hover else self.color_normal
+
+            # Vykreslí pozadí tlačítka se zaoblenými rohy
+            pygame.draw.rect(surface, color, self.rect, border_radius=20)
+            # Vykreslí tenký okraj kolem tlačítka
+            pygame.draw.rect(surface, settings.BORDER, self.rect, 3, border_radius=20)
+
+            # Vykreslení textu na tlačítku
+            text_surf = self.font.render(self.text, True, self.text_color) # Vytvoří surface s textem
+            text_rect = text_surf.get_rect(center=self.rect.center)       # Získá obdélník textu a vycentruje ho na tlačítku
+            text_rect.y -= 3 # použitý font je ve skutečnosti vyšší (diakritika) proto -3px
+            surface.blit(text_surf, text_rect) # Nakreslí text na surface
+        else:
+            # Vykreslí pozadí tlačítka se zaoblenými rohy
+            pygame.draw.rect(surface, self.color_pasiv, self.rect, border_radius=20)
+            # Vykreslí tenký okraj kolem tlačítka
+            pygame.draw.rect(surface, settings.BORDER, self.rect, 3, border_radius=20)
+
+            # Vykreslení textu na tlačítku
+            text_surf = self.font.render(self.text, True, self.text_color)  # Vytvoří surface s textem
+            text_rect = text_surf.get_rect(center=self.rect.center)  # Získá obdélník textu a vycentruje ho na tlačítku
+            text_rect.y -= 3  # použitý font je ve skutečnosti vyšší (diakritika) proto -3px
+            surface.blit(text_surf, text_rect)  # Nakreslí text na surface
 
     def handle_event(self, event: pygame.event.Event):
         """
@@ -86,8 +100,9 @@ class Button:
         Args:
             event (pygame.event.Event): Událost Pygame (např. kliknutí myši).
         """
+        if self.stav:
         # Kontroluje, zda se jedná o stisknutí tlačítka myši a zda bylo stisknuto levé tlačítko (button == 1)
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            # Kontroluje, zda kliknutí proběhlo uvnitř oblasti tlačítka
-            if self.rect.collidepoint(event.pos):
-                self.callback() # Pokud ano, zavolá připojenou funkci (callback)
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                # Kontroluje, zda kliknutí proběhlo uvnitř oblasti tlačítka
+                if self.rect.collidepoint(event.pos):
+                    self.callback() # Pokud ano, zavolá připojenou funkci (callback)

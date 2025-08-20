@@ -57,6 +57,11 @@ class Game:
         self.score_list = ScoreJson(self.screen)
         self.score = settings.SCORE
 
+        self.pause_menu.enable_buton("Pokračovat", False)
+
+        # continue_button = self.pause_menu.buttons[1]
+        # continue_button.stav = False
+
         # Skupiny spritů pro snadnou správu herních objektů.
         self.hrac_group = hrac_group
         self.jidla_group = jidla_group

@@ -29,21 +29,21 @@ class PauseMenu:
         button_width = 400
         button_height = 60
         self.start_y = (self.screen_height // 2) - 80
-        button_spacing = 80 
+        button_spacing = 80
 
         # Vytvoření tlačítek hlavního menu s callback funkcemi
         self.buttons: list[Button] = [
-            Button("Nová hra", self.screen_width // 2, self.start_y, button_width, button_height, self._request_new_game_confirmation),
-            Button("Pokračovat", self.screen_width // 2, self.start_y, button_width, button_height, self.resume_game),
-            Button("Restart", self.screen_width // 2, self.start_y + button_spacing, button_width, button_height, self._request_restart_confirmation), # Změněno
-            Button("Ukončit", self.screen_width // 2, self.start_y + (2 * button_spacing), button_width, button_height, self._request_quit_confirmation), # Změněno
+            Button("Nová hra", self.screen_width // 2, self.start_y, button_width, button_height, self._request_new_game_confirmation, True),
+            Button("Pokračovat", self.screen_width // 2, self.start_y, button_width, button_height, self.resume_game, True),
+            Button("Restart", self.screen_width // 2, self.start_y + button_spacing, button_width, button_height, self._request_restart_confirmation, True), # Změněno
+            Button("Ukončit", self.screen_width // 2, self.start_y + (2 * button_spacing), button_width, button_height, self._request_quit_confirmation, True), # Změněno
         ]
 
         # Tlačítka pro potvrzovací dialog (ANO / NE)
         # Používáme lambdy pro předání True/False do callback funkce confirm_action
         self.confirm_buttons: list[Button] = [
-            Button("ANO", self.screen_width // 2 - 100, self.screen_height // 2 + 50, 150, 50, self.ano),
-            Button("NE", self.screen_width // 2 + 100, self.screen_height // 2 + 50, 150, 50, self.ne)
+            Button("ANO", self.screen_width // 2 - 100, self.screen_height // 2 + 50, 150, 50, self.ano, True),
+            Button("NE", self.screen_width // 2 + 100, self.screen_height // 2 + 50, 150, 50, self.ne, True)
         ]
         # Poznamenejte si, že pro `confirm_buttons` jsem zmenšil šířku a výšku a posunul je, aby byly vedle sebe.
         # Také jsem upravil `start_y` pro `confirm_buttons` aby byly lépe vycentrovány vzhledem k textu.
@@ -52,7 +52,7 @@ class PauseMenu:
         self.screen_width = width
         self.screen_height = height
         center_x = self.screen_width // 2
-        
+
         self.start_y = (self.screen_height // 2) - 80
         button_spacing = 80
 
@@ -111,6 +111,14 @@ class PauseMenu:
             self.current_action_pending = None
             self.game_instance.kresleni()
             self.score_list.draw()
+
+    def enable_buton(self, nazev_tlacitka,  is_active: bool):
+        """Aktivuje nebo deaktivuje tlačítko "Pokračovat"."""
+        # Najdeme tlačítko s textem "Pokračovat"
+        for button in self.buttons:
+            if button.text == nazev_tlacitka:
+                button.stav = is_active
+                break  # Až ho najdeme, ukončíme cyklus
 
     def show_menu(self) -> str:
         self.paused = True
