@@ -16,6 +16,7 @@ class NameInput:
         Args:
             screen (pygame.Surface): Objekt Surface, na který se bude vykreslovat.
         """
+        self.player_name_entered = None
         self.exit = False
         self.game_instance = game_instance
         self.screen = screen
@@ -73,8 +74,6 @@ class NameInput:
         self.ok_button.handle_event(event)
         # Zpracování kliknutí na tlačítko KONEC
         self.exit_button.handle_event(event)
-        if self.exit:
-            return "exit"
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN  or event.key == pygame.K_KP_ENTER:
@@ -94,6 +93,31 @@ class NameInput:
             return self.player_name
 
         return None
+
+    def run(self):
+        # Smyčka pro zadávání jména
+        self.reset()
+        self.player_name_entered = False
+        self.exit = False  # Zresetujeme proměnnou exit
+
+        while not self.player_name_entered and not self.exit:
+            for event in pygame.event.get():
+                # Zpracování události třídou NameInput
+                returned_name = self.handle_event(event)
+                # Pokud handle_event vrátí jméno, znamená to, že bylo potvrzeno
+                if returned_name:
+                    settings.PLAYER_NAME = returned_name
+                    self.player_name_entered = True
+
+            # Aktualizace a vykreslení obrazovky zadávání jména
+            self.update()
+            self.draw(self.screen)
+            pygame.display.flip()
+
+        # Po ukončení smyčky zkontrolujeme, proč byla ukončena
+        if self.exit:
+            # ukončí se cela hra
+            self.game_instance.lets_continue = False
 
     def reset(self):
         """

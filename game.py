@@ -50,8 +50,7 @@ class Game:
         self.screen = obrazovka
         # --- Fáze zadávání jména ---
         # Vytvoření instance NameInput
-        self.name_input_screen = NameInput(self.screen, self)
-        self.player_name_entered = False  # Flag, který bude True, až když je jméno hotové
+        self.name_input = NameInput(self.screen, self)
 
         # Inicializace menu pro pauzu, předáváme aktuální obrazovku a její rozměry.
         self.pause_menu = PauseMenu(self.screen, self)
@@ -408,8 +407,7 @@ class Game:
         self.score = 0
         self.hrac_obj.had_segmenty.clear()  # Vyprázdní segmenty hada (sudy)
         self.kresleni_horniho_panelu()
-        if self.player_name_entered:
-            self.restart()
+        self.restart()
 
     def restart(self):
         """
@@ -656,29 +654,6 @@ class Game:
         self.update_stav_is_angry()
         self.update_rychlosti()
 
-    def zadani_jmena(self):
-        # Smyčka pro zadávání jména
-                self.name_input_screen.reset()
-                self.player_name_entered = False
-                
-                while not self.player_name_entered:
-                    for event in pygame.event.get():
-                        # Zpracování události třídou NameInput
-                        returned_name = self.name_input_screen.handle_event(event)
-                        if returned_name == "exit":
-                            self.lets_continue = False
-                        # Pokud handle_event vrátí jméno, znamená to, že bylo potvrzeno
-                        if returned_name:
-                            settings.PLAYER_NAME = returned_name  # Uložíme jméno do settings
-                            self.player_name_entered = True  # Nastavíme flag pro ukončení smyčky zadávání jména
-
-                    # Aktualizace a vykreslení obrazovky zadávání jména
-                    self.name_input_screen.update()  # Aktualizuje kurzor
-                    self.name_input_screen.draw(self.screen)  # Vykreslí aktuální stav na obrazovku
-
-                    pygame.display.flip()  # Aktualizuje celou obrazovku
-                    # pygame.time.Clock().tick(settings.FPS)  # Řídí FPS pro fázi zadávání jména
-
     def run(self):
         """
         Spouští hlavní herní smyčku.
@@ -690,7 +665,7 @@ class Game:
         while self.lets_continue:
             self.stisknute_klavesy()  # Zpracování uživatelského vstupu
             if settings.PLAYER_NAME == "":
-                self.zadani_jmena()
+                self.name_input.run()
             if not self.game_paused:
                 self.update()  # Aktualizace herní logiky
                 self.hrac_group.update()  # Aktualizace hráče
