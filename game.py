@@ -665,7 +665,7 @@ class Game:
                     for event in pygame.event.get():
                         # Zpracování události třídou NameInput
                         returned_name = self.name_input_screen.handle_event(event)
-                        if returned_name == "ex":
+                        if returned_name == "exit":
                             self.lets_continue = False
                         # Pokud handle_event vrátí jméno, znamená to, že bylo potvrzeno
                         if returned_name:
