@@ -16,7 +16,7 @@ class NameInput:
         Args:
             screen (pygame.Surface): Objekt Surface, na který se bude vykreslovat.
         """
-        self.exit = "ex"
+        self.exit = False
         self.game_instance = game_instance
         self.screen = screen
         self.screen_width = settings.SCREEN_WIDTH
@@ -51,7 +51,7 @@ class NameInput:
         self.exit_button = Button("KONEC",0, 0,150, 50,self.exit_game)
 
     def exit_game(self):
-        self.exit = "exit"
+        self.exit = True
 
     def confirm_name(self):
         """Callback pro tlačítko OK – potvrdí jméno, pokud nějaké je."""
@@ -73,7 +73,7 @@ class NameInput:
         self.ok_button.handle_event(event)
         # Zpracování kliknutí na tlačítko KONEC
         self.exit_button.handle_event(event)
-        if self.exit == "exit":
+        if self.exit:
             return "exit"
 
         if event.type == pygame.KEYDOWN:
