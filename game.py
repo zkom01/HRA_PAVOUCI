@@ -656,20 +656,11 @@ class Game:
         self.update_stav_is_angry()
         self.update_rychlosti()
 
-    def run(self):
-        """
-        Spouští hlavní herní smyčku.
-        V této smyčce se zpracovává uživatelský vstup, aktualizuje
-        se herní stav (pokud není hra pozastavena) a následně se
-        vše vykresluje na obrazovku. Rychlost smyčky je omezena
-        na definované FPS.
-        """
-        while self.lets_continue:
-            self.stisknute_klavesy()  # Zpracování uživatelského vstupu
-            if settings.PLAYER_NAME == "":
-                # Smyčka pro zadávání jména
+    def zadani_jmena(self):
+        # Smyčka pro zadávání jména
                 self.name_input_screen.reset()
                 self.player_name_entered = False
+                
                 while not self.player_name_entered:
                     for event in pygame.event.get():
                         # Zpracování události třídou NameInput
@@ -686,6 +677,18 @@ class Game:
                     pygame.display.flip()  # Aktualizuje celou obrazovku
                     # pygame.time.Clock().tick(settings.FPS)  # Řídí FPS pro fázi zadávání jména
 
+    def run(self):
+        """
+        Spouští hlavní herní smyčku.
+        V této smyčce se zpracovává uživatelský vstup, aktualizuje
+        se herní stav (pokud není hra pozastavena) a následně se
+        vše vykresluje na obrazovku. Rychlost smyčky je omezena
+        na definované FPS.
+        """
+        while self.lets_continue:
+            self.stisknute_klavesy()  # Zpracování uživatelského vstupu
+            if settings.PLAYER_NAME == "":
+                self.zadani_jmena()
             if not self.game_paused:
                 self.update()  # Aktualizace herní logiky
                 self.hrac_group.update()  # Aktualizace hráče
