@@ -370,6 +370,8 @@ class Game:
         V závislosti na volbě hráče (nová hra, pokračovat, restartovat, ukončit)
         upraví stav hry a herní smyčky.
         """
+        self.kresleni_pozadi()
+        self.kresleni_horniho_panelu()
         if not self.game_paused:
             # Hru pozastavíme a spustíme menu.
             pygame.mixer.music.pause()  # Zastaví hudbu

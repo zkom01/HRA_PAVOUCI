@@ -68,6 +68,7 @@ hra = Game(player_group, jidlo_group, pavouk_group, sud_group,
 # --- Spuštění hry a profilování ---
 # Nastaví hru na celoobrazovkový režim, pokud je v nastavení povoleno.
 hra.fullscreen()
+hra.pause()
 
 # # Importy pro ladění a profilování výkonu.
 # import cProfile
