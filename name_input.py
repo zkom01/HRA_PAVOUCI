@@ -50,8 +50,7 @@ class NameInput:
         self.exit_button = Button("KONEC",0, 0,150, 50,self.exit)
 
     def exit(self):
-        self.input_active = False
-        self.game_instance.lets_continue = False
+        self.exit = "exit"
 
     def confirm_name(self):
         """Callback pro tlačítko OK – potvrdí jméno, pokud nějaké je."""
@@ -73,6 +72,9 @@ class NameInput:
         self.ok_button.handle_event(event)
         # Zpracování kliknutí na tlačítko KONEC
         self.exit_button.handle_event(event)
+        if self.exit == "exit":
+            self.game_instance.lets_continue = False
+            return "ex"
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN  or event.key == pygame.K_KP_ENTER:
