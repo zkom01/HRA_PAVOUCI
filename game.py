@@ -56,10 +56,9 @@ class Game:
         self.pause_menu = PauseMenu(self.screen, self)
         self.score_list = ScoreJson(self.screen)
         self.score = settings.SCORE
-        d
+        
 #-------------------------------------------------------------------------------------
-        self.pause_menu.enable_buton("Pokračovat", False)
-        self.pause_menu.enable_buton("ANO", False)
+        # self.pause_menu.enable_buton("Pokračovat", False)
 #---------------------------------------------------------------------------------------
         # continue_button = self.pause_menu.buttons[1]
         # continue_button.stav = False
@@ -379,6 +378,9 @@ class Game:
         """
         self.kresleni_pozadi()
         self.kresleni_horniho_panelu()
+        if setings.PLAYER_NAME == "":
+            self.pause_menu.enable_buton("Pokračovat", False)
+        
         if not self.game_paused:
             # Hru pozastavíme a spustíme menu.
             pygame.mixer.music.pause()  # Zastaví hudbu
@@ -662,6 +664,7 @@ class Game:
         self.kontrola_kolize()
         self.update_stav_is_angry()
         self.update_rychlosti()
+        
 
     def run(self):
         """
