@@ -378,8 +378,12 @@ class Game:
         """
         self.kresleni_pozadi()
         self.kresleni_horniho_panelu()
-        if setings.PLAYER_NAME == "":
+        if settings.PLAYER_NAME == "":
             self.pause_menu.enable_buton("Pokračovat", False)
+            self.pause_menu.enable_buton("Restart", False)
+        else:
+            self.pause_menu.enable_buton("Pokračovat", True)
+            self.pause_menu.enable_buton("Restart", True)
         
         if not self.game_paused:
             # Hru pozastavíme a spustíme menu.
