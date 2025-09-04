@@ -370,7 +370,7 @@ class Game:
         V závislosti na volbě hráče (nová hra, pokračovat, restartovat, ukončit)
         upraví stav hry a herní smyčky.
         """
-        if settings.PLAYER_NAME == "":
+        if settings.PLAYER_NAME == "" or settings.GAME_OVER:
             self.pause_menu.enable_buton("Pokračovat", False)
             self.pause_menu.enable_buton("Restart", False)
         else:
