@@ -56,13 +56,6 @@ class Game:
         self.pause_menu = PauseMenu(self.screen, self)
         self.score_list = ScoreJson(self.screen)
         self.score = settings.SCORE
-        d
-#-------------------------------------------------------------------------------------
-        self.pause_menu.enable_buton("Pokračovat", False)
-        self.pause_menu.enable_buton("ANO", False)
-#---------------------------------------------------------------------------------------
-        # continue_button = self.pause_menu.buttons[1]
-        # continue_button.stav = False
 
         # Skupiny spritů pro snadnou správu herních objektů.
         self.hrac_group = hrac_group
@@ -377,6 +370,12 @@ class Game:
         V závislosti na volbě hráče (nová hra, pokračovat, restartovat, ukončit)
         upraví stav hry a herní smyčky.
         """
+        if settings.PLAYER_NAME == "":
+            self.pause_menu.enable_buton("Pokračovat", False)
+            self.pause_menu.enable_buton("Restart", False)
+        else:
+            self.pause_menu.enable_buton("Pokračovat", True)
+            self.pause_menu.enable_buton("Restart", True)
         self.kresleni_pozadi()
         self.kresleni_horniho_panelu()
         if not self.game_paused:
