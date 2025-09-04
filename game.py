@@ -378,6 +378,7 @@ class Game:
             self.pause_menu.enable_buton("Restart", True)
         self.kresleni_pozadi()
         self.kresleni_horniho_panelu()
+
         if not self.game_paused:
             # Hru pozastavíme a spustíme menu.
             pygame.mixer.music.pause()  # Zastaví hudbu
