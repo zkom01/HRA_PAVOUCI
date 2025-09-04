@@ -55,7 +55,7 @@ jidlo_group.add(jidlo, jidlo1)
 
 # Vytváří instanci sudu.
 # Počáteční pozice mimo obrazovku, bude se objevovat dynamicky.
-sud = Sud(-500, -500, settings.BARREL_IMAGE)
+sud = Sud(-500, -500)
 # Skupina spritů pro sudy.
 sud_group = pygame.sprite.Group()
 sud_group.add(sud) # Poznámka: Pokud tento sud nemá být trvale přítomen, ale objevovat se dynamicky,

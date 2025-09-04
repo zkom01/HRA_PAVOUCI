@@ -46,14 +46,14 @@ class Pavouk(pygame.sprite.Sprite):
         super().__init__()  # Volá konstruktor rodičovské třídy pygame.sprite.Sprite
 
         # Načtení a nastavení normálního obrázku pavouka
-        self.original_image = pygame.image.load(f"media/img/{image_name}").convert_alpha()
+        self.original_image = pygame.image.load(image_name).convert_alpha()
         self.image = self.original_image  # Aktuální obrázek pavouka
         self.rect = self.image.get_rect()  # Získá obdélník z obrázku
         self.rect.topleft = (x, y)  # Nastaví počáteční pozici pavouka
         self.mask = pygame.mask.from_surface(self.image)  # Maska pro pixel-perfect kolize
 
         # Načtení a příprava obrázku "naštvaného" pavouka
-        self.image_angry = pygame.image.load(f"media/img/{image_angry_name}").convert_alpha()
+        self.image_angry = pygame.image.load(image_angry_name).convert_alpha()
 
         # Nastavení rychlostí pavouka
         self.original_speed = rychlost  # Původní (klidná) rychlost pavouka

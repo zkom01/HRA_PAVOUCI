@@ -334,7 +334,7 @@ class Game:
                 # Pokud hráč sebral dostatek kapek, přidá se nový sud (segment hada).
                 if self.kapky_od_posledniho_sudu >= self.pocet_kapek_na_sud:
                     # Nový sud se objeví na pozici hráče.
-                    new_sud = Sud(self.hrac_obj.rect.centerx, self.hrac_obj.rect.centery, settings.BARREL_IMAGE)
+                    new_sud = Sud(self.hrac_obj.rect.centerx, self.hrac_obj.rect.centery)
                     self.sudy_group.add(new_sud)
                     self.hrac_obj.pridej_segment(new_sud)  # Přidání sudu k hráči (hadovi)
                     self.kapky_od_posledniho_sudu = 0  # Reset počítadla kapek

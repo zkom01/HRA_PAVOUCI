@@ -41,7 +41,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.direction = None # Počáteční směr pohybu
         # Načtení a příprava obrázku hráče. convert_alpha() pro průhlednost.
-        self.original_image = pygame.image.load(f"media/img/{image_name}").convert_alpha()
+        self.original_image = pygame.image.load(settings.PLAYER_IMAGE).convert_alpha()
         self.image = self.original_image
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image) # Maska pro přesné kolize

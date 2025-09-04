@@ -3,7 +3,16 @@ Modul settings.py obsahuje globální konstanty a konfigurační parametry pro h
 Definuje herní pravidla, rozměry obrazovky, rychlosti objektů, barvy,
 cesty k souborům s médii a další důležitá nastavení.
 """
+import os
+
 from screeninfo import get_monitors
+
+# --- Základní adresáře ---
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MEDIA_DIR = os.path.join(BASE_DIR, "media")
+IMG_DIR = os.path.join(MEDIA_DIR, "img")
+FONT_DIR = os.path.join(MEDIA_DIR, "fonts")
+SOUND_DIR = os.path.join(MEDIA_DIR, "sounds")
 
 # --- Základní herní pravidla ---
 # Počáteční počet životů hráče.
@@ -81,38 +90,30 @@ BARVA_TEXTU_MENU = BORDER
 POZADI_TLACITKA_PASIVE = (128,128,128)
 
 # --- Cesty k souborům s médii ---
-# Cesta k souboru s ikonou okna hry.
-IKONA_IMAGE_PATH = "media/img/robot.png"
-# Cesta k souboru s vlastním písmem.
-FONT_ROBOT_PATH = "media/fonts/Super Rocky by All Super Font.ttf"
-# Cesta k souboru s hudbou na pozadí.
-MUSIC_PATH = "media/sounds/Desert_Nomad.ogg"
-# Cesta k souboru se zvukem sebrání kapky jídla.
-ZVUK_KAPKY_PATH = "media/sounds/olej_sound.ogg"
-# Cesta k souboru se zvukem kousnutí/zásahu pavoukem.
-KOUSANEC_SOUND_PATH = "media/sounds/kousanec.ogg"
-# Cesta k souboru se zvukem aktivace rychlostního bonusu.
-RYCHLOST_SOUND_PATH = "media/sounds/rychlost.ogg"
-# Cesta k souboru se zvukem, když se pavouk "naštve".
-ANGRY_SOUND_PATH = "media/sounds/alarm.ogg"
-# Cesta k souboru s obrázkem pozadí hry.
-POZADI_IMAGE_PATH = "media/img/pozadi.png"
+IKONA_IMAGE_PATH = os.path.join(IMG_DIR, "robot.png")
+FONT_ROBOT_PATH = os.path.join(FONT_DIR, "Super Rocky by All Super Font.ttf")
+MUSIC_PATH = os.path.join(SOUND_DIR, "Desert_Nomad.ogg")
+ZVUK_KAPKY_PATH = os.path.join(SOUND_DIR, "olej_sound.ogg")
+KOUSANEC_SOUND_PATH = os.path.join(SOUND_DIR, "kousanec.ogg")
+RYCHLOST_SOUND_PATH = os.path.join(SOUND_DIR, "rychlost.ogg")
+ANGRY_SOUND_PATH = os.path.join(SOUND_DIR, "alarm.ogg")
+POZADI_IMAGE_PATH = os.path.join(IMG_DIR, "pozadi.png")
 
 # --- Názvy souborů obrázků pro herní objekty ---
 # Tyto konstanty uchovávají pouze názvy souborů, bez cesty,
 # protože cesta "media/img/" je přidávána přímo ve třídách, které je používají.
-PLAYER_IMAGE = "robot.png"
-FOOD_IMAGE = "olej.png"
-BARREL_IMAGE = "sud_90.png"
+PLAYER_IMAGE = os.path.join(IMG_DIR, "robot.png")
+FOOD_IMAGE = os.path.join(IMG_DIR, "olej.png")
+BARREL_IMAGE = os.path.join(IMG_DIR, "sud_90.png")
 
 # Obrázky pro různé typy pavouků a jejich "naštvané" varianty.
-PAVOUK_MAX_IMAGE = "pavoukMax_165.png"
-PAVOUK_MAX_ANGRY_IMAGE = "pavoukMaxAngry_165.png"
-PAVOUK_TERY_IMAGE = "pavoukTery_165.png"
-PAVOUK_TERY_ANGRY_IMAGE = "pavoukTeryAngry_165.png"
-PAVOUK_NIKY_IMAGE = "pavoukNiky_165.png"
-PAVOUK_NIKY_ANGRY_IMAGE = "pavoukNikyAngry_165.png"
-PAVOUK_EDA_IMAGE = "pavoukEda_185.png"
-PAVOUK_EDA_ANGRY_IMAGE = "pavoukEdaAngry_185.png"
-PAVOUK_HANA_IMAGE = "pavoukHana_185.png"
-PAVOUK_HANA_ANGRY_IMAGE = "pavoukHanaAngry_185.png"
+PAVOUK_MAX_IMAGE = os.path.join(IMG_DIR, "pavoukMax_165.png")
+PAVOUK_MAX_ANGRY_IMAGE = os.path.join(IMG_DIR, "pavoukMaxAngry_165.png")
+PAVOUK_TERY_IMAGE = os.path.join(IMG_DIR, "pavoukTery_165.png")
+PAVOUK_TERY_ANGRY_IMAGE = os.path.join(IMG_DIR, "pavoukTeryAngry_165.png")
+PAVOUK_NIKY_IMAGE = os.path.join(IMG_DIR, "pavoukNiky_165.png")
+PAVOUK_NIKY_ANGRY_IMAGE = os.path.join(IMG_DIR, "pavoukNikyAngry_165.png")
+PAVOUK_EDA_IMAGE = os.path.join(IMG_DIR, "pavoukEda_185.png")
+PAVOUK_EDA_ANGRY_IMAGE = os.path.join(IMG_DIR, "pavoukEdaAngry_185.png")
+PAVOUK_HANA_IMAGE = os.path.join(IMG_DIR, "pavoukHana_185.png")
+PAVOUK_HANA_ANGRY_IMAGE = os.path.join(IMG_DIR, "pavoukHanaAngry_185.png")

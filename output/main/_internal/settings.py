@@ -1,0 +1,119 @@
+"""
+Modul settings.py obsahuje globální konstanty a konfigurační parametry pro hru.
+Definuje herní pravidla, rozměry obrazovky, rychlosti objektů, barvy,
+cesty k souborům s médii a další důležitá nastavení.
+"""
+import os
+
+from screeninfo import get_monitors
+
+# --- Základní adresáře ---
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MEDIA_DIR = os.path.join(BASE_DIR, "media")
+IMG_DIR = os.path.join(MEDIA_DIR, "img")
+FONT_DIR = os.path.join(MEDIA_DIR, "fonts")
+SOUND_DIR = os.path.join(MEDIA_DIR, "sounds")
+
+# --- Základní herní pravidla ---
+# Počáteční počet životů hráče.
+ZIVOTY = 3
+GAME_OVER = False
+# Počet sebraných kapek jídla potřebných k získání jednoho sudu (segmentu "hada").
+POCET_KAPEK_NA_SUD = 3
+# Počáteční skóre hráče.
+SCORE = 0
+
+PLAYER_NAME = ""
+
+# --- Rychlosti herních objektů ---
+# Základní rychlost pohybu pavouků (v pixelech za snímek).
+SPIDER_RYCHLOST = 6
+# Základní rychlost pohybu hráče (v pixelech za snímek).
+PLAYER_RYCHLOST = 10
+
+# Koeficienty pro modifikaci rychlosti hráče a pavouků.
+# Používají se k postupnému zvyšování obtížnosti nebo k aktivaci speciálních stavů.
+RYCHLOST_1 = 1.0  # Výchozí rychlost (100%)
+RYCHLOST_2 = 1.2  # Zvýšená rychlost (120%)
+RYCHLOST_3 = 1.4  # Další zvýšení rychlosti (140%)
+RYCHLOST_MAX = 1.5 # Maximální rychlostní koeficient (150%)
+
+# Vzdálenost v pixelech mezi segmenty (sudy) hada.
+MEZERA_MEZI_SUDY = 5
+# Doba trvání imunity hráče po zásahu (v milisekundách). 2000 ms = 2 sekundy.
+DOBA_IMUNITY = 2000
+# Vzdálenost v pixelech, pod kterou se pavouk stane "naštvaným" a začne pronásledovat hráče.
+ANGRY_VZDALENOST = 400
+# Násobitel rychlosti pavouka, když je "naštvaný". (Přidáno pro lepší konfiguraci a oddělení od SPIDER_RYCHLOST)
+ANGRY_SPEED_MULTIPLIER = 1 # Příklad: 1.5x původní rychlost (když je naštvaný tak je rychlejší 1 = není rychlejší)
+
+
+# --- Nastavení obrazovky ---
+# Získání rozměrů primárního monitoru pro potenciální fullscreen režim.
+try:
+    monitors = get_monitors()
+    MONITOR_WIDTH = monitors[0].width
+    MONITOR_HEIGHT = monitors[0].height
+except IndexError:
+    # Fallback pro případ, kdy není detekován žádný monitor (např. v CI/CD prostředí)
+    MONITOR_WIDTH = 1920
+    MONITOR_HEIGHT = 1080
+    print("Upozornění: Nelze detekovat monitor. Používám výchozí rozlišení 1920x1080.")
+
+
+# Výchozí šířka herního okna.
+SCREEN_WIDTH = 1400
+# Výchozí výška herního okna.
+SCREEN_HEIGHT = 700
+# Původní (výchozí) šířka herního okna, pro případné přepočty při změně velikosti.
+ORIGINAL_SCREEN_WIDTH = SCREEN_WIDTH
+# Původní (výchozí) výška herního okna, pro případné přepočty při změně velikosti.
+ORIGINAL_SCREEN_HEIGHT = SCREEN_HEIGHT
+
+# Výška horního informačního panelu (např. pro skóre, životy).
+VYSKA_HORNIHO_PANELU = 64
+# Maximální počet snímků za sekundu (Frame Rate) pro hru.
+FPS = 60
+
+# --- Barvy (RGB formát) ---
+SCREEN_COLOR = (0, 0, 0)                # Černá barva pozadí obrazovky
+BARVA_TEXTU = (50, 103, 6)              # Specifická zelená barva pro texty
+WHITE = (255, 255, 255)                 # Čistě bílá barva
+ANGRY_COLOR = (128, 0, 0)               # Tmavě červená barva, např. pro indikaci "naštvaného" stavu
+
+# --- Barvy pro tlačítka a menu ---
+BORDER = (242, 216, 82)
+POZADI_TLACITKA = (0, 0, 0) # Černá
+POZADI_TLACITKA_HOVER = (50, 103, 6) # Specifická zelená barva pro texty
+POZADI_MENU = (128, 0, 0) # Tmavě červená barva
+BARVA_TEXTU_MENU = BORDER
+POZADI_TLACITKA_PASIVE = (128,128,128)
+
+# --- Cesty k souborům s médii ---
+IKONA_IMAGE_PATH = os.path.join(IMG_DIR, "robot.png")
+FONT_ROBOT_PATH = os.path.join(FONT_DIR, "Super Rocky by All Super Font.ttf")
+MUSIC_PATH = os.path.join(SOUND_DIR, "Desert_Nomad.ogg")
+ZVUK_KAPKY_PATH = os.path.join(SOUND_DIR, "olej_sound.ogg")
+KOUSANEC_SOUND_PATH = os.path.join(SOUND_DIR, "kousanec.ogg")
+RYCHLOST_SOUND_PATH = os.path.join(SOUND_DIR, "rychlost.ogg")
+ANGRY_SOUND_PATH = os.path.join(SOUND_DIR, "alarm.ogg")
+POZADI_IMAGE_PATH = os.path.join(IMG_DIR, "pozadi.png")
+
+# --- Názvy souborů obrázků pro herní objekty ---
+# Tyto konstanty uchovávají pouze názvy souborů, bez cesty,
+# protože cesta "media/img/" je přidávána přímo ve třídách, které je používají.
+PLAYER_IMAGE = os.path.join(IMG_DIR, "robot.png")
+FOOD_IMAGE = os.path.join(IMG_DIR, "olej.png")
+BARREL_IMAGE = os.path.join(IMG_DIR, "sud_90.png")
+
+# Obrázky pro různé typy pavouků a jejich "naštvané" varianty.
+PAVOUK_MAX_IMAGE = os.path.join(IMG_DIR, "pavoukMax_165.png")
+PAVOUK_MAX_ANGRY_IMAGE = os.path.join(IMG_DIR, "pavoukMaxAngry_165.png")
+PAVOUK_TERY_IMAGE = os.path.join(IMG_DIR, "pavoukTery_165.png")
+PAVOUK_TERY_ANGRY_IMAGE = os.path.join(IMG_DIR, "pavoukTeryAngry_165.png")
+PAVOUK_NIKY_IMAGE = os.path.join(IMG_DIR, "pavoukNiky_165.png")
+PAVOUK_NIKY_ANGRY_IMAGE = os.path.join(IMG_DIR, "pavoukNikyAngry_165.png")
+PAVOUK_EDA_IMAGE = os.path.join(IMG_DIR, "pavoukEda_185.png")
+PAVOUK_EDA_ANGRY_IMAGE = os.path.join(IMG_DIR, "pavoukEdaAngry_185.png")
+PAVOUK_HANA_IMAGE = os.path.join(IMG_DIR, "pavoukHana_185.png")
+PAVOUK_HANA_ANGRY_IMAGE = os.path.join(IMG_DIR, "pavoukHanaAngry_185.png")

@@ -34,7 +34,7 @@ class Jidlo(pygame.sprite.Sprite):
         super().__init__()  # Volá konstruktor rodičovské třídy pygame.sprite.Sprite
 
         # Načtení obrázku jídla a zajištění průhlednosti (pokud je v obrázku alpha kanál).
-        self.image = pygame.image.load(f"media/img/{image_name}").convert_alpha()
+        self.image = pygame.image.load(settings.FOOD_IMAGE).convert_alpha()
         
         self.rect = self.image.get_rect()  # Získá obdélník (rect) z obrázku pro pozici a rozměry.
         self.mask = pygame.mask.from_surface(self.image)  # Vytvoří masku z obrázku pro pixel-perfect kolize.
