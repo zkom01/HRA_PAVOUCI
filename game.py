@@ -330,7 +330,7 @@ class Game:
                 jedno_jidlo.rect.topleft = jedno_jidlo.nahodna_pozice()  # Přemístění jídla
                 self.score += 1
                 self.kapky_od_posledniho_sudu += 1
-                settings.SCORE =self.score
+                settings.SCORE = self.score
                 # Pokud hráč sebral dostatek kapek, přidá se nový sud (segment hada).
                 if self.kapky_od_posledniho_sudu >= self.pocet_kapek_na_sud:
                     # Nový sud se objeví na pozici hráče.
