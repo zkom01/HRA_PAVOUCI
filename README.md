@@ -1,4 +1,5 @@
 # 🕷️ Pavouci Komárkovi
+![Gameplay](screen.jpg)
 
 Pygame hra inspirovaná klasickým konceptem "Snake", rozšířená o dynamické nepřátele, adaptivní obtížnost a stavový AI systém pavouků.
 
