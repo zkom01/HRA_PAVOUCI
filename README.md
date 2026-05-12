@@ -74,16 +74,24 @@ Aplikace obsahuje plně funkční systém pro správu výsledků:
 
 ## 🗂️ Struktura projektu
 ```
-API_ARES/
-├── main.py         # Vstupní bod aplikace
-├── game.py         # Hlavní herní smyčka a logika
-├── player.py       # Třída hráče a správa sudů
-├── spider.py       # Logika a AI nepřátel
-├── barrel.py       # Mechanika připojených sudů
-├── food.py         # Generování kapek oleje
-├── button.py       # UI prvky (tlačítka)
-├── pause_menu.py   # Logika menu a pauzy
-├── score_json.py   # Modul pro práci s JSON daty
-├── settings.py     # Globální konfigurace a konstanty
-└── media/          # Obrázky, ikony a zvuky
+spider/
+├── main.py           # Vstupní bod – inicializace a spuštění hry
+├── game.py           # Hlavní herní logika, smyčka, kolize, zvuky
+├── player.py         # Hráč (robot) – pohyb, had segmentů, imunita
+├── spider.py         # Pavouk – pohyb, pronásledování, naštvaný stav
+├── barrel.py         # Sud – segment hada hráče
+├── food.py           # Jídlo (kapka oleje) – náhodná pozice
+├── button.py         # UI tlačítko – hover, callback
+├── pause_menu.py     # Menu pauzy – pokračovat, restart, nová hra, konec
+├── name_input.py     # Zadávání jména hráče před hrou
+├── score_json.py     # Správa skóre (ukládání/načítání JSON, vykreslení Top 10)
+├── score.py          # Starší verze správy skóre (TXT) – nepoužívá se
+├── settings.py       # Globální konstanty – rozměry, barvy, rychlosti, cesty k médiím
+├── score.json        # Soubor s uloženými skóre (generuje se automaticky)
+├── .gitignore
+└── media/
+    ├── fonts/        # Herní font (Super Rocky)
+    ├── ico/          # Ikona okna
+    ├── img/          # Obrázky hráče, pavouků, sudů, jídla, pozadí
+    └── sounds/       # Hudba a zvukové efekty
 ```
